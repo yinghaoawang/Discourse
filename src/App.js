@@ -1,11 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
+import Sidebar from './Sidebar';
 
 function App() {
   return (
-    <p className="text-center text-green-500 font-extrabold bg-green-200">
-      Hi Mom!
-    </p>
+    <div className="flex">
+      <Sidebar />
+    </div>
   );
 }
 
