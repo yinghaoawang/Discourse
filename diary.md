@@ -6,6 +6,8 @@
 - 1 hour setting up tailwind
 - 30 mins frontend sidebar icons
 - 30 mins frontend sidebar tooltip
+- 30 mins frontend content pane
+- 3 hour frontend right sidebar
 #### Plan
 Create frontend for chat app (Discord clone)
 - Login/Signup

@@ -1,11 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
-import Sidebar from './Sidebar';
+import Sidebar from './components/common/Sidebar';
+import Server from './components/Server/Server';
 
-function App() {
+const App = () => {
   return (
     <div className="flex">
       <Sidebar />
+      <div className="content">
+        <Server />
+      </div>
     </div>
   );
 }

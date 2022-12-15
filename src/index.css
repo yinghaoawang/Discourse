@@ -3,12 +3,21 @@
 @tailwind utilities;
 
 @layer components {
+    .icon {
+        @apply flex items-center justify-center shrink-0
+        w-10 h-10 mx-auto 
+        text-xl
+        bg-green-500 rounded-full;
+    }
+
     .sidebar-icon {
-        @apply relative flex items-center justify-center
-        h-14 w-14 mt-2 mb-2 mx-auto 
+        @apply relative
+        flex items-center
+        w-14 h-14 mt-1.5
+        text-2xl
         bg-gray-800 text-green-500
         hover:bg-green-700 hover:text-white
-        rounded-full hover:rounded-2xl
+        hover:rounded-2xl
         transition-all duration-100 ease-in
         cursor-pointer;
     }
@@ -20,5 +29,13 @@
         text-xs font-semibold
         transition-all duration-100 scale-0 origin-left
         pointer-events-none;
+    }
+
+    .content {
+        @apply ml-18 w-full;
+    }
+
+    body {
+        overflow: hidden;
     }
 }
