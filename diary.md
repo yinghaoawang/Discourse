@@ -1,9 +1,11 @@
 # Code Diary
 
-### 12/13/22
+### 12/14/22
 #### Time
-- 1 hour coming up with plan
-- 1 hour getting tailwind to work
+- 1 hour planning
+- 1 hour setting up tailwind
+- 30 mins frontend sidebar icons
+- 30 mins frontend sidebar tooltip
 #### Plan
 Create frontend for chat app (Discord clone)
 - Login/Signup

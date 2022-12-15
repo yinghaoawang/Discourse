@@ -12,4 +12,13 @@
         transition-all duration-100 ease-in
         cursor-pointer;
     }
+
+    .sidebar-tooltip {
+        @apply absolute left-14 p-2 m-2 min-w-max
+        rounded-md shadow-md
+        bg-gray-900 text-white
+        text-xs font-semibold
+        transition-all duration-100 scale-0 origin-left
+        pointer-events-none;
+    }
 }
