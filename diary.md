@@ -7,7 +7,10 @@
 - 30 mins frontend sidebar icons
 - 30 mins frontend sidebar tooltip
 - 30 mins frontend content pane
-- 3 hour frontend right sidebar
+- 3 hours frontend right sidebar
+- 2 hours deploying static page to digitalocean
+- 1.5 hours frontend inner sidebar & chatbar
+
 #### Plan
 Create frontend for chat app (Discord clone)
 - Login/Signup

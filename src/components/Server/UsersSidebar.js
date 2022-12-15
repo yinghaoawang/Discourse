@@ -1,6 +1,6 @@
 const UsersSidebar = () => {
     return (
-        <div className="fixed right-0 top-0 w-60 h-screen pt-2
+        <div className="fixed right-0 top-0 w-right-sidebar h-screen pt-2 px-2
         flex flex-col
         bg-gray-900 text-gray-400">
             <UsersSidebarCategoryLabel name={'Online'} />
@@ -30,8 +30,8 @@ const UsersSidebarCard = ({ user }) => {
             </div>
             <div className="flex flex-col leading-5 w-full">
                 <div className="font-semibold">{ user.name }</div>
-                <div className="text-xs w-40 whitespace-nowrap overflow-hidden overflow-ellipsis">{ user.statusMessage || '' }</div>
-            </div>
+                <div className="text-xs w-36 whitespace-nowrap overflow-hidden overflow-ellipsis">{ user.statusMessage || '' }</div>
+            </div>  
         </div>
     );
 };

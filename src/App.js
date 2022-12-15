@@ -7,9 +7,7 @@ const App = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="content">
-        <Server />
-      </div>
+      <Server />
     </div>
   );
 }
