@@ -4,6 +4,7 @@
 
 :root {
     --doc-height: 100%;
+    --chatbar-height: 100px;
 }
 
 ::-webkit-scrollbar {

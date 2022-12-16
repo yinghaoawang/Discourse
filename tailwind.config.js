@@ -13,7 +13,6 @@ module.exports = {
         'left-sidebar': '4.25rem',
         'inner-sidebar': '15rem',
         'right-sidebar': '15rem',
-        'chatbar': '8rem',
         '13': '3.15rem',
         '18': '4.25rem',
       },
