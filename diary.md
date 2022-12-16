@@ -1,14 +1,18 @@
 # Code Diary
+### 12/16/22
+- 1 hour scrollbar
+- 2 hours tooltips follow sidebar
+
 ### 12/15/22
-- 2 hours mobile responsiveness
+- 3 hours mobile responsiveness
 
 ### 12/14/22
 - 1 hour planning
 - 1 hour setting up tailwind
-- 30 mins frontend sidebar icons
-- 30 mins frontend sidebar tooltip
-- 30 mins frontend content pane
-- 3 hours frontend right sidebar
+- 30 mins sidebar icons
+- 30 mins sidebar tooltip
+- 30 mins content pane
+- 3 hours right sidebar
 - 2 hours deploying static page to digitalocean
 - 1.5 hours frontend inner sidebar & chatbar
 

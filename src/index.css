@@ -6,9 +6,25 @@
     --doc-height: 100%;
 }
 
+::-webkit-scrollbar {
+    width: 9px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 20px;
+    border: transparent;
+}
+
 @layer components {
     .stretch-vertical {
-        @apply h-full min-h-[var(--doc-height)] 
+        @apply h-full min-h-[var(--doc-height)];
+    }
+
+    .scrolling-container {
+        @apply overflow-y-auto h-[var(--doc-height)];
     }
 
     .icon {
@@ -31,7 +47,7 @@
     }
 
     .sidebar-tooltip {
-        @apply absolute left-14 p-2 m-2 min-w-max
+        @apply fixed left-14 p-2 m-2 min-w-max
         rounded-md shadow-md
         bg-gray-900 text-white
         text-xs font-semibold

@@ -10,7 +10,7 @@ const Server = () => {
     <div className="content flex">
         <InnerSidebar />
         <div className="flex flex-col basis-full bg-gray-700 text-gray-300">
-            <div className="overflow-auto p-4 h-[calc(var(--doc-height)-theme('spacing.chatbar'))] ">
+            <div className="scrolling-container p-4 h-[calc(var(--doc-height)-theme('spacing.chatbar'))] ">
                 {sampleText}
             </div>
             <BottomChatbar />

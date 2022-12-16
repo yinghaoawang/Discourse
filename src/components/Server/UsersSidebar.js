@@ -1,6 +1,6 @@
 const UsersSidebar = () => {
     return (
-        <div className="w-right-sidebar
+        <div className="w-right-sidebar scrolling-container
         pt-2 px-2
         flex flex-col shrink-0
         bg-gray-900 text-gray-400">
@@ -10,6 +10,35 @@ const UsersSidebar = () => {
             <UsersSidebarCategoryLabel name={'Offline'} />
             <UsersSidebarCard user={{ name: 'Fan Zhendong', statusMessage: '我喜欢冰淇淋'}}/>
             <UsersSidebarCard user={{ name: 'Lebron James', statusMessage: 'When you have one of the best players on the court being unselfish, I think that transfers to the other players.'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
+            <UsersSidebarCard user={{ name: 'Zebra'}}/>
             <UsersSidebarCard user={{ name: 'Zebra'}}/>
         </div>
     );
