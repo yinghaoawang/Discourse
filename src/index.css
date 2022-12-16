@@ -2,7 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+    --doc-height: 100%;
+}
+
 @layer components {
+    .stretch-vertical {
+        @apply h-full min-h-[var(--doc-height)] 
+    }
+
     .icon {
         @apply flex items-center justify-center shrink-0
         w-10 h-10 mx-auto 
@@ -32,9 +40,10 @@
     }
 
     .content {
-        @apply ml-18;
+        @apply w-full;
     }
 
     body {
+        /* overflow: hidden; */
     }
 }

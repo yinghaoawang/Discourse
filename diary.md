@@ -1,7 +1,8 @@
 # Code Diary
+### 12/15/22
+- 2 hours mobile responsiveness
 
 ### 12/14/22
-#### Time
 - 1 hour planning
 - 1 hour setting up tailwind
 - 30 mins frontend sidebar icons

@@ -1,7 +1,8 @@
 const UsersSidebar = () => {
     return (
-        <div className="fixed right-0 top-0 w-right-sidebar h-screen pt-2 px-2
-        flex flex-col
+        <div className="w-right-sidebar
+        pt-2 px-2
+        flex flex-col shrink-0
         bg-gray-900 text-gray-400">
             <UsersSidebarCategoryLabel name={'Online'} />
             <UsersSidebarCard user={{ name: 'Alan'}}/>

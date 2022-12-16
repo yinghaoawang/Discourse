@@ -3,57 +3,19 @@ import BottomChatbar from "./BottomChatbar";
 import UsersSidebar from "./UsersSidebar";
 
 const Server = () => {
-    return (
-    <div className="content">
-        <UsersSidebar />
-        <InnerSidebar />
-        <BottomChatbar />
+    let sampleText = [];
+    for (let i = 0; i < 80; i++) sampleText.push(<div>Hello</div>);
 
-        <div className="h-screen">
-            <div className="p-4 bg-gray-700 text-gray-300 ml-60 mr-60">
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>HelloHelloHelloHello HelloHelloHelloHello HelloHelloHelloHello HelloHelloHelloHello HelloHelloHelloHello HelloHelloHelloHello Hello Hello Hello Hello HelHello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello lo Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello Hello </div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div>Hello</div>
-                <div className="h-chatbar"></div>
+    return (
+    <div className="content flex">
+        <InnerSidebar />
+        <div className="flex flex-col basis-full p-4 bg-gray-700 text-gray-300">
+            <div className="overflow-auto h-[calc(var(--doc-height)-theme('spacing.chatbar'))] ">
+                {sampleText}
             </div>
+            <BottomChatbar />
         </div>
+        <UsersSidebar />
     </div>
     );
 };
