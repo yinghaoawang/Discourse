@@ -46,7 +46,7 @@ const UsersSidebar = () => {
 
 const UsersSidebarCategoryLabel = ({ name }) => {
     return (
-        <div className="text-sm font-semibold ml-4 mt-4">
+        <div className="category-label ml-4 mt-4">
             {name}
         </div>
     );
@@ -54,13 +54,13 @@ const UsersSidebarCategoryLabel = ({ name }) => {
 
 const UsersSidebarCard = ({ user }) => {
     return (
-        <div className="flex items-center w-full h-12 hover:bg-gray-700 mt-1">
+        <div className="flex items-center w-full h-12 hover:bg-gray-700 mt-1 p-2">
             <div className="icon mx-3">
                 <span className="w-full text-center text-xl text-white mt-[-4px]">{user.name.charAt(0).toUpperCase()}</span>
             </div>
             <div className="flex flex-col leading-5 w-full">
                 <div className="font-semibold">{ user.name }</div>
-                <div className="text-xs w-36 whitespace-nowrap overflow-hidden overflow-ellipsis">{ user.statusMessage || '' }</div>
+                <div className="text-xs w-36 ellipsis-container">{ user.statusMessage || '' }</div>
             </div>  
         </div>
     );

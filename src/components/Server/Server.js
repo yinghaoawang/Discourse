@@ -4,7 +4,7 @@ import UsersSidebar from "./UsersSidebar";
 
 const Server = () => {
     let sampleText = [];
-    for (let i = 0; i < 80; i++) sampleText.push(<div>Hello</div>);
+    for (let i = 0; i < 80; i++) sampleText.push(<div key={'s' + i}>Hello</div>);
 
     return (
     <div className="content flex">
