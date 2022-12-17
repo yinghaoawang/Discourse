@@ -2,6 +2,7 @@
 ### 12/16/22
 - 1 hour scrollbar
 - 2 hours tooltips follow sidebar
+- 1.5 hours resize textarea and chatbar
 
 ### 12/15/22
 - 3 hours mobile responsiveness

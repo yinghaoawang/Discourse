@@ -4,7 +4,7 @@
 
 :root {
     --doc-height: 100%;
-    --chatbar-height: 100px;
+    --chatbar-height: 62px;
 }
 
 ::-webkit-scrollbar {
@@ -39,7 +39,7 @@
     .icon {
         @apply flex items-center justify-center shrink-0
         w-10 h-10 mx-auto 
-        text-xl
+        text-xl text-center
         bg-green-500 rounded-full;
     }
 
@@ -62,13 +62,5 @@
         text-xs font-semibold
         transition-all duration-100 scale-0 origin-left
         pointer-events-none;
-    }
-
-    .content {
-        @apply w-full;
-    }
-
-    body {
-        /* overflow: hidden; */
     }
 }

@@ -1,7 +1,4 @@
-import { eventWrapper } from '@testing-library/user-event/dist/utils';
 import { FaCompass, FaEnvelope, FaPlus } from 'react-icons/fa';
-
-
 
 const Sidebar = () => {
   return (
