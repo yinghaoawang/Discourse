@@ -27,14 +27,16 @@ const Server = () => {
     }, []);
 
   let samplePostData = [];
-  for (let i = 0; i < 80; i++) samplePostData.push(<PostCard key={'x' + i} user={{name: generateRandomName(8)}} post={{content: 'Hello'}} />);
+  for (let i = 0; i < 80; i++) samplePostData.push({user: {name: generateRandomName(8)}, post: {content: 'Hello'}});
 
   return (
     <div className='w-full flex'>
       <InnerSidebar />
       <div className='flex flex-col basis-full bg-gray-700 text-gray-300'>
         <div id="channel-content-container" className="reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
-          {samplePostData}
+          {samplePostData.map((data, i) => 
+            <PostCard key={i} user={data.user} post={data.post} />
+          )}
         </div>
         <BottomChatbar />
       </div>

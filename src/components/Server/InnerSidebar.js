@@ -10,9 +10,9 @@ const selectChannel = (event) => {
 const InnerSidebar = () => {
     const textChannelsData = [];
     for (let i = 0; i < 50; i++) {
-        textChannelsData.push(<InnerSidebarChannelCard key={'t' + i} channel={{name: 'Text Channel'}} />);
+        textChannelsData.push({name: 'Text Channel'});
     }
-    textChannelsData.push(<InnerSidebarChannelCard key='t-1' channel={{name: 'Super long channel namenamename namenamenamename namenamenamename name'}} />);
+    textChannelsData.push({name: 'Super long channel namenamename namenamenamename namenamenamename name'});
 
     return (
         <div className="scrolling-container
@@ -21,7 +21,9 @@ const InnerSidebar = () => {
         bg-gray-800 text-gray-400">
             <InnerSidebarCategoryLabel name="Text channels" />
             <ul>
-                {textChannelsData}
+                {textChannelsData.map((data, i) => 
+                    <InnerSidebarChannelCard key={i} channel={data} />
+                )}
             </ul>
         </div>
     );

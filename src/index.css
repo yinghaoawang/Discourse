@@ -4,7 +4,7 @@
 
 :root {
     --doc-height: 100%;
-    --chatbar-height: 62px;
+    /* --chatbar-height: 62px; */
 }
 
 ::-webkit-scrollbar {
@@ -20,6 +20,14 @@
 }
 
 @layer components {
+    body {
+        @apply bg-gray-700;
+    }
+    
+    a {
+        @apply text-gray-400;
+    }
+
     .ellipsis-container {
         @apply whitespace-nowrap overflow-hidden overflow-ellipsis;
     }

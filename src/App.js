@@ -1,8 +1,40 @@
-import logo from './logo.svg';
+import { Outlet, createBrowserRouter, RouterProvider } from "react-router-dom";    
 import { useEffect } from 'react';
 import './App.css';
 import Sidebar from './components/common/Sidebar';
 import Server from './components/Server/Server';
+import ErrorPage from "./components/common/ErrorPage";
+import ExploreServers from "./components/ExploreServers/ExploreServers";
+import DirectMessages from "./components/DirectMessages/DirectMessages";
+
+const router = createBrowserRouter([{
+  path: "/",
+  element: <NavbarWrapper />,
+  errorElement: <ErrorPage />,
+  children: [
+    {
+      path: "/",
+      element: <Server />,
+    },
+    {
+      path: "explore/",
+      element: <ExploreServers />
+    },
+    {
+      path: "messages/",
+      element: <DirectMessages />
+    }
+  ]
+}]);
+
+function NavbarWrapper() {
+  return (
+    <div className="flex">
+      <Sidebar />
+      <Outlet />
+    </div>
+  );
+}
 
 const App = () => {
   useEffect(() => {
@@ -10,10 +42,7 @@ const App = () => {
   }, []);
 
   return (
-    <div className="flex">
-      <Sidebar />
-      <Server />
-    </div>
+    <RouterProvider router={router} />
   );
 }
 

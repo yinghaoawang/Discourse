@@ -1,8 +1,15 @@
 # Code Diary
+### 12/20/22
+- 1 hour routing
+
+### 12/18/22 
+- 30 mins routing
+
 ### 12/16/22
 - 1 hour scrollbar
 - 2 hours tooltips follow sidebar
-- 1.5 hours resize textarea and chatbar
+- 3.5 hours resize textarea and chatbar
+- 1 hour chat post cards
 
 ### 12/15/22
 - 3 hours mobile responsiveness
