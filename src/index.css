@@ -28,6 +28,14 @@
         @apply text-gray-400;
     }
 
+    h1 {
+        @apply mb-4 text-4xl font-bold;
+    }
+
+    .center-full {
+        @apply w-full h-full text-center flex items-center justify-center;
+    }
+
     .ellipsis-container {
         @apply whitespace-nowrap overflow-hidden overflow-ellipsis;
     }

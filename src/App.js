@@ -6,6 +6,7 @@ import Server from './components/Server/Server';
 import ErrorPage from "./components/common/ErrorPage";
 import ExploreServers from "./components/ExploreServers/ExploreServers";
 import DirectMessages from "./components/DirectMessages/DirectMessages";
+import Home from "./components/Home/Home";
 
 const generateRandomName = nameLength => {
   let res = '';
@@ -21,6 +22,10 @@ const router = createBrowserRouter([{
   element: <NavbarWrapper />,
   errorElement: <ErrorPage />,
   children: [
+    {
+      path: "/",
+      element: <Home />
+    },
     {
       path: "/server/:serverId",
       element: <Server />,
