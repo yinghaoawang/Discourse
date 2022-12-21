@@ -1,7 +1,11 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import InnerSidebar from './InnerSidebar';
 import BottomChatbar from './BottomChatbar';
+import { resizeTextArea } from './BottomChatbar';
 import UsersSidebar from './UsersSidebar';
+import Loader from '../common/Loader';
+import { generateRandomName } from '../../App';
 
 const PostCard = ({user, post}) => {
     return (
@@ -20,38 +24,51 @@ const PostCard = ({user, post}) => {
     );
 }
 
-const Server = () => {
-    useEffect(() => {
-        const container = document.getElementById('channel-content-container');
-        container.scrollTop = container.scrollHeight;
-    }, []);
+const resetContainerSize = () => {
+  const container = document.getElementById('channel-content-container');
+  container.scrollTop = container.scrollHeight;
+}
 
-  let samplePostData = [];
-  for (let i = 0; i < 80; i++) samplePostData.push({user: {name: generateRandomName(8)}, post: {content: 'Hello'}});
+const Server = () => {
+    const { serverId } = useParams();
+    const [isLoading, setIsLoading] = useState(true);
+    const [postData, setPostData] = useState([]);
+
+    useEffect(() => {
+      setIsLoading(true);
+
+      // load all post data
+      setTimeout(() => {
+        let samplePostData = [];
+        for (let i = 0; i < 80; i++) samplePostData.push({user: {name: generateRandomName(8)}, post: {content: 'Hello to server ' + serverId}});
+        setPostData(samplePostData);
+        setIsLoading(false);
+        // adjust the size of server messages container and textarea on page loaded
+        setTimeout(() => {
+          resizeTextArea();
+          resetContainerSize();
+        }, 0);
+      }, Math.random() * 509 + 250);
+    }, [serverId]);
 
   return (
     <div className='w-full flex'>
-      <InnerSidebar />
-      <div className='flex flex-col basis-full bg-gray-700 text-gray-300'>
-        <div id="channel-content-container" className="reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
-          {samplePostData.map((data, i) => 
-            <PostCard key={i} user={data.user} post={data.post} />
-          )}
+      {isLoading ? <Loader /> :
+        <>
+        <InnerSidebar />
+        <div className='flex flex-col basis-full bg-gray-700 text-gray-300'>
+          <div id="channel-content-container" className="reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
+            {postData.map((data, i) =>
+              <PostCard key={i} user={data.user} post={data.post} />
+            )}
+          </div>
+          <BottomChatbar />
         </div>
-        <BottomChatbar />
-      </div>
-      <UsersSidebar />
+        <UsersSidebar />
+        </>
+      }
     </div>
   );
-};
-
-const generateRandomName = nameLength => {
-    let res = '';
-    for(let i = 0; i < nameLength; i++){
-        const random = Math.floor(Math.random() * 26);
-        res += String.fromCharCode('a'.charCodeAt(0) + random);
-    };
-    return res;
 };
 
 export default Server;

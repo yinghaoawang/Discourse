@@ -21,7 +21,7 @@
 
 @layer components {
     body {
-        @apply bg-gray-700;
+        @apply bg-gray-700 text-gray-200;
     }
     
     a {

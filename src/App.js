@@ -7,13 +7,22 @@ import ErrorPage from "./components/common/ErrorPage";
 import ExploreServers from "./components/ExploreServers/ExploreServers";
 import DirectMessages from "./components/DirectMessages/DirectMessages";
 
+const generateRandomName = nameLength => {
+  let res = '';
+  for(let i = 0; i < nameLength; i++){
+      const random = Math.floor(Math.random() * 26);
+      res += String.fromCharCode('a'.charCodeAt(0) + random);
+  };
+  return res;
+};
+
 const router = createBrowserRouter([{
   path: "/",
   element: <NavbarWrapper />,
   errorElement: <ErrorPage />,
   children: [
     {
-      path: "/",
+      path: "/server/:serverId",
       element: <Server />,
     },
     {
@@ -57,3 +66,4 @@ function initializeEvents() {
 }
 
 export default App;
+export { generateRandomName };

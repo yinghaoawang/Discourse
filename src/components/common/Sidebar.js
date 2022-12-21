@@ -1,9 +1,13 @@
 import { Link } from 'react-router-dom';
 import { FaCompass, FaEnvelope, FaPlus } from 'react-icons/fa';
+import { generateRandomName } from '../../App';
 
 const Sidebar = () => {
-  const serverData = ['A', 'B', 'C'];
-  for (let i = 0; i < 22; i++) serverData.push('D');
+  const serverData = [];
+  for (let i = 0; i < 22; i++) serverData.push({
+    name: generateRandomName(8),
+    id: i,
+  });
 
   return (
     <div
@@ -12,14 +16,14 @@ const Sidebar = () => {
         flex flex-col shrink-0 
         bg-gray-900 text-white"
     >
-      <SidebarIcon icon={<FaEnvelope size='26' />} link='/messages' />
+      <SidebarIcon icon={<FaEnvelope size='26' />} text="Direct Messages" link='/messages' />
       {
-        serverData.map((serverData, i) => <SidebarIcon key={i} link='/' icon={
-        <span>{serverData}</span>
+        serverData.map((serverData, i) => <SidebarIcon key={i} link={`/server/${serverData.id}`} text={serverData.name} icon={
+        <span>{serverData.name?.[0]?.toUpperCase() || '?' }</span>
       } />)
       }
-      <SidebarIcon icon={<FaPlus size='22' />} />
-      <SidebarIcon icon={<FaCompass size='24' /> } link='/explore' />
+      <SidebarIcon icon={<FaPlus size='22' />} text="Add New Server" />
+      <SidebarIcon icon={<FaCompass size='24' /> } text="Explore" link='/explore' />
     </div>
   );
 };
