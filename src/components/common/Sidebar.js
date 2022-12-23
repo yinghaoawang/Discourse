@@ -1,14 +1,8 @@
 import { Link } from 'react-router-dom';
 import { FaCompass, FaEnvelope, FaPlus } from 'react-icons/fa';
-import { generateRandomName } from '../../App';
+import { serverData } from '../../db/data';
 
 const Sidebar = () => {
-  const serverData = [];
-  for (let i = 0; i < 22; i++) serverData.push({
-    name: generateRandomName(8),
-    id: i,
-  });
-
   return (
     <div
         id="sidebar"

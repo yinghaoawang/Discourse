@@ -1,6 +1,13 @@
 # Code Diary
+### 12/22/22
+- 1 hour channel content loading
+
 ### 12/20/22
 - 1 hour routing
+- 1.5 hour data loading
+- 30 mins home page
+- 1 hour generating random data
+- 1 hour displaying fetched data
 
 ### 12/18/22 
 - 30 mins routing

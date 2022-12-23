@@ -7,13 +7,7 @@ const selectChannel = (event) => {
     lastSelectedChannel = event.target;
 }
 
-const InnerSidebar = () => {
-    const textChannelsData = [];
-    for (let i = 0; i < 50; i++) {
-        textChannelsData.push({name: 'Text Channel'});
-    }
-    textChannelsData.push({name: 'Super long channel namenamename namenamenamename namenamenamename name'});
-
+const InnerSidebar = ({ channels, onClickChannel }) => {
     return (
         <div className="scrolling-container
         w-inner-sidebar p-2
@@ -21,17 +15,20 @@ const InnerSidebar = () => {
         bg-gray-800 text-gray-400">
             <InnerSidebarCategoryLabel name="Text channels" />
             <ul>
-                {textChannelsData.map((data, i) => 
-                    <InnerSidebarChannelCard key={i} channel={data} />
+                {channels.map((data, i) => 
+                    <InnerSidebarChannelCard onClickChannel={onClickChannel} channelIndex={i} key={i} channel={data} />
                 )}
             </ul>
         </div>
     );
 };
 
-const InnerSidebarChannelCard = ({channel}) => {
+const InnerSidebarChannelCard = ({ channel, onClickChannel, channelIndex }) => {
     return (
-        <li className="hover:bg-gray-600 p-2 flex flex-row items-center" onClick={selectChannel}>
+        <li className="hover:bg-gray-600 p-2 flex flex-row items-center" onClick={() => {
+            // selectChannel();
+            onClickChannel(channelIndex)
+        }}>
             <span className="shrink-0"><FaHashtag /></span><span className="ellipsis-container pl-1 font-semibold text-center">{channel.name}</span>
         </li>
     );

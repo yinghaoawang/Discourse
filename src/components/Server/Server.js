@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import InnerSidebar from './InnerSidebar';
 import BottomChatbar from './BottomChatbar';
 import { resizeTextArea } from './BottomChatbar';
 import UsersSidebar from './UsersSidebar';
 import Loader from '../common/Loader';
-import { generateRandomName } from '../../App';
+import { serverData } from '../../db/data';
 
 const PostCard = ({user, post}) => {
     return (
@@ -26,45 +26,66 @@ const PostCard = ({user, post}) => {
 
 const resetContainerSize = () => {
   const container = document.getElementById('channel-content-container');
-  container.scrollTop = container.scrollHeight;
+  // container.scrollTop = container.scrollHeight;
+  container.scrollTo(0, container.scrollHeight);
 }
 
 const Server = () => {
     const { serverId } = useParams();
     const [isLoading, setIsLoading] = useState(true);
+    const [isChannelLoading, setIsChannelLoading] = useState(false);
     const [postData, setPostData] = useState([]);
+    const [channelIndex, setChannelIndex] = useState(0);
+    const navigate = useNavigate();
 
-    useEffect(() => {
-      setIsLoading(true);
-
+    const onClickChannel = useCallback((index) => {
+      console.log('loading channel ' + index);
+      setChannelIndex(index);
+      setIsChannelLoading(true);
       // load all post data
-      setTimeout(() => {
-        let samplePostData = [];
-        for (let i = 0; i < 80; i++) samplePostData.push({user: {name: generateRandomName(8)}, post: {content: 'Hello to server ' + serverId}});
-        setPostData(samplePostData);
+      setTimeout(async () => {
+        const posts = serverData[serverId]?.channels[channelIndex]?.posts;
+        if (posts == null) navigate('/');
+        setPostData(posts);
         setIsLoading(false);
+        setIsChannelLoading(false);
         // adjust the size of server messages container and textarea on page loaded
         setTimeout(() => {
           resizeTextArea();
           resetContainerSize();
         }, 0);
-      }, Math.random() * 509 + 250);
+      }, Math.random() * 500 + 250);
+    }, [channelIndex, navigate, serverId]);
+
+    useEffect(() => {
+      console.log('loading server ' + serverId);
+      setIsLoading(true);
+      setChannelIndex(0);
+      setTimeout(() => {
+        setIsLoading(false);
+      }, Math.random() * 500 + 500);
     }, [serverId]);
+
+    useEffect(() => {
+      onClickChannel(channelIndex);
+    }, [onClickChannel, channelIndex]);
 
   return (
     <div className='w-full flex'>
       {isLoading ? <Loader /> :
         <>
-        <InnerSidebar />
+        <InnerSidebar onClickChannel={onClickChannel} channels={serverData[serverId].channels} />
         <div className='flex flex-col basis-full bg-gray-700 text-gray-300'>
+          {isChannelLoading ? <Loader /> :
           <div id="channel-content-container" className="reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
             {postData.map((data, i) =>
               <PostCard key={i} user={data.user} post={data.post} />
             )}
           </div>
+          }
           <BottomChatbar />
         </div>
-        <UsersSidebar />
+        <UsersSidebar server={serverData[serverId]} />
         </>
       }
     </div>

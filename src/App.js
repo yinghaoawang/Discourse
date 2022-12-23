@@ -8,15 +8,6 @@ import ExploreServers from "./components/ExploreServers/ExploreServers";
 import DirectMessages from "./components/DirectMessages/DirectMessages";
 import Home from "./components/Home/Home";
 
-const generateRandomName = nameLength => {
-  let res = '';
-  for(let i = 0; i < nameLength; i++){
-      const random = Math.floor(Math.random() * 26);
-      res += String.fromCharCode('a'.charCodeAt(0) + random);
-  };
-  return res;
-};
-
 const router = createBrowserRouter([{
   path: "/",
   element: <NavbarWrapper />,
@@ -71,4 +62,3 @@ function initializeEvents() {
 }
 
 export default App;
-export { generateRandomName };
