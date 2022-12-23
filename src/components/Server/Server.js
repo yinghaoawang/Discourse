@@ -46,14 +46,18 @@ const Server = () => {
       setTimeout(async () => {
         const posts = serverData[serverId]?.channels[channelIndex]?.posts;
         if (posts == null) navigate('/');
+      
         setPostData(posts);
-        setIsLoading(false);
-        setIsChannelLoading(false);
         // adjust the size of server messages container and textarea on page loaded
         setTimeout(() => {
-          resizeTextArea();
-          resetContainerSize();
-        }, 0);
+          setIsChannelLoading(false);
+          setIsLoading(false);
+
+          setTimeout(() => {
+            resizeTextArea();
+          }, 0);
+          
+        }, 500);
       }, Math.random() * 500 + 250);
     }, [channelIndex, navigate, serverId]);
 
@@ -61,9 +65,6 @@ const Server = () => {
       console.log('loading server ' + serverId);
       setIsLoading(true);
       setChannelIndex(0);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, Math.random() * 500 + 500);
     }, [serverId]);
 
     useEffect(() => {
@@ -77,7 +78,7 @@ const Server = () => {
         <InnerSidebar onClickChannel={onClickChannel} channels={serverData[serverId].channels} />
         <div className='flex flex-col basis-full bg-gray-700 text-gray-300'>
           {isChannelLoading ? <Loader /> :
-          <div id="channel-content-container" className="reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
+          <div id="channel-content-container" className="flex flex-col-reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
             {postData.map((data, i) =>
               <PostCard key={i} user={data.user} post={data.post} />
             )}
