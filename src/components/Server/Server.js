@@ -39,7 +39,6 @@ const Server = () => {
     const navigate = useNavigate();
 
     const onClickChannel = useCallback((index) => {
-      console.log('loading channel ' + index);
       setChannelIndex(index);
       setIsChannelLoading(true);
       // load all post data
@@ -49,15 +48,9 @@ const Server = () => {
       
         setPostData(posts);
         // adjust the size of server messages container and textarea on page loaded
-        setTimeout(() => {
-          setIsChannelLoading(false);
-          setIsLoading(false);
-
-          setTimeout(() => {
-            resizeTextArea();
-          }, 0);
-          
-        }, 500);
+        setIsChannelLoading(false);
+        setIsLoading(false);
+        resizeTextArea();
       }, Math.random() * 500 + 250);
     }, [channelIndex, navigate, serverId]);
 
@@ -76,11 +69,11 @@ const Server = () => {
         <InnerSidebar onClickChannel={onClickChannel} channels={isLoading ? [] : serverData[serverId].channels} />
         <div className='flex flex-col basis-full bg-gray-700 text-gray-300'>
           {isChannelLoading ? <Loader /> :
-          <div id="channel-content-container" className="flex flex-col-reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
-            {postData.map((data, i) =>
-              <PostCard key={i} user={data.user} post={data.post} />
-            )}
-          </div>
+            <div id="channel-content-container" className="flex flex-col-reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
+              {postData.map((data, i) =>
+                <PostCard key={i} user={data.user} post={data.post} />
+              )}
+            </div>
           }
           <BottomChatbar />
         </div>
