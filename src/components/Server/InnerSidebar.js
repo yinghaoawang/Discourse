@@ -1,13 +1,9 @@
+import { useState } from 'react';
 import { FaHashtag } from 'react-icons/fa';
 
-let lastSelectedChannel;
-const selectChannel = (event) => {
-    if (lastSelectedChannel != null) lastSelectedChannel.classList.remove('selected');
-    event.target.classList.add('selected');
-    lastSelectedChannel = event.target;
-}
-
 const InnerSidebar = ({ channels, onClickChannel }) => {
+    const [selectedChannelIndex, setSelectedChannelIndex] = useState(0);
+
     return (
         <div className="scrolling-container
         w-inner-sidebar p-2
@@ -16,19 +12,21 @@ const InnerSidebar = ({ channels, onClickChannel }) => {
             <InnerSidebarCategoryLabel name="Text channels" />
             <ul>
                 {channels.map((data, i) => 
-                    <InnerSidebarChannelCard onClickChannel={onClickChannel} channelIndex={i} key={i} channel={data} />
+                    <InnerSidebarChannelCard setSelectedChannelIndex={setSelectedChannelIndex} selectedChannelIndex={selectedChannelIndex} onClickChannel={onClickChannel} channelIndex={i} key={i} channel={data} />
                 )}
             </ul>
         </div>
     );
 };
 
-const InnerSidebarChannelCard = ({ channel, onClickChannel, channelIndex }) => {
+const InnerSidebarChannelCard = ({ channel, onClickChannel, channelIndex, selectedChannelIndex, setSelectedChannelIndex }) => {
     return (
-        <li className="hover:bg-gray-600 p-2 flex flex-row items-center" onClick={() => {
-            // selectChannel();
-            onClickChannel(channelIndex)
-        }}>
+        <li className={`hover:bg-gray-600 p-2 flex flex-row items-center ${(selectedChannelIndex === channelIndex) ? 'selected' : ''}`}
+            onClick={(e) => {
+                setSelectedChannelIndex(channelIndex);
+                onClickChannel(channelIndex)
+            }
+        }>
             <span className="shrink-0"><FaHashtag /></span><span className="ellipsis-container pl-1 font-semibold text-center">{channel.name}</span>
         </li>
     );

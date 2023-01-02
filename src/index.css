@@ -32,6 +32,10 @@
         @apply mb-4 text-4xl font-bold;
     }
 
+    .selected {
+        @apply bg-gray-600 !important;
+    }
+
     .center-full {
         @apply w-full h-full text-center flex items-center justify-center;
     }

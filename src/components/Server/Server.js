@@ -56,17 +56,17 @@ const Server = () => {
 
     useEffect(() => {
       console.log('loading server ' + serverId);
-      setIsLoading(true);
-      setChannelIndex(0);
+      (async function() {
+        await setIsLoading(true);
+        await setChannelIndex(0);
+        await onClickChannel(0);
+      })();
+      
     }, [serverId]);
-
-    useEffect(() => {
-      onClickChannel(channelIndex);
-    }, [onClickChannel, channelIndex]);
 
   return (
     <div className='w-full flex'>
-        <InnerSidebar onClickChannel={onClickChannel} channels={isLoading ? [] : serverData[serverId].channels} />
+        <InnerSidebar selectedChannelIndex={channelIndex} onClickChannel={onClickChannel} channels={isLoading ? [] : serverData[serverId].channels} />
         <div className='flex flex-col basis-full bg-gray-700 text-gray-300'>
           {isChannelLoading ? <Loader /> :
             <div id="channel-content-container" className="flex flex-col-reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
