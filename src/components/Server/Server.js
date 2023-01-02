@@ -73,9 +73,7 @@ const Server = () => {
 
   return (
     <div className='w-full flex'>
-      {isLoading ? <Loader /> :
-        <>
-        <InnerSidebar onClickChannel={onClickChannel} channels={serverData[serverId].channels} />
+        <InnerSidebar onClickChannel={onClickChannel} channels={isLoading ? [] : serverData[serverId].channels} />
         <div className='flex flex-col basis-full bg-gray-700 text-gray-300'>
           {isChannelLoading ? <Loader /> :
           <div id="channel-content-container" className="flex flex-col-reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
@@ -86,9 +84,7 @@ const Server = () => {
           }
           <BottomChatbar />
         </div>
-        <UsersSidebar server={serverData[serverId]} />
-        </>
-      }
+        <UsersSidebar users={isLoading ? [] : serverData[serverId].users} />
     </div>
   );
 };
