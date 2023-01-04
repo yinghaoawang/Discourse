@@ -1,4 +1,10 @@
 # Code Diary
+### 1/3/23
+- 30 mins fixed wrong channel loading
+
+### 1/2/23
+- 1 hour smoother server/channel loading
+
 ### 12/22/22
 - 1 hour channel content loading
 

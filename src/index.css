@@ -33,6 +33,10 @@
     }
 
     .selected {
+        @apply bg-gray-700 !important;
+    }
+
+    .sidebar-icon.selected {
         @apply bg-gray-600 !important;
     }
 

@@ -39,30 +39,31 @@ const Server = () => {
     const navigate = useNavigate();
 
     const onClickChannel = useCallback((index) => {
-      setChannelIndex(index);
       setIsChannelLoading(true);
+      setChannelIndex(index);
+    }, []);
+
+    useEffect(() => {
       // load all post data
-      setTimeout(async () => {
+      setTimeout(() => {
         const posts = serverData[serverId]?.channels[channelIndex]?.posts;
         if (posts == null) navigate('/');
       
-        setPostData(posts);
+        
         // adjust the size of server messages container and textarea on page loaded
         setIsChannelLoading(false);
         setIsLoading(false);
+
+        setPostData(posts);
         resizeTextArea();
       }, Math.random() * 500 + 250);
     }, [channelIndex, navigate, serverId]);
 
     useEffect(() => {
       console.log('loading server ' + serverId);
-      (async function() {
-        await setIsLoading(true);
-        await setChannelIndex(0);
-        await onClickChannel(0);
-      })();
-      
-    }, [serverId]);
+      setIsLoading(true);
+      onClickChannel(0);
+    }, []);
 
   return (
     <div className='w-full flex'>
@@ -71,7 +72,7 @@ const Server = () => {
           {isChannelLoading ? <Loader /> :
             <div id="channel-content-container" className="flex flex-col-reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
               {postData.map((data, i) =>
-                <PostCard key={i} user={data.user} post={data.post} />
+                <PostCard key={`channel${channelIndex}post${i}`} user={data.user} post={data.post} />
               )}
             </div>
           }
