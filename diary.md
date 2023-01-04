@@ -1,5 +1,6 @@
 # Code Diary
 ### 1/3/23
+- 1 hour made server id data global
 - 30 mins fixed wrong channel loading
 
 ### 1/2/23

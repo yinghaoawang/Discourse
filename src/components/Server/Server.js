@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import InnerSidebar from './InnerSidebar';
 import BottomChatbar from './BottomChatbar';
@@ -6,6 +6,7 @@ import { resizeTextArea } from './BottomChatbar';
 import UsersSidebar from './UsersSidebar';
 import Loader from '../common/Loader';
 import { serverData } from '../../db/data';
+import { ServerContext } from '../../contexts/ServerContext';
 
 const PostCard = ({user, post}) => {
     return (
@@ -37,6 +38,12 @@ const Server = () => {
     const [postData, setPostData] = useState([]);
     const [channelIndex, setChannelIndex] = useState(0);
     const navigate = useNavigate();
+    const serverContext = useContext(ServerContext);
+    useEffect(() => {
+      serverContext.setServerId(serverId);
+    }, [serverContext, serverId])
+    
+    
 
     const onClickChannel = useCallback((index) => {
       setIsChannelLoading(true);
