@@ -48,10 +48,6 @@
         @apply whitespace-nowrap overflow-hidden overflow-ellipsis;
     }
 
-    .stretch-vertical {
-        @apply h-full min-h-[var(--doc-height)];
-    }
-
     .scrolling-container {
         @apply overflow-y-auto h-[var(--doc-height)];
     }

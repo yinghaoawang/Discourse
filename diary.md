@@ -1,4 +1,7 @@
 # Code Diary
+### 1/5/23
+- 1 hour made server content & message bar sizing smooth and natural
+
 ### 1/3/23
 - 1 hour made server id data global
 - 30 mins fixed wrong channel loading

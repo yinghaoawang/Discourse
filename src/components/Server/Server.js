@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import InnerSidebar from './InnerSidebar';
 import BottomChatbar from './BottomChatbar';
-import { resizeTextArea } from './BottomChatbar';
 import UsersSidebar from './UsersSidebar';
 import Loader from '../common/Loader';
 import { serverData } from '../../db/data';
@@ -23,12 +22,6 @@ const PostCard = ({user, post}) => {
             </div>
         </div>
     );
-}
-
-const resetContainerSize = () => {
-  const container = document.getElementById('channel-content-container');
-  // container.scrollTop = container.scrollHeight;
-  container.scrollTo(0, container.scrollHeight);
 }
 
 const Server = () => {
@@ -62,7 +55,7 @@ const Server = () => {
         setIsLoading(false);
 
         setPostData(posts);
-        resizeTextArea();
+        console.log(posts);
       }, Math.random() * 500 + 250);
     }, [channelIndex, navigate, serverId]);
 
@@ -75,9 +68,9 @@ const Server = () => {
   return (
     <div className='w-full flex'>
         <InnerSidebar selectedChannelIndex={channelIndex} onClickChannel={onClickChannel} channels={isLoading ? [] : serverData[serverId].channels} />
-        <div className='flex flex-col basis-full bg-gray-700 text-gray-300'>
+        <div className='flex flex-col basis-full bg-gray-700 text-gray-300 scrolling-container'>
           {isChannelLoading ? <Loader /> :
-            <div id="channel-content-container" className="flex flex-col-reverse scrolling-container h-[calc(var(--doc-height)-var(--chatbar-height))]">
+            <div id="channel-content-container" className="flex flex-col-reverse overflow-auto">
               {postData.map((data, i) =>
                 <PostCard key={`channel${channelIndex}post${i}`} user={data.user} post={data.post} />
               )}
