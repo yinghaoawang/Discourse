@@ -1,6 +1,5 @@
 import { Outlet, createBrowserRouter, RouterProvider } from "react-router-dom";    
 import { useEffect, useState } from 'react';
-import './App.css';
 import { ServerContext } from "./contexts/ServerContext";
 import Sidebar from './components/common/Sidebar';
 import Server from './components/Server/Server';
@@ -58,14 +57,7 @@ const App = () => {
 }
 
 function initializeEvents() {
-  const documentHeight = () => {
-    const doc = document.documentElement;
-    doc.style.setProperty('--doc-height', `${Math.max(doc.clientHeight, window.innerHeight)}px`);
-   }
-   window.addEventListener('onload', documentHeight);
-   window.addEventListener('resize', documentHeight);
-   window.addEventListener('orientationchange', documentHeight);
-   documentHeight();
+  
 }
 
 export default App;

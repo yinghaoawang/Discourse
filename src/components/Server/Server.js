@@ -68,7 +68,7 @@ const Server = () => {
   return (
     <div className='w-full flex'>
         <InnerSidebar selectedChannelIndex={channelIndex} onClickChannel={onClickChannel} channels={isLoading ? [] : serverData[serverId].channels} />
-        <div className='flex flex-col basis-full bg-gray-700 text-gray-300 scrolling-container'>
+        <div className='flex flex-col basis-full bg-gray-700 text-gray-300 scrolling-container min-w-[300px]'>
           {isChannelLoading ? <Loader /> :
             <div id="channel-content-container" className="flex flex-col-reverse overflow-auto">
               {postData.map((data, i) =>

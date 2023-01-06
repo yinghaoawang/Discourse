@@ -2,11 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-    --doc-height: 100%;
-    /* --chatbar-height: 62px; */
-}
-
 ::-webkit-scrollbar {
     width: 9px;
 }
@@ -49,7 +44,7 @@
     }
 
     .scrolling-container {
-        @apply overflow-y-auto h-[var(--doc-height)];
+        @apply overflow-y-auto h-screen;
     }
 
     .category-label {

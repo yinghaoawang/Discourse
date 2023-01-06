@@ -2,8 +2,9 @@ const UsersSidebar = ({ users = [] }) => {
     return (
         <div className="w-right-sidebar scrolling-container
         pt-2 px-2
-        flex flex-col shrink-0
+        flex flex-col
         bg-gray-900 text-gray-400">
+            <CategoryLabel name="Users" />
             {users.map((user, i) => (
                 <UsersSidebarCard key={i} user={user} />
             ))}
@@ -13,7 +14,7 @@ const UsersSidebar = ({ users = [] }) => {
 
 const CategoryLabel = ({ name }) => {
     return (
-        <div className="category-label ml-4 mt-4">
+        <div className="category-label ml-4 mt-2">
             {name}
         </div>
     );
