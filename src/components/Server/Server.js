@@ -15,9 +15,6 @@ const PostCard = ({user, post}) => {
             </div>
             <div className="flex flex-col basis-full">
                 <div className="font-semibold">{user.name}</div>
-                <div>{post.content}{post.content}{post.content}{post.content} {post.content}{post.content}{post.content}{post.content} {post.content}{post.content}{post.content}{post.content} {post.content}{post.content}{post.content}{post.content} {post.content}{post.content}{post.content}{post.content} {post.content}{post.content}{post.content}{post.content} {post.content}{post.content}{post.content}{post.content} {post.content}{post.content}{post.content}{post.content}</div>
-                <div>{post.content}</div>
-                <div>{post.content}</div>
                 <div>{post.content}</div>
             </div>
         </div>
@@ -55,9 +52,8 @@ const Server = () => {
         setIsLoading(false);
 
         setPostData(posts);
-        console.log(posts);
       }, Math.random() * 500 + 250);
-    }, [channelIndex, navigate, serverId]);
+    }, [channelIndex, navigate, serverId, postData]);
 
     useEffect(() => {
       console.log('loading server ' + serverId);
@@ -76,7 +72,7 @@ const Server = () => {
               )}
             </div>
           }
-          <BottomChatbar />
+          <BottomChatbar postData={postData} setPostData={setPostData} />
         </div>
         <UsersSidebar users={isLoading ? [] : serverData[serverId].users} />
     </div>
