@@ -1,6 +1,6 @@
 import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { FaCompass, FaEnvelope, FaPlus } from 'react-icons/fa';
+import { FaCompass, FaEnvelope, FaHome, FaPlus } from 'react-icons/fa';
 import { serverData } from '../../db/data';
 import { ServerContext } from '../../contexts/ServerContext';
 
@@ -14,7 +14,7 @@ const Sidebar = () => {
         flex flex-col shrink-0 
         bg-gray-900 text-white"
     >
-      <SidebarIcon icon={<FaEnvelope size='26' />} serverIndex={'-1'} text="Direct Messages" link='/messages' />
+      <SidebarIcon icon={<FaHome size='26' />} serverIndex={'-1'} text="Home" link='/' />
       {
         serverData.map((serverData, i) => <SidebarIcon key={i} link={`/server/${serverData.id}`} text={serverData.name} serverIndex={i} icon={
         <span>{serverData.name?.[0]?.toUpperCase() || '?' }</span>
