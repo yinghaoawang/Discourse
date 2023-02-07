@@ -8,17 +8,17 @@ import ExploreServers from "./components/ExploreServers/ExploreServers";
 import DirectMessages from "./components/DirectMessages/DirectMessages";
 import Home from "./components/Home/Home";
 
-const router = createBrowserRouter([{
-  path: "/",
+const routes = [{
+  path: "",
   element: <NavbarWrapper />,
   errorElement: <ErrorPage />,
   children: [
     {
-      path: "/",
+      path: "",
       element: <Home />
     },
     {
-      path: "/server/:serverId",
+      path: "server/:serverId",
       element: <Server />,
     },
     {
@@ -30,7 +30,11 @@ const router = createBrowserRouter([{
       element: <DirectMessages />
     }
   ]
-}]);
+}];
+
+const router = createBrowserRouter(routes, {
+  basename: "/discourse",
+});
 
 function NavbarWrapper() {
   const [serverId, setServerId] = useState(-999);

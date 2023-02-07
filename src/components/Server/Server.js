@@ -56,7 +56,6 @@ const Server = () => {
     }, [channelIndex, navigate, serverId, postData]);
 
     useEffect(() => {
-      console.log('loading server ' + serverId);
       setIsLoading(true);
       onClickChannel(0);
     }, []);
