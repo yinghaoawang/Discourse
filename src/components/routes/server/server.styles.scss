@@ -1,0 +1,7 @@
+.server-right-container {
+    @apply flex flex-col basis-full bg-gray-700 text-gray-300 scrolling-container min-w-[300px];
+    
+    .channel-content-container {
+        @apply flex flex-col-reverse overflow-auto;
+    }
+}

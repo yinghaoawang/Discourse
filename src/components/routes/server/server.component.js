@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback, useContext } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import InnerSidebar from './InnerSidebar';
-import BottomChatbar from './BottomChatbar';
-import UsersSidebar from './UsersSidebar';
-import Loader from '../common/Loader';
-import { serverData } from '../../db/data';
-import { ServerContext } from '../../contexts/ServerContext';
+import InnerSidebar from './inner-sidebar/inner-sidebar.component';
+import BottomChatbar from './bottom-chatbar/bottom-chatbar.component';
+import UsersSidebar from './users-sidebar/users-sidebar.component';
+import Loader from '../../shared/loader.component';
+import { serverData } from '../../../db/data';
+import { ServerContext } from '../../../contexts/server.context';
+import './server.styles.scss';
 
 const PostCard = ({user, post}) => {
     return (
@@ -63,9 +64,9 @@ const Server = () => {
   return (
     <div className='w-full flex'>
         <InnerSidebar selectedChannelIndex={channelIndex} onClickChannel={onClickChannel} channels={isLoading ? [] : serverData[serverId].channels} />
-        <div className='flex flex-col basis-full bg-gray-700 text-gray-300 scrolling-container min-w-[300px]'>
+        <div className='server-right-container'>
           {isChannelLoading ? <Loader /> :
-            <div id="channel-content-container" className="flex flex-col-reverse overflow-auto">
+            <div className='channel-content-container'>
               {postData.map((data, i) =>
                 <PostCard key={`channel${channelIndex}post${i}`} user={data.user} post={data.post} />
               )}

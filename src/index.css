@@ -61,7 +61,7 @@
     .sidebar-icon {
         @apply relative
         flex items-center
-        w-13 h-13 mt-1.5
+        w-14 h-14 mt-1.5
         text-2xl
         bg-gray-800 text-green-500
         hover:bg-green-700 hover:text-white

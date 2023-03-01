@@ -1,67 +1,59 @@
-import { Outlet, createBrowserRouter, RouterProvider } from "react-router-dom";    
-import { useEffect, useState } from 'react';
-import { ServerContext } from "./contexts/ServerContext";
-import Sidebar from './components/common/Sidebar';
-import Server from './components/Server/Server';
-import ErrorPage from "./components/common/ErrorPage";
-import ExploreServers from "./components/ExploreServers/ExploreServers";
-import DirectMessages from "./components/DirectMessages/DirectMessages";
-import Home from "./components/Home/Home";
+import { Outlet, createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { useEffect } from 'react';
+import Sidebar from './components/shared/sidebar.component';
+import Server from './components/routes/server/server.component';
+import ErrorPage from './components/routes/error/error-page.component';
+import Explore from './components/routes/explore/explore.component';
+import DirectMessages from './components/routes/direct-messages/direct-messages.component';
+import Home from './components/routes/home/home.component';
 
-const routes = [{
-  path: "",
-  element: <NavbarWrapper />,
-  errorElement: <ErrorPage />,
-  children: [
-    {
-      path: "",
-      element: <Home />
-    },
-    {
-      path: "server/:serverId",
-      element: <Server />,
-    },
-    {
-      path: "explore/",
-      element: <ExploreServers />
-    },
-    {
-      path: "messages/",
-      element: <DirectMessages />
-    }
-  ]
-}];
+const routes = [
+	{
+		path: '',
+		element: <NavbarWrapper />,
+		errorElement: <ErrorPage />,
+		children: [
+			{
+				path: '',
+				element: <Home />
+			},
+			{
+				path: 'server/:serverId',
+				element: <Server />
+			},
+			{
+				path: 'explore/',
+				element: <Explore />
+			},
+			{
+				path: 'messages/',
+				element: <DirectMessages />
+			}
+		]
+	}
+];
 
 const router = createBrowserRouter(routes, {
-  basename: "/discourse",
+	basename: '/discourse'
 });
 
 function NavbarWrapper() {
-  const [serverId, setServerId] = useState(-999);
-
-  return (
-    <ServerContext.Provider value={{serverId, setServerId}}>
-      <div className="flex">
-            <Sidebar />
-            <Outlet />
-      </div>
-    </ServerContext.Provider>
-    
-  );
+	return (
+		<div className='flex'>
+			<Sidebar />
+			<Outlet />
+		</div>
+	);
 }
 
 const App = () => {
-  useEffect(() => {
-    initializeEvents();
-  }, []);
+	useEffect(() => {
+		initializeEvents();
+	}, []);
 
-  return (
-    <RouterProvider router={router} />
-  );
-}
+	return <RouterProvider router={router} />;
+};
 
-function initializeEvents() {
-  
-}
+function initializeEvents() {}
 
 export default App;

@@ -9,13 +9,6 @@ module.exports = {
         primary: '#202225',
         secondary: '#5865f2',
       },
-      spacing: {
-        'left-sidebar': '4.25rem',
-        'inner-sidebar': '15rem',
-        'right-sidebar': '15rem',
-        '13': '3.15rem',
-        '18': '4.25rem',
-      },
     },
   },
   plugins: [],

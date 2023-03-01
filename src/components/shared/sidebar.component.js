@@ -1,8 +1,8 @@
-import { useState, useContext } from 'react';
+import { useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { FaCompass, FaEnvelope, FaHome, FaPlus } from 'react-icons/fa';
+import { FaCompass, FaHome, FaPlus } from 'react-icons/fa';
 import { serverData } from '../../db/data';
-import { ServerContext } from '../../contexts/ServerContext';
+import { ServerContext } from '../../contexts/server.context';
 
 const Sidebar = () => {
   
@@ -42,7 +42,7 @@ const SidebarIcon = ({ icon, text = 'Tooltip placeholder', link, serverIndex }) 
   };
 
   return (
-      <Link to={link || ''} className={`sidebar-icon icon group ${serverContext.serverId == serverIndex && serverIndex !== undefined ? 'selected' : ''}`} onClick={onServerClick} onMouseOver={moveTooltip}>
+      <Link to={link || ''} className={`sidebar-icon icon group ${serverContext.serverId === serverIndex && serverIndex !== undefined ? 'selected' : ''}`} onClick={onServerClick} onMouseOver={moveTooltip}>
         {icon}
 
           <span className='sidebar-tooltip group-hover:scale-100'>{text}</span>

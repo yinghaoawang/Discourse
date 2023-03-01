@@ -1,4 +1,4 @@
-import { generateRandomName } from "../util/util";
+import { generateRandomName } from "../util/helpers.util";
 
 // Generate fake testing data
 const generateRandomData = () => {
