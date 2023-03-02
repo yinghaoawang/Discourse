@@ -1,5 +1,9 @@
+import './explore.styles.scss';
+
 const Explore = () => {
-    return (<span>Explore servers</span>);
+    return (
+        <div className='explore-container'>Explore servers</div>
+    );
 };
 
 export default Explore;

@@ -9,7 +9,7 @@ const Sidebar = () => {
 
     return (
         <div className='sidebar-container'>
-            <SidebarIcon text="Home" link='/'><FaHome size='26' /></SidebarIcon>
+            <SidebarIcon tooltipText="Home" link='/'><FaHome size='26' /></SidebarIcon>
             { servers.map((server, index) => {
                 const { name, id } = server;
                 const displayChar = name?.charAt(0).toUpperCase() || '?';
@@ -17,7 +17,7 @@ const Sidebar = () => {
                     <span>{ displayChar }</span>
                 </SidebarIcon>;
             })}
-            <SidebarIcon text="Add New Server"><FaPlus size='22' /></SidebarIcon>
+            <SidebarIcon tooltipText="Add New Server"><FaPlus size='22' /></SidebarIcon>
             <SidebarIcon text="Explore" link='/explore'><FaCompass size='24' /></SidebarIcon>
         </div>
     );

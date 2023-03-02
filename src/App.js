@@ -10,7 +10,7 @@ import { serverData, userData } from './db/data';
 import { ServerContext } from './contexts/server.context';
 import { UserContext } from './contexts/user.context';
 
-const Navigation = () => {
+const NavbarWrapper = () => {
 	return (
 		<div className='body-container'>
 			<Sidebar />
@@ -21,7 +21,7 @@ const Navigation = () => {
 
 const routes = [{
 	path: '',
-	element: <Navigation />,
+	element: <NavbarWrapper />,
 	errorElement: <ErrorPage />,
 	children: [
 		{ path: '', element: <Home /> },

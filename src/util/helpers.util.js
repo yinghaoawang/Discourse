@@ -1,4 +1,4 @@
-const generateRandomName = (nameLength) => {
+const generateRandomName = (nameLength = 10) => {
     let res = '';
     for(let i = 0; i < nameLength; i++){
         const random = Math.floor(Math.random() * 26);

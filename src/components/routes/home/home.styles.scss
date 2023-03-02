@@ -1,0 +1,14 @@
+.home-container {
+    @apply flex w-full justify-center;
+        .content {
+            @apply
+            flex flex-col
+            max-w-[1024px] w-[60%]
+            px-10 py-6 my-6 rounded-lg
+            bg-gray-500;
+
+            .header {
+                @apply text-center;
+            }
+        }
+}

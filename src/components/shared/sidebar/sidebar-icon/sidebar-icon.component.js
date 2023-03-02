@@ -36,7 +36,7 @@ const SidebarIcon = ({ link, tooltipText = 'Tooltip placeholder', server, classN
         (server == null && link === location.pathname);
     
     return (
-        <div className={ `sidebar-icon-container group ${ isSelected ? 'selected' : '' } ${ className }`} onClick={ iconClickHandler } onMouseOver={ iconHoverHandler } { ...props }>
+        <div className={ `sidebar-icon-container group ${ isSelected ? 'selected' : '' } ${ className || '' }`} onClick={ iconClickHandler } onMouseOver={ iconHoverHandler } { ...props }>
             <div className='icon-child'>
                 { children }
             </div>
