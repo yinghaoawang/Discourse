@@ -15,6 +15,10 @@
 }
 
 @layer components {
+    * {
+        @apply box-border;
+    }
+
     body {
         @apply bg-gray-700 text-gray-200;
     }

@@ -1,5 +1,5 @@
 .inner-sidebar-container {
-    @apply w-[200px] p-2
+    @apply w-[250px] p-2
     flex flex-col shrink-0
     bg-gray-800 text-gray-400;
 
@@ -8,7 +8,7 @@
     }
 
     .channel-container {
-        @apply flex items-center py-1 px-2 select-none;
+        @apply flex items-center mt-0.5 py-1.5 px-2 select-none;
 
         svg {
             @apply mr-2;
@@ -19,7 +19,7 @@
         }
 
         &:hover {
-            @apply bg-gray-600;
+            @apply bg-gray-700;
         }
     }
 }

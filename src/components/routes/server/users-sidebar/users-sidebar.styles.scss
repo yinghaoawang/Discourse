@@ -1,0 +1,10 @@
+.users-sidebar-container {
+    @apply w-[250px] shrink-0
+    pt-2 px-2
+    flex flex-col
+    bg-gray-900 text-gray-400;
+    
+    .category-label {
+        @apply ml-4 mt-2 select-none;
+    }
+}

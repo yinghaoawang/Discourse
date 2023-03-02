@@ -19,7 +19,6 @@ const Server = () => {
   }, [servers])
 
   useEffect(() => {
-    console.log(currentChannel, currentServer);
     if (currentServer != null) {
       const { channels } = currentServer;
       const firstChannel = channels[0] || null;
@@ -29,18 +28,19 @@ const Server = () => {
     }
   }, [currentServer])
   
+  console.log(currentChannel);
 
   return (
     <div className='server-container'>
         { currentServer ?
         <>
-          <InnerSidebar channels={ currentServer.channels } />
+          <InnerSidebar channels={ currentServer?.channels || [] } />
           <div className='content-users-container'>
             <div className='content-container'>
             </div>
             <BottomChatbar />
           </div>
-          <UsersSidebar />
+          <UsersSidebar users={ currentServer?.users || [] } />
         </>
         : <div className='flex justify-center items-center w-full'>Server does not exist</div>
         }

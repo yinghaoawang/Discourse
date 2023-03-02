@@ -13,11 +13,11 @@
     }
 
     &:hover {
-        @apply bg-green-700 text-white rounded-2xl
+        @apply bg-green-700 text-gray-200 rounded-2xl
     }
 
     &.selected {
-        @apply bg-gray-600 ;
+        @apply bg-gray-600;
     }
 
     .sidebar-tooltip {

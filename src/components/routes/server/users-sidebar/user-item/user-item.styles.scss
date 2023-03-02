@@ -1,0 +1,29 @@
+.user-item-container {
+    @apply flex items-center
+    w-full h-12 mt-1 p-2
+    select-none;
+
+    &:hover {
+        @apply bg-gray-700;
+    }
+
+    .icon {
+        @apply flex justify-center
+        items-center shrink-0
+        mx-2 w-10 h-10
+        rounded-full bg-green-600
+        text-xl text-white;
+    }
+
+    .infobox {
+        @apply flex flex-col leading-5 w-full;
+
+        .name {
+            @apply font-semibold;
+        }
+
+        .status {
+            @apply text-xs w-36;
+        }
+    }
+}

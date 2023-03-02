@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import { FaHome, FaPlus, FaCompass } from 'react-icons/fa';
 import { ServerContext } from '../../../contexts/server.context';
-import SidebarIcon from './sidebar-icon.component';
+import SidebarIcon from './sidebar-icon/sidebar-icon.component';
 import './sidebar.styles.scss';
 
 const Sidebar = () => {
@@ -13,7 +13,7 @@ const Sidebar = () => {
             { servers.map((server, index) => {
                 const { name, id } = server;
                 const displayChar = name?.charAt(0).toUpperCase() || '?';
-                return <SidebarIcon key={ index } link={`/server/${ id }`} text={ name } server={ server }>
+                return <SidebarIcon key={ index } tooltipText={ name } server={ server }>
                     <span>{ displayChar }</span>
                 </SidebarIcon>;
             })}
