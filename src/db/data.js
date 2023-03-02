@@ -34,7 +34,7 @@ const generateRandomData = () => {
             const postData = [];
             for (let i = 0; i < Math.random() * 50 + 10; i++) {
                 const randomServerUserIndex = Math.floor(Math.random() * serverUsers.length);
-                postData.push({user: serverUsers[randomServerUserIndex], post: {content: `Hello to channel ${channelName} in ${serverName}`}});
+                postData.push({user: serverUsers[randomServerUserIndex], message: `Hello to channel ${channelName} in ${serverName}`});
             }
 
             channelData.push({

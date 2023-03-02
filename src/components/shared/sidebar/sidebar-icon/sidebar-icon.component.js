@@ -28,6 +28,7 @@ const SidebarIcon = ({ link, tooltipText = 'Tooltip placeholder', server, classN
     const iconHoverHandler = (event) => {
         if (tooltip.current == null) return;
         const target = { event };
+        if (!target?.getBoundingClientRect) return;
         tooltip.current.style.top = target.getBoundingClientRect().top + 'px';
     };
 
