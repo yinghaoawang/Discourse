@@ -1,43 +1,30 @@
-import { useState } from 'react';
+import { useContext } from 'react';
 import { FaHashtag } from 'react-icons/fa';
+import { ServerContext } from '../../../../contexts/server.context';
+import './inner-sidebar.styles.scss';
 
-const InnerSidebar = ({ channels, onClickChannel }) => {
-    const [selectedChannelIndex, setSelectedChannelIndex] = useState(0);
+const Channel = ({ channel }) => {
+    const { currentChannel, setCurrentChannel } = useContext(ServerContext);
+    const channelClickHandler = () => {
+        setCurrentChannel(channel);
+    }
 
     return (
-        <div className="scrolling-container
-        w-inner-sidebar p-2
-        flex flex-col shrink-0
-        bg-gray-800 text-gray-400">
-            <InnerSidebarCategoryLabel name="Text channels" />
-            <ul>
-                {channels.map((data, i) => 
-                    <InnerSidebarChannelCard setSelectedChannelIndex={setSelectedChannelIndex} selectedChannelIndex={selectedChannelIndex} onClickChannel={onClickChannel} channelIndex={i} key={i} channel={data} />
+        <div onClick={ channelClickHandler } className={ `channel-container ${ currentChannel === channel ? 'selected' : '' }` }><FaHashtag />{ channel.name }</div>
+    );
+}
+
+const InnerSidebar = ({ channels }) => {
+    return (
+        <div className="inner-sidebar-container">
+            <div className='category-label'>Text channels</div>
+            <div className='channels-container'>
+                { channels.map((channel, index) => 
+                    <Channel key={ index } channel={ channel } />
                 )}
-            </ul>
+            </div>
         </div>
     );
 };
-
-const InnerSidebarChannelCard = ({ channel, onClickChannel, channelIndex, selectedChannelIndex, setSelectedChannelIndex }) => {
-    return (
-        <li className={`hover:bg-gray-600 p-2 flex flex-row items-center ${(selectedChannelIndex === channelIndex) ? 'selected' : ''}`}
-            onClick={(e) => {
-                setSelectedChannelIndex(channelIndex);
-                onClickChannel(channelIndex)
-            }
-        }>
-            <span className="shrink-0"><FaHashtag /></span><span className="ellipsis-container pl-1 font-semibold text-center">{channel.name}</span>
-        </li>
-    );
-}
-
-const InnerSidebarCategoryLabel = ({name}) => {
-    return (
-        <div className="category-label mt-2">
-            {name}
-        </div>
-    );
-}
 
 export default InnerSidebar;

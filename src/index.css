@@ -27,3 +27,7 @@
         @apply mb-4 text-4xl font-bold;
     }
 }
+
+.body-container {
+    @apply flex min-h-screen;
+}

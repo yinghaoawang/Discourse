@@ -12,7 +12,7 @@ import { UserContext } from './contexts/user.context';
 
 const Navigation = () => {
 	return (
-		<div className='flex'>
+		<div className='body-container'>
 			<Sidebar />
 			<Outlet />
 		</div>
@@ -25,7 +25,7 @@ const routes = [{
 	errorElement: <ErrorPage />,
 	children: [
 		{ path: '', element: <Home /> },
-		{ path: 'server/:serverId', element: <Server /> },
+		{ path: 'server/:id', element: <Server /> },
 		{ path: 'explore/', element: <Explore /> },
 		{ path: 'messages/', element: <DirectMessages /> }
 	]

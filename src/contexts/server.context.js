@@ -5,14 +5,15 @@ export const ServerContext = createContext({
     setServers: () => null,
     currentServer: null,
     setCurrentServerId: () => null,
-    currentPosts: null,
-    setCurrentPosts: () => null,
+    currentChannel: null,
+    setCurrentChannel: () => null
 });
 
 export const ServerProvider = ({ children }) => {
     const [servers, setServers] = useState([]);
     const [currentServer, setCurrentServer] = useState(null);
-    const value = { servers, setServers, currentServer, setCurrentServer };
+    const [currentChannel, setCurrentChannel] = useState(null);
+    const value = { servers, setServers, currentServer, setCurrentServer, currentChannel, setCurrentChannel };
 
     return <ServerContext.Provider value={ value }>{ children }</ServerContext.Provider>;
 }

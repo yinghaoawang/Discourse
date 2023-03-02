@@ -1,7 +1,11 @@
-.server-right-container {
-    @apply flex flex-col basis-full bg-gray-700 text-gray-300 scrolling-container min-w-[300px];
-    
-    .channel-content-container {
-        @apply flex flex-col-reverse overflow-auto;
+.server-container {
+    @apply flex w-full;
+
+    .content-users-container {
+        @apply flex flex-col basis-full bg-gray-700 text-gray-300 min-w-[300px];
+        
+        .content-container {
+            @apply flex flex-col-reverse overflow-auto;
+        }
     }
 }
