@@ -1,0 +1,5 @@
+.sidebar-container {
+    @apply flex flex-col items-center shrink-0
+    w-[70px]
+    bg-gray-900 text-white;
+}

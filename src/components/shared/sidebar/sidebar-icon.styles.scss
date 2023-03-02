@@ -1,0 +1,28 @@
+.sidebar-icon-container {
+    @apply flex items-center
+    w-14 h-14 mt-1.5
+    bg-gray-800 text-green-500
+    cursor-pointer
+    transition-all duration-100 ease-in rounded-full;
+
+    .icon-child {
+        @apply h-full w-full flex justify-center items-center text-2xl pointer-events-none;
+    }
+
+    :hover {
+        @apply bg-green-700 text-white rounded-2xl
+    }
+
+    &.selected {
+        @apply bg-gray-600 ;
+    }
+
+    .sidebar-tooltip {
+        @apply fixed left-16 p-2 m-2 min-w-max
+        rounded-md shadow-md
+        bg-gray-900 text-white
+        text-xs font-semibold
+        transition-all duration-100 scale-0 origin-left
+        pointer-events-none;
+    }
+}

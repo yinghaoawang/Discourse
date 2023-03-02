@@ -1,12 +1,18 @@
 import { createContext, useState } from 'react';
 
 export const ServerContext = createContext({
-    serverId: null,
-    setServerId: () => null,
+    servers: [],
+    setServers: () => null,
+    currentServer: null,
+    setCurrentServerId: () => null,
+    currentPosts: null,
+    setCurrentPosts: () => null,
 });
-export const ServerProvider = ({children}) => {
-    const [serverId, setServerId] = useState(-999);
-    const value = {serverId, setServerId};
 
-    return <ServerContext.Provider value={value}>{children}</ServerContext.Provider>
+export const ServerProvider = ({ children }) => {
+    const [servers, setServers] = useState([]);
+    const [currentServer, setCurrentServer] = useState(null);
+    const value = { servers, setServers, currentServer, setCurrentServer };
+
+    return <ServerContext.Provider value={ value }>{ children }</ServerContext.Provider>;
 }
