@@ -1,0 +1,9 @@
+.bottom-chatbar-container {
+    @apply bg-gray-700 p-4 pt-0 shrink-0;
+
+    textarea {
+        @apply w-full p-2 rounded-md
+        bg-gray-600 placeholder-gray-400 text-white
+        outline-none resize-none;
+    }
+}

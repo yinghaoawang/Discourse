@@ -1,13 +1,13 @@
 .server-container {
     @apply flex w-full;
 
-    .content-users-container {
+    .content-bottom-chatbar-container {
         @apply flex flex-col basis-full
         min-w-[300px]
         bg-gray-700 text-gray-300;
         
         .content-container {
-            @apply flex flex-col-reverse overflow-auto;
+            @apply flex h-full;
         }
     }
 }

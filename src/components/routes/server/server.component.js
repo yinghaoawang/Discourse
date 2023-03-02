@@ -35,7 +35,7 @@ const Server = () => {
         { currentServer ?
         <>
           <InnerSidebar channels={ currentServer?.channels || [] } />
-          <div className='content-users-container'>
+          <div className='content-bottom-chatbar-container'>
             <div className='content-container'>
             </div>
             <BottomChatbar />
