@@ -1,4 +1,4 @@
-import { useRef, useCallback } from 'react';
+import { useRef } from 'react';
 import './bottom-chatbar.styles.scss';
 
 const BottomChatbar = ({postData, setPostData}) => {

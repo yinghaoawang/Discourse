@@ -33,5 +33,5 @@
 }
 
 .body-container {
-    @apply flex min-h-screen;
+    @apply flex h-screen;
 }

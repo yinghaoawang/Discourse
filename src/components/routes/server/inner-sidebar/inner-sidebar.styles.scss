@@ -1,25 +1,10 @@
 .inner-sidebar-container {
     @apply w-[250px] p-2
     flex flex-col shrink-0
-    bg-gray-800 text-gray-400;
+    bg-gray-800 text-gray-400
+    overflow-y-scroll;
 
     .category-label {
         @apply mt-2 select-none;
-    }
-
-    .channel-container {
-        @apply flex items-center mt-0.5 py-1.5 px-2 select-none;
-
-        svg {
-            @apply mr-2;
-        }
-
-        &.selected {
-            @apply bg-gray-600;
-        }
-
-        &:hover {
-            @apply bg-gray-700;
-        }
     }
 }

@@ -1,0 +1,15 @@
+.channel-item-container {
+    @apply flex items-center mt-0.5 py-1.5 px-2 select-none;
+
+    svg {
+        @apply mr-2;
+    }
+
+    &.selected {
+        @apply bg-gray-600;
+    }
+
+    &:hover {
+        @apply bg-gray-700;
+    }
+}

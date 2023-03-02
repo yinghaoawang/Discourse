@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 
 const Server = () => {
   const { id } = useParams();
-  const { servers, currentServer, setCurrentServer, currentChannel, setCurrentChannel } = useContext(ServerContext);
+  const { servers, currentServer, setCurrentServer, setCurrentChannel } = useContext(ServerContext);
 
   useEffect(() => {
     if (currentServer == null && servers?.length > 0) {
@@ -28,8 +28,6 @@ const Server = () => {
     }
   }, [currentServer])
   
-  console.log(currentChannel);
-
   return (
     <div className='server-container'>
         { currentServer ?
