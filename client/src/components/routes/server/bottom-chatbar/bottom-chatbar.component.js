@@ -13,7 +13,11 @@ const BottomChatbar = () => {
     const keyDownHandler = (event) => {
         if (event.keyCode === 13 && !event.shiftKey) {
             event.preventDefault();
+            const message = textAreaRef.current.value;
+            if (message === '') return;
+            
             sendMessage(textAreaRef.current.value);
+            textAreaRef.current.value = '';
         }
     }
     

@@ -15,18 +15,15 @@ app.get('/', (req, res) => {
 io.on('connection', (socket) => {
     console.log('connect');
     socket.on('message', (data) => {
-        console.log(data);
+        const { message } = data;
+        console.log('message received, sending', message);
+        io.emit('message', { message });
     })
 
     socket.on('disconnect', () => {
         console.log('disconnect');
     })
-})
-
-io.on('hey', socket => {
-    console.log('hey');
-    console.log(socket);
-})
+});
 
 server.listen(10101, () => {
   console.log('listening on *:10101');

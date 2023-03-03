@@ -2,14 +2,29 @@ import InnerSidebar from './inner-sidebar/inner-sidebar.component';
 import BottomChatbar from './bottom-chatbar/bottom-chatbar.component';
 import UsersSidebar from './users-sidebar/users-sidebar.component';
 import './server.styles.scss';
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import { ServerContext } from '../../../contexts/server.context';
 import { useParams } from 'react-router-dom';
 import PostItem from './post-item/post-item.component';
+import { SocketContext } from '../../../contexts/socket.context';
 
 const Server = () => {
   const { id } = useParams();
-  const { servers, currentServer, currentChannel, setCurrentServer, setCurrentChannel } = useContext(ServerContext);
+  const { servers, currentServer, currentChannel, currentPosts, setCurrentPosts, setCurrentServer, setCurrentChannel } = useContext(ServerContext);
+  const { socket } = useContext(SocketContext);
+
+  useEffect(() => {
+    socket.on('message', (data) => {
+        const { message } = data;
+        const newPost = {
+          message
+        };
+        setCurrentPosts(posts => [...posts, newPost]);
+    })
+    return () => {
+        socket.off('message');
+    }
+  }, []);
 
   useEffect(() => {
     if (currentServer == null && servers?.length > 0) {
@@ -29,8 +44,6 @@ const Server = () => {
     }
   }, [currentServer])
 
-  const posts = currentChannel?.posts || [];
-  
   return (
     <div className='server-container'>
         { currentServer ?
@@ -38,7 +51,7 @@ const Server = () => {
           <InnerSidebar channels={ currentServer?.channels || [] } />
           <div className='content-bottom-chatbar-container'>
             <div className='content-container'>
-              { posts.map((post, index) => {
+              { currentPosts.map((post, index) => {
                 return <PostItem key={ index } post={ post } />
               })}
             </div>

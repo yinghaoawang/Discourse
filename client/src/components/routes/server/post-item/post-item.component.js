@@ -2,7 +2,7 @@ import './post-item.styles.scss';
 
 const PostItem = ({ post }) => {
     const { message, user } = post;
-    const displayChar = user?.name?.charAt(0).toUpperCase();
+    const displayChar = user?.name?.charAt(0).toUpperCase() || '?';
     return (
         <div className='post-item-container'>
             <div className='icon'>
