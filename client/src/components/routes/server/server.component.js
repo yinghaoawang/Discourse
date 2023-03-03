@@ -30,7 +30,6 @@ const Server = () => {
   }, [currentServer])
 
   const posts = currentChannel?.posts || [];
-  console.log(posts, currentChannel);
   
   return (
     <div className='server-container'>
