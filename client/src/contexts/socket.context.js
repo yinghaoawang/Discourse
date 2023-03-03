@@ -6,7 +6,7 @@ export const SocketContext = createContext({
 });
 
 export const SocketProvider = ({ children }) => {
-    const socket = io('localhost:1250');
+    const socket = io(process.env.REACT_APP_SOCKET_URL);
     const value = { socket };
     return <SocketContext.Provider value={ value }>{ children }</SocketContext.Provider>
 }
