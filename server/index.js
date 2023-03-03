@@ -9,7 +9,7 @@ const io = require('socket.io')(server, {
 });
 
 app.get('/', (req, res) => {
-  res.send('<h1>Hello world</h1>');
+  res.send('<h1>Hello world, this is Discourse api</h1>');
 });
 
 io.on('connection', (socket) => {
@@ -25,6 +25,6 @@ io.on('connection', (socket) => {
     })
 });
 
-server.listen(10101, () => {
-  console.log('listening on *:10101');
+server.listen(1250, () => {
+  console.log('listening on *:1250');
 });
