@@ -15,9 +15,9 @@ const Server = () => {
 
   useEffect(() => {
     socket.on('message', (data) => {
-        const { message } = data;
+        const { message, user } = data;
         const newPost = {
-          message
+          message, user
         };
         setCurrentPosts(posts => [...posts, newPost]);
     })

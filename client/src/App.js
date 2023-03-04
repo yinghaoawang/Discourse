@@ -37,7 +37,13 @@ const router = createBrowserRouter(routes, {
 
 const App = () => {
 	const { setServers } = useContext(ServerContext);
-	const { setUsers } = useContext(UserContext);
+	const { setUsers, setCurrentUser } = useContext(UserContext);
+	
+	useEffect(() => {
+		const username = prompt('What is your name?');
+		setCurrentUser({ name: username });
+	}, [])
+	
 
 	useEffect(() => {
 		const loadServers = async () => {

@@ -1,13 +1,15 @@
 import { useRef, useEffect, useContext } from 'react';
 import { SocketContext } from '../../../../contexts/socket.context';
+import { UserContext } from '../../../../contexts/user.context';
 import './bottom-chatbar.styles.scss';
 
 const BottomChatbar = () => {
     const textAreaRef =  useRef(null);
     const { socket } = useContext(SocketContext);
+    const { currentUser } = useContext(UserContext);
 
     const sendMessage = (message) => {
-        socket.emit('message', { message });
+        socket.emit('message', { message, user: currentUser });
     }
 
     const keyDownHandler = (event) => {
@@ -15,7 +17,7 @@ const BottomChatbar = () => {
             event.preventDefault();
             const message = textAreaRef.current.value;
             if (message === '') return;
-            
+
             sendMessage(textAreaRef.current.value);
             textAreaRef.current.value = '';
         }

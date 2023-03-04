@@ -23,9 +23,9 @@ io.on('connect', (socket) => {
 io.on('connection', (socket) => {
     console.log('connection');
     socket.on('message', (data) => {
-        const { message } = data;
-        console.log('message received, sending', message);
-        io.emit('message', { message });
+        const { message, user } = data;
+        console.log('message received, sending', message, user);
+        io.emit('message', { message, user });
     })
 
     socket.on('disconnect', () => {

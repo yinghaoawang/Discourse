@@ -1,10 +1,15 @@
 .home-container {
     @apply flex w-full justify-center;
+
+        .inner-container {
+            @apply flex flex-col items-center w-full;
+        }
+
         .content {
             @apply
             flex flex-col
             max-w-[1024px] w-[60%]
-            px-10 py-6 my-6 rounded-lg
+            px-10 pt-6 pb-10 my-6 rounded-lg
             bg-gray-500;
 
             .header {
