@@ -18,14 +18,11 @@ app.get('/', (req, res) => {
 
 io.on('connect', (socket) => {
     console.log('connect');
-});
-
-io.on('connection', (socket) => {
-    console.log('connection');
     socket.on('message', (data) => {
         const { message, user } = data;
+        const dateCreated = new Date();
         console.log('message received, sending', message, user);
-        io.emit('message', { message, user });
+        io.emit('message', { message, user, dateCreated });
     })
 
     socket.on('disconnect', () => {

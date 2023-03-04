@@ -1,7 +1,9 @@
 import './post-item.styles.scss';
+import Moment from 'react-moment';
 
 const PostItem = ({ post }) => {
-    const { message, user } = post;
+    const { message, user, dateCreated } = post;
+    console.log(dateCreated);
     const displayChar = user?.name?.charAt(0).toUpperCase() || '?';
     return (
         <div className='post-item-container'>
@@ -11,7 +13,7 @@ const PostItem = ({ post }) => {
             <div className='message-col'>
                 <div className='metadata'>
                     <div className='username'>{ user?.name || '?' }</div>
-                    <div className='timestamp'>{ 'Today at 11:43am' }</div>
+                    <div className='timestamp'><Moment format='hh:mm A' date={ dateCreated }></Moment></div>
                 </div>
                 <div className='message'>{ message }</div>
             </div>

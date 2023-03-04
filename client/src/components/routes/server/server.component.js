@@ -15,10 +15,11 @@ const Server = () => {
 
   useEffect(() => {
     socket.on('message', (data) => {
-        const { message, user } = data;
+        const { message, user, dateCreated } = data;
         const newPost = {
-          message, user
+          message, user, dateCreated
         };
+        console.log(dateCreated)
         setCurrentPosts(posts => [...posts, newPost]);
     })
     return () => {
