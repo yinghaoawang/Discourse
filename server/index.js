@@ -4,16 +4,24 @@ const http = require('http');
 const server = http.createServer(app);
 const io = require('socket.io')(server, {
     cors: {
-        origins: '*'
-    }
+        origin: '*',
+    },
+    path: '/socket.io'
 });
+const cors = require('cors');
+
+app.use(cors({ origin: '*' }));
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello world, this is Discourse api</h1>');
 });
 
-io.on('connection', (socket) => {
+io.on('connect', (socket) => {
     console.log('connect');
+});
+
+io.on('connection', (socket) => {
+    console.log('connection');
     socket.on('message', (data) => {
         const { message } = data;
         console.log('message received, sending', message);
@@ -21,7 +29,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('disconnect', () => {
-        console.log('disconnect');
+       console.log('disconnect');
     })
 });
 
