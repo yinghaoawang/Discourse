@@ -21,11 +21,7 @@ const serversDb = [{
   channels: [{
     name: 'first',
     posts: [
-      { user: { name: 'guy' }, message: 'howdy', dateCreated: '2023-03-05T02:50:40.183Z'},
-      { user: { name: 'guy' }, message: 'howdy', dateCreated: '2023-03-05T02:50:40.183Z'},
-      { user: { name: 'guy' }, message: 'howdy', dateCreated: '2023-03-05T02:50:40.183Z'},
-      { user: { name: 'guy' }, message: 'howdy', dateCreated: '2023-03-05T02:50:40.183Z'},
-      { user: { name: 'guy' }, message: 'howdy', dateCreated: '2023-03-05T02:50:40.183Z'},
+      { user: { name: 'Admin' }, message: 'Hey, welcome to a-first', dateCreated: '2023-03-05T02:50:40.183Z'},
     ]
   }]
   
@@ -34,17 +30,16 @@ const serversDb = [{
   channels: [{
     name: 'bchannel',
     posts: [
-      { user: { name: 'guy' }, message: 'howdy', dateCreated: '2023-03-05T02:50:40.183Z'},
-      { user: { name: 'guy' }, message: 'howdy', dateCreated: '2023-03-05T02:50:40.183Z'},
+      { user: { name: 'guy' }, message: 'howdy, this is bchannel', dateCreated: '2023-03-05T02:50:40.183Z'},
     ]
   },
   {
     name: 'yoyo',
     posts: [
-      { user: { name: 'guy' }, message: 'howdy', dateCreated: '2023-03-05T02:50:40.183Z'},
-      { user: { name: 'guy' }, message: 'hola', dateCreated: '2023-03-05T02:50:40.183Z'},
-      { user: { name: 'guy' }, message: 'hola', dateCreated: '2023-03-05T02:50:40.183Z'},
-      { user: { name: 'guy' }, message: 'bonjo', dateCreated: '2023-03-05T02:50:40.183Z'},
+      { user: { name: 'eminem' }, message: 'balms r sweaty', dateCreated: '2023-03-05T02:50:40.183Z'},
+      { user: { name: 'eminem' }, message: 'knees meat', dateCreated: '2023-03-05T02:50:40.183Z'},
+      { user: { name: 'eminem' }, message: 'arms spaghetti', dateCreated: '2023-03-05T02:50:40.183Z'},
+      { user: { name: 'eminem' }, message: 'moms are heavy', dateCreated: '2023-03-05T02:50:40.183Z'},
     ]
   }]
   
@@ -67,6 +62,7 @@ const sendMessage = (data, namespace = io) => {
   console.log('sending message: ' + message + ' to ' + room + ' in ' + namespace.name);
   const dateCreated = new Date();
   namespace.to(room).emit('message', { message, user, dateCreated });
+  serversDb.find(server => '/' + server.name === namespace.name).channels.find(channel => channel.name === room).posts.push({ message, user, dateCreated} );
 };
 
 serversDb.forEach(server => {

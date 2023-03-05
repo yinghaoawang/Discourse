@@ -60,7 +60,7 @@ const Server = () => {
 
     changeRoom(firstChannel.name);
     setCurrentChannel(firstChannel);
-  }, [currentServer])
+  }, [socket, currentServer])
 
   return (
     <div className='server-container'>
