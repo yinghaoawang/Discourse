@@ -24,7 +24,6 @@ const Server = () => {
 
     // sets corresponding namespace to server w/ params id
     const server = servers.find(s => s.id === parseInt(id));
-    console.log(id, servers, server);
     setCurrentServer(server);
     changeNamespace('/' + server.name);
   }, [servers]);
@@ -39,9 +38,9 @@ const Server = () => {
     });
 
     socket.on('message', (data) => {
-        const { message, user, dateCreated } = data;
+        const { message, user, dateCreated, type } = data;
         const newPost = {
-          message, user, dateCreated
+          message, user, dateCreated, type
         };
         setCurrentPosts(posts => [...posts, newPost]);
     })

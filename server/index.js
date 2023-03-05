@@ -9,6 +9,11 @@ const io = require('socket.io')(server, {
     path: '/socket.io'
 });
 const cors = require('cors');
+const PostTypes = {
+  USER_MESSAGE: 'USER_MESSAGE',
+  USER_LEAVE: 'USER_LEAVE',
+  USER_JOIN: 'USER_JOIN',
+}
 
 app.use(cors({ origin: '*' }));
 
@@ -57,45 +62,60 @@ const servers = serversDb.map((server, index) => ({
   channels: server.channels.map(channel => ({ name: channel.name }))
 }));
 
-const sendMessage = (data, namespace = io) => {
-  const { message, user, room } = data;
-  console.log('sending message: ' + message + ' to ' + room + ' in ' + namespace.name);
+const sendMessage = ({ message, user, roomName, type, namespace }) => {
+  console.log('sending message: ' + message + ' to ' + roomName + ' in ' + namespace.name);
   const dateCreated = new Date();
-  namespace.to(room).emit('message', { message, user, dateCreated });
-  serversDb.find(server => '/' + server.name === namespace.name).channels.find(channel => channel.name === room).posts.push({ message, user, dateCreated} );
+  namespace.to(roomName).emit('message', { message, user, dateCreated, type });
+  serversDb.find(server => '/' + server.name === namespace.name).channels.find(channel => channel.name === roomName).posts.push({ message, user, dateCreated, type } );
 };
+
+
 
 serversDb.forEach(server => {
   console.log('/' + server.name);
   const namespace = io.of('/' + server.name);
+
   namespace.on('connect', (socket) => {
     console.log('connected to ' + server.name);
+
     const { channels } = server;
+
+    const joinRoom = ({ user, roomName }) => {
+      console.log('join room ' + roomName);
+      socket.join(roomName);
+      sendMessage({ message: 'has joined the room', user, roomName, type: PostTypes.USER_JOIN, namespace });
+    }
+
     const firstChannel = channels[0];
     socket.join(firstChannel.name);
     socket.emit('postHistory', { posts: firstChannel.posts });
 
     socket.on('joinRoom', (data) => {
-      console.log('join room ' + data.room);
-
-      const { room, user } = data;
-      socket.join(room);
-      const channel = server.channels.find(c => c.name === room);
+      const { roomName, user } = data;
+      const channel = server.channels.find(c => c.name === roomName);
       const { posts } = channel;
       socket.emit('postHistory', { posts });
-      sendMessage({ message: 'has joined the room', user, room }, namespace);
+      joinRoom({ roomName, user });
     })
 
     socket.on('leaveRoom', (data) => {
-      console.log('leave room ' + data.room);
+      console.log('leave room ' + data.roomName);
 
-      const { room, user } = data;
-      sendMessage({ message: 'has left the room', user, room }, namespace);
-      socket.leave(room);
+      const { roomName, user } = data;
+      sendMessage({ message: 'has left the room', user, roomName , type: PostTypes.USER_LEAVE, namespace });
+      socket.leave(roomName);
+    });
+
+    socket.on('disconnect', (data) => {
+      console.log(socket.rooms);
+      console.log('disconnect');
     })
 
-    socket.on('message', (data) => sendMessage(data, namespace))
-  });
+    socket.on('message', (data) => {
+      console.log(data);
+      sendMessage({ ...data, namespace })
+    });
+  })
 });
 
 io.on('connect', (socket) => {

@@ -11,7 +11,7 @@ const BottomChatbar = () => {
     const { currentChannel } = useContext(ServerContext);
 
     const sendMessage = (message) => {
-        socket.emit('message', { message, user: currentUser, room: currentChannel.name });
+        socket.emit('message', { message, user: currentUser, roomName: currentChannel.name });
     }
 
     const keyDownHandler = (event) => {

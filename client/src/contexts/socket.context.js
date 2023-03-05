@@ -29,7 +29,7 @@ export const SocketProvider = ({ children }) => {
     
     const changeNamespace = (namespace) => {
         if (currentChannel != null) {
-            socket.emit('leaveRoom', { room: currentChannel.name, user: currentUser });
+            socket.emit('leaveRoom', { roomName: currentChannel.name, user: currentUser });
             setCurrentChannel(null);
         }
 
@@ -41,9 +41,9 @@ export const SocketProvider = ({ children }) => {
 
     const changeRoom = (roomName) => {
         if (currentChannel != null) {
-            socket.emit('leaveRoom', { room: currentChannel.name, user: currentUser });
+            socket.emit('leaveRoom', { roomName: currentChannel.name, user: currentUser });
         }
-        socket.emit('joinRoom', { room: roomName, user: currentUser });
+        socket.emit('joinRoom', { roomName, user: currentUser });
     }
 
     const value = { socket, changeNamespace, changeRoom };
