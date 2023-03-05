@@ -1,12 +1,14 @@
 import { useContext, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ServerContext } from '../../../../contexts/server.context';
+import { SocketContext } from '../../../../contexts/socket.context';
 import './sidebar-icon.styles.scss';
 
 const SidebarIcon = ({ link, tooltipText = 'Tooltip placeholder', server, className, children, ...props }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { currentServer, setCurrentServer } = useContext(ServerContext);
+    const { changeNamespace } = useContext(SocketContext);
     const tooltip = useRef(null);
   
     const iconClickHandler = () => {
@@ -16,7 +18,8 @@ const SidebarIcon = ({ link, tooltipText = 'Tooltip placeholder', server, classN
 
         if (server != null) {
             setCurrentServer(server);
-            navigate(`/server/${ server.id }`)
+            changeNamespace('/' + server.name);
+            navigate(`/server/${ server.id }`);
         } else if (link != null) {
             navigate(link);
             setCurrentServer(null);

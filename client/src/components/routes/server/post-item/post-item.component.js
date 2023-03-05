@@ -3,7 +3,6 @@ import Moment from 'react-moment';
 
 const PostItem = ({ post }) => {
     const { message, user, dateCreated } = post;
-    console.log(dateCreated);
     const displayChar = user?.name?.charAt(0).toUpperCase() || '?';
     return (
         <div className='post-item-container'>

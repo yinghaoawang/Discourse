@@ -1,11 +1,17 @@
 import io from 'socket.io-client';
-import { createContext } from 'react'
+import { createContext, useContext, useState, useEffect } from 'react'
+import { UserContext } from './user.context';
+import { ServerContext } from './server.context';
 
 export const SocketContext = createContext({
     socket: null,
+    changeNamespace: () => null,
+    changeRoom: () => null
 });
 
 export const SocketProvider = ({ children }) => {
+    const { currentUser } = useContext(UserContext);
+    const { currentChannel, setCurrentChannel } = useContext(ServerContext);
     let url = 'localhost:1250';
     let options = {};
     if (process.env.NODE_ENV === 'production') {
@@ -15,7 +21,31 @@ export const SocketProvider = ({ children }) => {
             secure: process.env.REACT_APP_SOCKET_SECURE
         };
     }
-    const socket = io(url, options);
-    const value = { socket };
+    const [socket, setSocket] = useState(null);
+    useEffect(() => {
+        const newSocket = io(url, options);
+        setSocket(newSocket);
+    }, [])
+    
+    const changeNamespace = (namespace) => {
+        if (currentChannel != null) {
+            socket.emit('leaveRoom', { room: currentChannel.name, user: currentUser });
+            setCurrentChannel(null);
+        }
+
+        const fullUrl = url + namespace;
+        console.log(fullUrl);
+
+        setSocket(io(fullUrl, options));
+    }
+
+    const changeRoom = (roomName) => {
+        if (currentChannel != null) {
+            socket.emit('leaveRoom', { room: currentChannel.name, user: currentUser });
+        }
+        socket.emit('joinRoom', { room: roomName, user: currentUser });
+    }
+
+    const value = { socket, changeNamespace, changeRoom };
     return <SocketContext.Provider value={ value }>{ children }</SocketContext.Provider>
 }

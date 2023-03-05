@@ -9,12 +9,12 @@ import { SocketProvider } from './contexts/socket.context';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <React.StrictMode>
-        <SocketProvider>
-            <ServerProvider>
-                <UserProvider>
+        <ServerProvider>
+            <UserProvider>
+                <SocketProvider>
                     <App />
-                </UserProvider>
-            </ServerProvider>
-        </SocketProvider>
+                </SocketProvider>
+            </UserProvider>
+        </ServerProvider>
     </React.StrictMode>
 );

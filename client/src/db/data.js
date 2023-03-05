@@ -51,7 +51,8 @@ const generateRandomData = () => {
         });
     }
 
-    return { serverData, userData };
+    // return { serverData, userData };
+    return { serverData: [], userData: [] }
 }
 const { serverData, userData } = generateRandomData();
 

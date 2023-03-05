@@ -1,4 +1,5 @@
 import { useRef, useEffect, useContext } from 'react';
+import { ServerContext } from '../../../../contexts/server.context';
 import { SocketContext } from '../../../../contexts/socket.context';
 import { UserContext } from '../../../../contexts/user.context';
 import './bottom-chatbar.styles.scss';
@@ -7,9 +8,10 @@ const BottomChatbar = () => {
     const textAreaRef =  useRef(null);
     const { socket } = useContext(SocketContext);
     const { currentUser } = useContext(UserContext);
+    const { currentChannel } = useContext(ServerContext);
 
     const sendMessage = (message) => {
-        socket.emit('message', { message, user: currentUser });
+        socket.emit('message', { message, user: currentUser, room: currentChannel.name });
     }
 
     const keyDownHandler = (event) => {

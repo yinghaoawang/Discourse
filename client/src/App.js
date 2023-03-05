@@ -6,9 +6,9 @@ import ErrorPage from './components/routes/error/error-page.component';
 import Explore from './components/routes/explore/explore.component';
 import DirectMessages from './components/routes/direct-messages/direct-messages.component';
 import Home from './components/routes/home/home.component';
-import { serverData, userData } from './db/data';
 import { ServerContext } from './contexts/server.context';
 import { UserContext } from './contexts/user.context';
+import { SocketContext } from './contexts/socket.context';
 
 const NavbarWrapper = () => {
 	return (
@@ -36,27 +36,36 @@ const router = createBrowserRouter(routes, {
 });
 
 const App = () => {
-	const { setServers } = useContext(ServerContext);
+	const { servers, setServers } = useContext(ServerContext);
 	const { setUsers, setCurrentUser } = useContext(UserContext);
+	const { socket, } = useContext(SocketContext);
 	
 	useEffect(() => {
-		const username = prompt('What is your name?');
-		setCurrentUser({ name: username });
+		while (true) {
+			if (process.env.NODE_ENV === 'development') {
+				setCurrentUser({ name: 'Test' });
+				break;
+			}
+			
+			const username = prompt('What is your name?')?.trim();
+			if (username != null && username.length !== 0) {
+				setCurrentUser({ name: username });
+				break;
+			}
+		}
 	}, [])
-	
 
 	useEffect(() => {
-		const loadServers = async () => {
-			setServers(serverData);
+		if (socket === null || servers.length > 0) return;
+		socket.on('servers', (data) => {
+			const { servers } = data;
+			setServers(servers);
+		})
+		
+		return () => {
+			socket.off('servers');
 		}
-
-		const loadUsers = async () => {
-			setUsers(userData);
-		}
-
-		loadServers().catch(console.error);
-		loadUsers().catch(console.error);
-	}, []);
+	}, [socket]);
 
 	return <RouterProvider router={ router } />;
 };
