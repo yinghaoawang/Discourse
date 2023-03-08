@@ -19,7 +19,7 @@ export const SocketProvider = ({ children }) => {
         options = {
             ...options,
             path: process.env.REACT_APP_SOCKET_PATH,
-            secure: process.env.REACT_APP_SOCKET_SECURE
+            secure: process.env.NODE_ENV ? true : false
         };
     }
     const [socket, setSocket] = useState(null);

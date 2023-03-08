@@ -11,10 +11,10 @@ const server = process.env.NODE_ENV == 'production' ? https.createServer({
 }, app) : http.createServer(app);
 
 
-const io = require('socket.io')((server, {
+const io = require('socket.io')(server, {
   secure: process.env.NODE_ENV == 'production' ? true : false,
   transports: ['websocket'],
-}));
+});
 
 const { onSocketConnect } = require('./socket/socketHandler')(io);
 io.on('connect', onSocketConnect);
