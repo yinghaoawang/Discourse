@@ -26,7 +26,8 @@ module.exports = (io) => {
             sendMessage({ message: 'has joined the channel', user, roomName, type: PostTypes.USER_JOIN, namespace });
         };
 
-        const leaveRoom = ({ roomName, user }) => {
+        const leaveRoom = ({ roomName = null, user }) => {
+            if (roomName == null) roomName = getCurrentRoom();
             sendMessage({ message: 'has left the room', user, roomName , type: PostTypes.USER_LEAVE, namespace });
             socket.leave(roomName);
         }

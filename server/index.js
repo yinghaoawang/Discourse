@@ -9,7 +9,7 @@ const io = require('socket.io')(server, {
     path: '/socket.io'
 });
 const cors = require('cors');
-const { onSocketConnect } = require('./socketHandler')(io);
+const { onSocketConnect } = require('./socket/socketHandler')(io);
 io.on('connect', onSocketConnect);
 
 app.use(cors({ origin: '*' }));

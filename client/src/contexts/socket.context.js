@@ -13,10 +13,11 @@ export const SocketProvider = ({ children }) => {
     const { currentUser } = useContext(UserContext);
     const { currentChannel, setCurrentChannel } = useContext(ServerContext);
     let url = 'localhost:1250';
-    let options = {};
+    let options = { transports: ['websocket'] };
     if (process.env.NODE_ENV === 'production') {
         url = process.env.REACT_APP_SOCKET_URL;
         options = {
+            ...options,
             path: process.env.REACT_APP_SOCKET_PATH,
             secure: process.env.REACT_APP_SOCKET_SECURE
         };
