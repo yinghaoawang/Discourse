@@ -44,7 +44,7 @@ module.exports = (io) => {
         }
 
         const onDisconnecting = () => {
-            leaveRoom({ roomName: getCurrentRoom(), message: 'has signed out and left the room' });
+            leaveRoom({ roomName: getCurrentRoom(), message: 'has signed out' });
         }
 
         const onMessage = (payload) => {
