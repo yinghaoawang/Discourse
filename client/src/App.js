@@ -37,8 +37,8 @@ const router = createBrowserRouter(routes, {
 
 const App = () => {
 	const { servers, setServers } = useContext(ServerContext);
-	const { setUsers, setCurrentUser } = useContext(UserContext);
-	const { socket, } = useContext(SocketContext);
+	const { setCurrentUser } = useContext(UserContext);
+	const { socket } = useContext(SocketContext);
 	
 	useEffect(() => {
 		while (true) {
@@ -56,11 +56,11 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		if (socket === null || servers.length > 0) return;
+		if (socket == null || servers.length > 0) return;
 		socket.on('servers', (data) => {
 			const { servers } = data;
 			setServers(servers);
-		})
+		});
 		
 		return () => {
 			socket.off('servers');

@@ -6,7 +6,8 @@ import { ServerContext } from './server.context';
 export const SocketContext = createContext({
     socket: null,
     changeNamespace: () => null,
-    changeRoom: () => null
+    changeRoom: () => null,
+    updateSocketUser: () => null
 });
 
 export const SocketProvider = ({ children }) => {
@@ -26,11 +27,15 @@ export const SocketProvider = ({ children }) => {
     useEffect(() => {
         const newSocket = io(url, options);
         setSocket(newSocket);
-    }, [])
+    }, []);
+
+    const updateSocketUser = () => {
+        socket.emit('updateUser', { user: currentUser });
+    }
     
     const changeNamespace = (namespace) => {
         if (currentChannel != null) {
-            socket.emit('leaveRoom', { roomName: currentChannel.name, user: currentUser });
+            socket.emit('leaveRoom', { roomName: currentChannel.name });
             setCurrentChannel(null);
         }
 
@@ -42,11 +47,12 @@ export const SocketProvider = ({ children }) => {
 
     const changeRoom = (roomName) => {
         if (currentChannel != null) {
-            socket.emit('leaveRoom', { roomName: currentChannel.name, user: currentUser });
+            socket.emit('leaveRoom', { user: currentUser, roomName: currentChannel.name });
         }
-        socket.emit('joinRoom', { roomName, user: currentUser });
+        updateSocketUser();
+        socket.emit('joinRoom', { roomName });
     }
 
-    const value = { socket, changeNamespace, changeRoom };
+    const value = { socket, changeNamespace, changeRoom, updateSocketUser };
     return <SocketContext.Provider value={ value }>{ children }</SocketContext.Provider>
 }

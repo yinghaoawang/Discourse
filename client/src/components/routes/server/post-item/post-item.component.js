@@ -8,7 +8,7 @@ const PostTypes = {
 }
 
 const PostItem = ({ post }) => {
-    const { message, user, dateCreated, type = PostTypes.USER_MESSAGE } = post;
+    const { message, user = { name: '?'}, dateCreated, type = PostTypes.USER_MESSAGE } = post;
     const displayChar = user?.name?.charAt(0).toUpperCase() || '?';
 
     let displayMessage = message;
