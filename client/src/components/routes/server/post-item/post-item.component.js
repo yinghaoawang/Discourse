@@ -26,19 +26,17 @@ const PostItem = ({ post }) => {
     }
 
     return (
-        <div className='post-item-container'>
-            { type === PostTypes.USER_MESSAGE ?
-                <div className='icon'>
-                    <div className='char'>{ displayChar }</div>
-                </div>
-            : <div className='ml-5'></div>
-            }
+        <div className={`post-item-container ${ type !== PostTypes.USER_MESSAGE ? 'system-message' : 'user-message' }`}>
+            <div className='icon'>
+                <div className='char'>{ displayChar }</div>
+            </div>
             
             <div className='message-col'>
                 <div className='metadata'>
                     <div className='username'>{ user?.name || '?' }</div>
                     <div className='timestamp'><Moment format='hh:mm A' date={ dateCreated }></Moment></div>
                 </div>
+                
                 <div className='message'>{ displayMessage }</div>
             </div>
         </div>

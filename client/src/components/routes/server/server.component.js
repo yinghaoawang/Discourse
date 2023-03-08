@@ -59,7 +59,9 @@ const Server = () => {
 
     changeRoom(firstChannel.name);
     setCurrentChannel(firstChannel);
-  }, [socket, currentServer])
+  }, [socket, currentServer]);
+
+  const reversedPosts = [...currentPosts].reverse();
 
   return (
     <div className='server-container'>
@@ -68,7 +70,7 @@ const Server = () => {
           <InnerSidebar channels={ currentServer?.channels || [] } />
           <div className='content-bottom-chatbar-container'>
             <div className='content-container'>
-              { currentPosts.map((post, index) => {
+              { reversedPosts.map((post, index) => {
                 return <PostItem key={ index } post={ post } />
               })}
             </div>

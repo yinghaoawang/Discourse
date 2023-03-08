@@ -5,6 +5,24 @@
         @apply bg-gray-600;
     }
 
+    &.system-message {
+        .icon {
+            @apply hidden;
+        }
+
+        .message-col {
+            @apply flex ml-5;
+
+            .metadata {
+                @apply mr-2;
+                
+                .username {
+                    @apply hidden;
+                }
+            }
+        }
+    }
+
     .icon {
         @apply shrink-0
         flex items-center justify-center
