@@ -14,10 +14,10 @@ const PostItem = ({ post }) => {
     let displayMessage = message;
     switch (type) {
         case PostTypes.USER_LEAVE:
-            displayMessage = `${ user.name } has left the room.`
+            displayMessage = `${ user.name } ${ message }`
             break;
         case PostTypes.USER_JOIN:
-            displayMessage = `${ user.name } has joined the room.`
+            displayMessage = `${ user.name } ${ message }`
             break;
         case PostTypes.USER_MESSAGE:
             break;

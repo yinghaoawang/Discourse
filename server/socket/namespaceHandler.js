@@ -27,9 +27,15 @@ module.exports = (io) => {
             sendMessage({ message: 'has joined the channel', roomName, type: PostTypes.USER_JOIN });
         };
 
-        const leaveRoom = ({ roomName = null, user }) => {
-            if (roomName == null) roomName = getCurrentRoom();
-            sendMessage({ message: 'has left the room', roomName, type: PostTypes.USER_LEAVE });
+        const leaveRoom = ({ roomName, message }) => {
+            if (roomName == null) {
+                console.error('Error handling leaveRoom: room does not exist');
+                return;
+            }
+            if (message == null) {
+                message = 'has left the channel';
+            }
+            sendMessage({ message, roomName, type: PostTypes.USER_LEAVE });
             socket.leave(roomName);
         }
 
@@ -38,9 +44,7 @@ module.exports = (io) => {
         }
 
         const onDisconnecting = () => {
-            console.log(getCurrentRoom());
-            leaveRoom()
-            console.log('disconnecting');
+            leaveRoom({ roomName: getCurrentRoom(), message: 'has signed out and left the room' });
         }
 
         const onMessage = (payload) => {
