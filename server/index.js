@@ -1,21 +1,23 @@
+require('dotenv').config()
+const fs = require('fs');
 const express = require('express');
 const app = express();
-const http = require('http');
-const server = http.createServer(app);
+const https = require('https');
+const server = https.createServer({
+    key: fs.readFileSync(process.env.PATH_TO_PRIVATE_KEY),
+    cert: fs.readFileSync(process.env.PATH_TO_CERTIFICATE) 
+}, app);
+
 const io = require('socket.io')(server, {
-    cors: {
-        origin: '*',
-    },
-    path: '/socket.io'
+    secure: true,
+    transports: ['websocket'],
 });
-const cors = require('cors');
+
 const PostTypes = {
   USER_MESSAGE: 'USER_MESSAGE',
   USER_LEAVE: 'USER_LEAVE',
   USER_JOIN: 'USER_JOIN',
 }
-
-app.use(cors({ origin: '*' }));
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello world, this is Discourse api</h1>');
@@ -72,11 +74,13 @@ const sendMessage = ({ message, user, roomName, type, namespace }) => {
 
 
 serversDb.forEach(server => {
+console.log(io.transports);
   console.log('/' + server.name);
   const namespace = io.of('/' + server.name);
 
   namespace.on('connect', (socket) => {
     console.log('connected to ' + server.name);
+    console.log(io);
 
     const { channels } = server;
 
@@ -106,9 +110,8 @@ serversDb.forEach(server => {
       socket.leave(roomName);
     });
 
-    socket.on('disconnect', (data) => {
-      console.log(socket.rooms);
-      console.log('disconnect');
+    socket.on('disconnect', (data) => {      
+	console.log('disconnect');
     })
 
     socket.on('message', (data) => {
