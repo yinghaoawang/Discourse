@@ -21,7 +21,6 @@ module.exports = async (io) => {
         for (const nspKey of io._nsps.keys()) {
             const nsp = io.of(nspKey);
             servers = await getServers();
-            console.log(nsp.sockets.size, nspKey);
             nsp.emit('servers', { servers });
         }
     }

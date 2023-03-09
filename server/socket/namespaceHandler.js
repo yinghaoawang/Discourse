@@ -5,47 +5,43 @@ module.exports = async (io) => {
     const onNamespaceConnect = async ({ socket, server, namespace }) => {
         console.log('connected to ' + server.name);
 
-        const channels = await getChannels({ serverName: server.name });
-
-        // const channelData = { name: 'newChannel' + channels.length };
-        // await addChannel({ serverName: server.name, channelData });
-        // channels = await getChannels({ serverName: server.name });
+        const channels = await getChannels({ serverId: server.id });
 
         socket.emit('channels', { channels });
 
-        const sendMessage = async ({ message, roomName, type }) => {
+        const sendMessage = async ({ message, roomId, type }) => {
             const { user } = socket;
-            console.log('sending message: ' + message + ' to ' + roomName + ' in ' + namespace.name);
+            console.log('sending message: ' + message + ' to ' + roomId + ' in ' + namespace.name);
             const dateCreated = new Date();
-            namespace.to(roomName).emit('message', { message, dateCreated, type, user });
+            namespace.to(roomId).emit('message', { message, dateCreated, type, user });
             const postData = { message, dateCreated, type, user };
-            await addPost({ serverName: server.name, channelName: roomName, postData });
+            await addPost({ serverId: server.id, channelId: roomId, postData });
         };
 
         const getCurrentRoom = () => {
             return [...socket.rooms][1];
         }
 
-        const joinRoom = async ({ roomName, message }) => {
-            const posts = await getPosts({ serverName: server.name, channelName: roomName });
+        const joinRoom = async ({ roomId, message }) => {
+            const posts = await getPosts({ serverId: server.id, channelId: roomId });
             socket.emit('posts', { posts });
-            socket.join(roomName);
+            socket.join(roomId);
             if (message == null) {
                 message = 'has joined the channel';
             }
-            await sendMessage({ message, roomName, type: PostTypes.USER_JOIN });
+            await sendMessage({ message, roomId, type: PostTypes.USER_JOIN });
         };
 
-        const leaveRoom = async ({ roomName, message }) => {
-            if (roomName == null) {
+        const leaveRoom = async ({ roomId, message }) => {
+            if (roomId == null) {
                 console.error('Error handling leaveRoom: room does not exist');
                 return;
             }
             if (message == null) {
                 message = 'has left the channel';
             }
-            await sendMessage({ message, roomName, type: PostTypes.USER_LEAVE });
-            socket.leave(roomName);
+            await sendMessage({ message, roomId, type: PostTypes.USER_LEAVE });
+            socket.leave(roomId);
         }
 
         const onUpdateUser = ({ user }) => {
@@ -53,17 +49,15 @@ module.exports = async (io) => {
         }
 
         const onAddChannel = async ({ channelData}) => {
-            let channels = await getChannels({ serverName: server.name });
-            console.log(channels);
-            await addChannel({ serverName: server.name, channelData: { ...channelData, id: channels.length } });
+            let channels = await getChannels({ serverId: server.id });
+            await addChannel({ serverId: server.id, channelData: { ...channelData, id: channels.length } });
             const nsp = io.of('/' + server.name);
-            channels = await getChannels({ serverName: server.name });
-            console.log(channels);
+            channels = await getChannels({ serverId: server.id });
             nsp.emit('channels', { channels });
         }
 
         const onDisconnecting = () => {
-            leaveRoom({ roomName: getCurrentRoom(), message: 'has signed out' });
+            leaveRoom({ roomId: getCurrentRoom(), message: 'has signed out' });
         }
 
         const onMessage = (payload) => {

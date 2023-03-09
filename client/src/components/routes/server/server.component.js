@@ -38,7 +38,6 @@ const Server = () => {
     });
 
     socket.on('channels', (data) => {
-      console.log(data);
       const { channels } = data;
       setChannels(channels);
     });
@@ -65,7 +64,7 @@ const Server = () => {
     const firstChannel = channels?.[0];
     if (!firstChannel) return;
 
-    changeRoom(firstChannel.name);
+    changeRoom(firstChannel.id);
     setCurrentChannel(firstChannel);
   }, [socket, currentServer, channels]);
 

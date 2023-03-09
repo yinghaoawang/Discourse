@@ -9,7 +9,7 @@ const ChannelItem = ({ channel, className, children, ...props }) => {
     const { changeRoom } = useContext(SocketContext);
     const channelClickHandler = () => {
         if (channel == null) return;
-        changeRoom(channel.name);
+        changeRoom(channel.id);
         setCurrentChannel(channel);
     }
 

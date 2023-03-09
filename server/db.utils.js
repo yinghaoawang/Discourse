@@ -22,8 +22,8 @@ const getServers = async () => {
     }
 }
 
-const addChannel = async ({ serverName, channelData }) => {
-    const keyName = `${ serverName }/channels`;
+const addChannel = async ({ serverId, channelData }) => {
+    const keyName = `${ serverId }/channels`;
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
         const data = JSON.parse(cacheResults);
@@ -33,10 +33,9 @@ const addChannel = async ({ serverName, channelData }) => {
     }
 }
 
-const getChannels = async ({ serverName }) => {
-    const keyName = `${ serverName }/channels`; 
+const getChannels = async ({ serverId }) => {
+    const keyName = `${ serverId }/channels`; 
     const cacheResults = await redisClient.get(keyName);
-    console.log(cacheResults);
     if (cacheResults) {
         return JSON.parse(cacheResults);
     } else {
@@ -45,8 +44,8 @@ const getChannels = async ({ serverName }) => {
     }
 }
 
-const addPost = async ({ serverName, channelName, postData }) => {
-    const keyName = `${ serverName }/${ channelName }/posts`; 
+const addPost = async ({ serverId, channelId, postData }) => {
+    const keyName = `${ serverId }/${ channelId }/posts`; 
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
         const data = JSON.parse(cacheResults);
@@ -56,8 +55,8 @@ const addPost = async ({ serverName, channelName, postData }) => {
     }
 }
 
-const getPosts = async ({ serverName, channelName }) => {
-    const keyName = `${ serverName }/${ channelName }/posts`; 
+const getPosts = async ({ serverId, channelId }) => {
+    const keyName = `${ serverId }/${ channelId }/posts`; 
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
         return JSON.parse(cacheResults);
