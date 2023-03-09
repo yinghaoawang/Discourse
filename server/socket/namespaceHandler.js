@@ -5,11 +5,12 @@ module.exports = async (io) => {
     const onNamespaceConnect = async ({ socket, server, namespace }) => {
         console.log('connected to ' + server.name);
 
-        let channels = await getChannels({ serverName: server.name });
-        const channelData = { name: 'newChannel' + channels.length };
-        await addChannel({ serverName: server.name, channelData });
+        const channels = await getChannels({ serverName: server.name });
 
-        channels = await getChannels({ serverName: server.name });
+        // const channelData = { name: 'newChannel' + channels.length };
+        // await addChannel({ serverName: server.name, channelData });
+        // channels = await getChannels({ serverName: server.name });
+
         socket.emit('channels', { channels });
 
         const sendMessage = async ({ message, roomName, type }) => {

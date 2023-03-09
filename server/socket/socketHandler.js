@@ -4,11 +4,11 @@ module.exports = async (io) => {
     const { onNamespaceConnect } = await require('./namespaceHandler')(io);
 
     (async () => {
-        let servers = await getServers();
+        const servers = await getServers();
 
-        const serverData = { name: 'newServer' + servers.length, id: servers.length };
-        await addServer({ serverData });
-        servers = await getServers();
+        // const serverData = { name: 'newServer' + servers.length, id: servers.length };
+        // await addServer({ serverData });
+        // servers = await getServers();
 
         servers.forEach(server => {
         const namespace = io.of('/' + server.name);
