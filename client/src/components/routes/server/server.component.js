@@ -10,7 +10,7 @@ import { SocketContext } from '../../../contexts/socket.context';
 
 const Server = () => {
   const { id } = useParams();
-  const { servers, channels, currentServer, posts, setPosts, setChannels, setCurrentServer, setCurrentChannel } = useContext(ServerContext);
+  const { servers, currentChannel, channels, currentServer, posts, setPosts, setChannels, setCurrentServer, setCurrentChannel } = useContext(ServerContext);
   const { socket, changeRoom, changeNamespace } = useContext(SocketContext);
 
   // handles loading a server on page refresh
@@ -74,12 +74,16 @@ const Server = () => {
         <>
           <InnerSidebar channels={ channels } />
           <div className='content-bottom-chatbar-container'>
-            <div className='content-container'>
-              { reversedPosts.map((post, index) => {
-                return <PostItem key={ index } post={ post } />
-              })}
-            </div>
-            <BottomChatbar />
+            { currentChannel ? <>
+                <div className='content-container'>
+                { reversedPosts.map((post, index) => {
+                  return <PostItem key={ index } post={ post } />
+                })}
+              </div>
+              <BottomChatbar />
+            </> : ''
+            }
+            
           </div>
           <UsersSidebar users={ currentServer?.users || [] } />
         </>

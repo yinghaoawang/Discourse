@@ -4,8 +4,6 @@ const express = require('express');
 const app = express();
 const https = require('https');
 const http = require('http');
-const { redisClient } = require('./redis.utils');
-
 
 const server = process.env.NODE_ENV == 'production' ? https.createServer({
   key: fs.readFileSync(process.env.PATH_TO_PRIVATE_KEY),

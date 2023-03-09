@@ -56,7 +56,7 @@ const App = () => {
 	}, [])
 
 	useEffect(() => {
-		if (socket == null || servers.length > 0) return;
+		if (socket == null) return;
 		socket.on('servers', (data) => {
 			const { servers } = data;
 			setServers(servers);
