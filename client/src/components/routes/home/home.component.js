@@ -6,7 +6,8 @@ const Home = () => {
             <div className='inner-container'>
                 <div className='content'>
                     <h1 className='header'>What's New in Discourse</h1>
-                    <li>3/9/23 - <span>Redis used as primary database for lightning speed persistent data storage</span></li>
+                    <li>3/9/23 - <span>Dynamic server & channel creation added</span></li>
+                    <li>3/8/23 - <span>Redis used as primary database for lightning speed persistent data storage</span></li>
                     <li>3/7/23 - <span>Real time websocket transmission properly working</span></li>
                     <li>3/3/23 - <span>Real time chat working with long polling. User names added</span></li>
                     <li>3/2/23 - <span>All modules refactored completely</span></li>
