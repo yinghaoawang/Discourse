@@ -1,20 +1,26 @@
 const { getServers, addServer } = require('../db.utils');
 
 module.exports = async (io) => {
-    const { onNamespaceConnect } = require('./namespaceHandler')(io);
+    const { onNamespaceConnect } = await require('./namespaceHandler')(io);
 
-    const serverData = { name: 'newServer' };
-    await addServer({ serverData });
-    const servers = await getServers();
-    servers.forEach(server => {
+    (async () => {
+        let servers = await getServers();
+
+        const serverData = { name: 'newServer' + servers.length, id: servers.length };
+        await addServer({ serverData });
+        servers = await getServers();
+
+        servers.forEach(server => {
         const namespace = io.of('/' + server.name);
         namespace.on('connect', socket => {
             onNamespaceConnect({ socket, server, namespace })
         });
     });
+    })();
 
-    const onSocketConnect = (socket) => {
+    const onSocketConnect = async (socket) => {
         console.log('connect');
+        const servers = await getServers();
         socket.emit('servers', { servers });
     
         socket.on('disconnect', () => {
@@ -22,5 +28,5 @@ module.exports = async (io) => {
         })
     }
     
-    return { onSocketConnect, servers };
+    return { onSocketConnect };
 }

@@ -10,7 +10,7 @@ import { SocketContext } from '../../../contexts/socket.context';
 
 const Server = () => {
   const { id } = useParams();
-  const { servers, currentServer, currentPosts, setCurrentPosts, setCurrentServer, setCurrentChannel } = useContext(ServerContext);
+  const { servers, channels, currentServer, posts, setPosts, setChannels, setCurrentServer, setCurrentChannel } = useContext(ServerContext);
   const { socket, changeRoom, changeNamespace } = useContext(SocketContext);
 
   // handles loading a server on page refresh
@@ -32,9 +32,14 @@ const Server = () => {
   useEffect(() => {
     if (socket == null) return;
   
-    socket.on('postHistory', (data) => {
+    socket.on('posts', (data) => {
       const { posts } = data;
-      setCurrentPosts(posts);
+      setPosts(posts);
+    });
+
+    socket.on('channels', (data) => {
+      const { channels } = data;
+      setChannels(channels);
     });
 
     socket.on('message', (data) => {
@@ -42,32 +47,32 @@ const Server = () => {
         const newPost = {
           message, user, dateCreated, type
         };
-        setCurrentPosts(posts => [...posts, newPost]);
+        setPosts(posts => [...posts, newPost]);
     })
     return () => {
         socket.off('message');
-        socket.off('postHistory');
+        socket.off('posts');
+        socket.off('channels')
     }
   }, [socket]);
 
   // selects first channel on server load
   useEffect(() => {
-    if (currentServer == null) return;
-    const { channels } = currentServer;
-    const firstChannel = channels?.[0] || null;
+    if (currentServer == null || channels.length === 0) return;
+    const firstChannel = channels?.[0];
     if (!firstChannel) return;
 
     changeRoom(firstChannel.name);
     setCurrentChannel(firstChannel);
-  }, [socket, currentServer]);
+  }, [socket, currentServer, channels]);
 
-  const reversedPosts = [...currentPosts].reverse();
+  const reversedPosts = [...posts].reverse();
 
   return (
     <div className='server-container'>
         { currentServer ?
         <>
-          <InnerSidebar channels={ currentServer?.channels || [] } />
+          <InnerSidebar channels={ channels } />
           <div className='content-bottom-chatbar-container'>
             <div className='content-container'>
               { reversedPosts.map((post, index) => {

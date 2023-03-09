@@ -19,8 +19,7 @@ const io = require('socket.io')(server, {
 });
 
 (async () => {
-  const { onSocketConnect, servers } = await require('./socket/socketHandler')(io);
-  console.log(servers);
+  const { onSocketConnect } = await require('./socket/socketHandler')(io);
   io.on('connect', onSocketConnect);
 })();
 

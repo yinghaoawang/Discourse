@@ -40,14 +40,14 @@ export const SocketProvider = ({ children }) => {
         }
 
         const fullUrl = url + namespace;
-        console.log(fullUrl);
-
         setSocket(io(fullUrl, options));
     }
 
     const changeRoom = (roomName) => {
+        if (currentChannel && roomName === currentChannel.name) return;
+        
         if (currentChannel != null) {
-            socket.emit('leaveRoom', { user: currentUser, roomName: currentChannel.name });
+            socket.emit('leaveRoom', { roomName: currentChannel.name });
         }
         updateSocketUser();
         socket.emit('joinRoom', { roomName });
