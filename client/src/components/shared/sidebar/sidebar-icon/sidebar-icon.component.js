@@ -35,7 +35,8 @@ const SidebarIcon = ({ link, tooltipText = 'Tooltip placeholder', server, classN
         tooltip.current.style.top = target.getBoundingClientRect().top + 'px';
     };
 
-    const isSelected = (currentServer === server && currentServer != null) ||
+    const isSelected = (currentServer != null && server != null &&
+        currentServer.id === server.id) ||
         (server == null && link === location.pathname);
     
     return (

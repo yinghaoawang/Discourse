@@ -8,10 +8,10 @@ import './sidebar.styles.scss';
 const Sidebar = () => {
     const { servers } = useContext(ServerContext);
     const { socket } = useContext(SocketContext);
-    const addNewServerHandler = () => {
+    const createNewServerHandler = () => {
         const serverName = prompt('What is the name of the server?')?.trim();
         if (serverName == null || serverName.length === 0) {
-            alert('Server was not created.');
+            // alert('Server was not created.');
             return;
         }
         socket.emit('addServer', { serverData: { name: serverName } });
@@ -27,7 +27,7 @@ const Sidebar = () => {
                     <span>{ displayChar }</span>
                 </SidebarIcon>;
             })}
-            <SidebarIcon onClick={ addNewServerHandler } tooltipText="Add New Server"><FaPlus size='22' /></SidebarIcon>
+            <SidebarIcon onClick={ createNewServerHandler } tooltipText="Add New Server"><FaPlus size='22' /></SidebarIcon>
             {/* <SidebarIcon tooltipText="Explore" link='/explore'><FaCompass size='24' /></SidebarIcon> */}
         </div>
     );

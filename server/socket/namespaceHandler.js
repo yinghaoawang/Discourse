@@ -52,6 +52,16 @@ module.exports = async (io) => {
             socket.user = user;
         }
 
+        const onAddChannel = async ({ channelData}) => {
+            let channels = await getChannels({ serverName: server.name });
+            console.log(channels);
+            await addChannel({ serverName: server.name, channelData: { ...channelData, id: channels.length } });
+            const nsp = io.of('/' + server.name);
+            channels = await getChannels({ serverName: server.name });
+            console.log(channels);
+            nsp.emit('channels', { channels });
+        }
+
         const onDisconnecting = () => {
             leaveRoom({ roomName: getCurrentRoom(), message: 'has signed out' });
         }
@@ -73,6 +83,7 @@ module.exports = async (io) => {
         socket.on('joinRoom', onJoinRoom);
         socket.on('leaveRoom', onLeaveRoom);
         socket.on('updateUser', onUpdateUser);
+        socket.on('addChannel', onAddChannel);
     }
 
     return {

@@ -1,4 +1,4 @@
-const { getServers, addServer } = require('../db.utils');
+const { getServers, addServer, getChannels, addChannel } = require('../db.utils');
 
 module.exports = async (io) => {
     const { onNamespaceConnect } = await require('./namespaceHandler')(io);

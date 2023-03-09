@@ -38,6 +38,7 @@ const Server = () => {
     });
 
     socket.on('channels', (data) => {
+      console.log(data);
       const { channels } = data;
       setChannels(channels);
     });
@@ -59,6 +60,8 @@ const Server = () => {
   // selects first channel on server load
   useEffect(() => {
     if (currentServer == null || channels.length === 0) return;
+    if (currentChannel != null && channels.find(c => c.id === currentChannel.id)) return;
+
     const firstChannel = channels?.[0];
     if (!firstChannel) return;
 

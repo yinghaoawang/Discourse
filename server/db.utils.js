@@ -36,6 +36,7 @@ const addChannel = async ({ serverName, channelData }) => {
 const getChannels = async ({ serverName }) => {
     const keyName = `${ serverName }/channels`; 
     const cacheResults = await redisClient.get(keyName);
+    console.log(cacheResults);
     if (cacheResults) {
         return JSON.parse(cacheResults);
     } else {

@@ -7,4 +7,9 @@
     .category-label {
         @apply mt-2 select-none;
     }
+    .channels-container {
+        .new-room-item {
+            @apply cursor-pointer;
+        }
+    }
 }

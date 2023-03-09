@@ -4,18 +4,26 @@ import { ServerContext } from '../../../../../contexts/server.context';
 import { SocketContext } from '../../../../../contexts/socket.context';
 import './channel-item.styles.scss';
 
-const ChannelItem = ({ channel }) => {
+const ChannelItem = ({ channel, className, children, ...props }) => {
     const { currentChannel, setCurrentChannel } = useContext(ServerContext);
     const { changeRoom } = useContext(SocketContext);
     const channelClickHandler = () => {
+        if (channel == null) return;
         changeRoom(channel.name);
         setCurrentChannel(channel);
     }
 
-    const isSelected = currentChannel === channel;
+    const isSelected = currentChannel != null && channel != null &&
+        currentChannel.id === channel.id;
 
     return (
-        <div onClick={ channelClickHandler } className={ `channel-item-container ${ isSelected ? 'selected' : '' }` }><FaHashtag />{ channel.name }</div>
+        <div onClick={ channelClickHandler } className={ `channel-item-container ${ className } ${ isSelected ? 'selected' : '' }` } { ...props }>
+            { children ? children :
+            <>
+                <FaHashtag /> { channel?.name }
+            </>
+            }
+        </div>
     );
 }
 
