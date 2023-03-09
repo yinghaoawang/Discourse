@@ -6,9 +6,12 @@ const Home = () => {
             <div className='inner-container'>
                 <div className='content'>
                     <h1 className='header'>What's New in Discourse</h1>
-                    <li>User names added</li>
-                    <li>Real time chat working</li>
-                    <li>All modules refactored completely</li>
+                    <li>3/9/23 - <span>Redis used as primary database for lightning speed persistent data storage</span></li>
+                    <li>3/7/23 - <span>Real time websocket transmission properly working</span></li>
+                    <li>3/3/23 - <span>Real time chat working with long polling. User names added</span></li>
+                    <li>3/2/23 - <span>All modules refactored completely</span></li>
+                    <li>12/16/22 - <span>All frontend components added</span></li>
+                    <li>12/4/22 - <span>Project started as a proof of concept</span></li>
                 </div>
             </div>
             
