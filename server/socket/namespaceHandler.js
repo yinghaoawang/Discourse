@@ -1,6 +1,5 @@
-const serversDb = require('./serversDb');
-
 const { PostTypes } = require('./socketConstants');
+const { addPost } = require('../db.utils');
 
 module.exports = (io) => {
     const onNamespaceConnect = ({ socket, server, namespace }) => {
@@ -12,7 +11,8 @@ module.exports = (io) => {
             console.log('sending message: ' + message + ' to ' + roomName + ' in ' + namespace.name);
             const dateCreated = new Date();
             namespace.to(roomName).emit('message', { message, dateCreated, type, user });
-            serversDb.find(server => '/' + server.name === namespace.name).channels.find(channel => channel.name === roomName).posts.push({ message, dateCreated, type, user } );
+            const postData = { message, dateCreated, type, user };
+            addPost(postData);
         };
 
         const getCurrentRoom = () => {

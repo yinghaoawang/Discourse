@@ -1,14 +1,12 @@
-const serversDb = require('./serversDb');
+const { getServers, addServer } = require('../db.utils');
 
-const servers = serversDb.map((server, index) => ({
-    id: index + 1,
-    name: server.name,
-    channels: server.channels.map(channel => ({ name: channel.name }))
-}));
-
-module.exports = (io) => {
+module.exports = async (io) => {
     const { onNamespaceConnect } = require('./namespaceHandler')(io);
-    serversDb.forEach(server => {
+
+    const serverData = { name: 'newServer' };
+    await addServer({ serverData });
+    const servers = await getServers();
+    servers.forEach(server => {
         const namespace = io.of('/' + server.name);
         namespace.on('connect', socket => {
             onNamespaceConnect({ socket, server, namespace })
@@ -24,5 +22,5 @@ module.exports = (io) => {
         })
     }
     
-    return { onSocketConnect };
+    return { onSocketConnect, servers };
 }

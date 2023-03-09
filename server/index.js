@@ -4,6 +4,8 @@ const express = require('express');
 const app = express();
 const https = require('https');
 const http = require('http');
+const { redisClient } = require('./redis.utils');
+
 
 const server = process.env.NODE_ENV == 'production' ? https.createServer({
   key: fs.readFileSync(process.env.PATH_TO_PRIVATE_KEY),
@@ -16,8 +18,12 @@ const io = require('socket.io')(server, {
   transports: ['websocket'],
 });
 
-const { onSocketConnect } = require('./socket/socketHandler')(io);
-io.on('connect', onSocketConnect);
+(async () => {
+  const { onSocketConnect, servers } = await require('./socket/socketHandler')(io);
+  console.log(servers);
+  io.on('connect', onSocketConnect);
+})();
+
 
 app.get('/', (req, res) => {
   res.send('<h1>Hello world, this is Discourse api</h1>');
