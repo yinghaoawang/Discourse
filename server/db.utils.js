@@ -66,6 +66,28 @@ const getPosts = async ({ serverId, channelId }) => {
     }
 }
 
+const addServerUser = async ({ serverId, serverUserData }) => {
+    const keyName = `${ serverId }/users`; 
+    const cacheResults = await redisClient.get(keyName);
+    if (cacheResults) {
+        const data = JSON.parse(cacheResults);
+        await redisClient.set(keyName, JSON.stringify([...data, serverUserData]))
+    } else {
+        await redisClient.set(keyName, JSON.stringify([]));
+    }
+}
+
+const getServerUsers = async ({ serverId }) => {
+    const keyName = `${ serverId }/users`; 
+    const cacheResults = await redisClient.get(keyName);
+    if (cacheResults) {
+        return JSON.parse(cacheResults);
+    } else {
+        await redisClient.set(keyName, JSON.stringify([]));
+        return [];
+    }
+}
+
 module.exports = {
-    addPost, getServers, addServer, addChannel, getChannels, getPosts
+    addPost, getPosts, addServer, getServers, addChannel, getChannels, addServerUser, getServerUsers
 }

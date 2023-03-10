@@ -10,8 +10,8 @@ import { SocketContext } from '../../../contexts/socket.context';
 
 const Server = () => {
   const { id } = useParams();
-  const { servers, currentChannel, channels, currentServer, posts, setPosts, setChannels, changeServer, setCurrentChannel, setUsers, users } = useContext(ServerContext);
-  const { socket, isSocketConnecting, changeRoom, changeNamespace } = useContext(SocketContext);
+  const { servers, currentChannel, channels, currentServer, posts, changeServer, users } = useContext(ServerContext);
+  const { changeNamespace } = useContext(SocketContext);
 
   // handles loading a server on page refresh
   useEffect(() => {
@@ -25,60 +25,6 @@ const Server = () => {
     changeServer(server);
     changeNamespace('/' + server.name);
   }, [servers]);
-
-  // gets post history and socket listeners on server load
-  useEffect(() => {
-    if (socket == null || isSocketConnecting === true) return;
-
-    socket.emit('getChannels');
-    socket.emit('getUsers');
-  
-    socket.on('posts', (data) => {
-      console.log('posts', data);
-      const { posts } = data;
-      setPosts(posts);
-    });
-
-    socket.on('channels', (data) => {
-      console.log('channels', data);
-
-      const { channels } = data;
-      setChannels(channels);
-    });
-
-    socket.on('message', (data) => {
-        const { message, user, dateCreated, type } = data;
-        const newPost = {
-          message, user, dateCreated, type
-        };
-        setPosts(posts => [...posts, newPost]);
-    });
-
-    socket.on('serverUsers', (data) => {
-      console.log('users', data);
-      const { users } = data;
-      setUsers(users);
-    })
-
-    return () => {
-      socket.off('message');
-      socket.off('posts');
-      socket.off('channels')
-      socket.on('serverUsers')
-  }
-  }, [isSocketConnecting]);
-
-  // selects first channel on server load
-  useEffect(() => {
-    if (isSocketConnecting === true) return
-    if (currentChannel != null && channels.find(c => c.id === currentChannel.id)) return;
-
-    const firstChannel = channels?.[0];
-    if (!firstChannel) return;
-
-    changeRoom(firstChannel.id);
-    setCurrentChannel(firstChannel);
-  }, [channels]);
 
   const reversedPosts = [...posts].reverse();
 

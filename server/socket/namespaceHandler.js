@@ -1,27 +1,50 @@
 const { PostTypes } = require('./socketConstants');
-const { addPost, getChannels, addChannel, getPosts } = require('../db.utils');
+const { addPost, getChannels, addChannel, getPosts, addServerUser, getServerUsers } = require('../db.utils');
 
 
 
 module.exports = async (io) => {
     const onNamespaceConnect = async ({ socket, server }) => {
         const namespace = io.of('/' + server.name);
+
+        const getUsersInNamespace = () => {
+            const users = [];
+            for (const [key, value] of namespace.sockets.entries()) {
+                const { user } = value;
+                if (!user) {
+                    console.error('Namespace socket user does not exist')
+                } else {
+                    users.push(user);
+                }
+            }
+            return users;
+        }
         
         const sendChannels = async () => {
             const channels = await getChannels({ serverId: server.id });
             socket.emit('channels', { channels });
         }
         
-        const sendUsers = () => {
-            namespace.emit('serverUsers', { users: getUsersInNamespace({ namespace }), name: namespace.name });
+        const sendUsers = async () => {
+            namespace.emit('serverUsers', { users: await getServerUsers({ serverId: server.id }), connectedUsers: await getUsersInNamespace({ namespace }), name: namespace.name });
+        }
+
+        const sendPosts = async ({ roomId }) => {
+            const posts = await getPosts({ serverId: server.id, channelId: roomId });
+            console.log(posts);
+            socket.emit('posts', { posts });
         }
 
         const updateUser = async ({ user, isOnConnect }) => {
             socket.user = user;
-            sendUsers();
+            console.log('updating')
             if (isOnConnect) {
+                console.log('is on connect');
+                await addServerUser({ serverId: server.id, serverUserData: user })
                 await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN });
             }
+            console.log('updated')
+            sendUsers();
         }
 
         const sendMessage = async ({ message, roomId, type }) => {
@@ -46,22 +69,8 @@ module.exports = async (io) => {
             return [...socket.rooms][1];
         }
 
-        const getUsersInNamespace = () => {
-            const users = [];
-            for (const [key, value] of namespace.sockets.entries()) {
-                const { user } = value;
-                if (!user) {
-                    console.error('Namespace socket user does not exist')
-                } else {
-                    users.push(user);
-                }
-            }
-            return users;
-        }
-
         const joinRoom = async ({ roomId }) => {
-            const posts = await getPosts({ serverId: server.id, channelId: roomId });
-            socket.emit('posts', { posts });
+            sendPosts({ roomId });
             socket.join(roomId);
             sendUsers();
         };
@@ -97,6 +106,7 @@ module.exports = async (io) => {
             nsp.emit('channels', { channels });
         }
 
+        socket.on('getPosts', sendPosts);
         socket.on('getChannels', sendChannels);
         socket.on('getUsers', sendUsers);
         socket.on('message', sendMessage);

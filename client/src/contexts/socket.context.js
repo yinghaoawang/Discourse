@@ -25,7 +25,7 @@ export const SocketContext = createContext({
 
 export const SocketProvider = ({ children }) => {
     const { currentUser } = useContext(UserContext);
-    const { currentChannel, setCurrentChannel, setServers } = useContext(ServerContext);
+    const { currentChannel, setCurrentChannel, setServers, setPosts, setChannels, setUsers } = useContext(ServerContext);
     
     const [socket, setSocket] = useState(null);
     const [isSocketConnecting, setIsSocketConnecting] = useState(false);
@@ -42,7 +42,44 @@ export const SocketProvider = ({ children }) => {
         newSocket.on('connect', () => {
             setIsSocketConnecting(false);
             console.log('connected');
+
             newSocket.emit('updateUser', { user: currentUser, isOnConnect: true });
+            newSocket.emit('getChannels');
+
+            newSocket.on('posts', (data) => {
+                console.log('posts', data);
+                const { posts } = data;
+                setPosts(posts);
+              });
+          
+              newSocket.on('channels', (data) => {
+                console.log('channels', data);
+          
+                const { channels } = data;
+                setChannels(channels);
+
+                const firstChannel = channels?.[0];
+                if (firstChannel) {
+                    changeRoom(firstChannel.id);
+                    setCurrentChannel(firstChannel);
+                    newSocket.emit('getPosts', { roomId: firstChannel.id })
+                }
+              });
+          
+              newSocket.on('message', (data) => {
+                  const { message, user, dateCreated, type } = data;
+                  const newPost = {
+                    message, user, dateCreated, type
+                  };
+                  setPosts(posts => [...posts, newPost]);
+              });
+          
+              newSocket.on('serverUsers', (data) => {
+                console.log('users', data);
+                const { users, connectedUsers } = data;
+                // const offlineUsers = users.filter(user => )
+                setUsers(users);
+              })
         });
 
         newSocket.on('servers', (data) => {

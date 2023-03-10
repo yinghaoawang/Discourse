@@ -6,7 +6,6 @@ import ErrorPage from './components/routes/error/error-page.component';
 import Explore from './components/routes/explore/explore.component';
 import DirectMessages from './components/routes/direct-messages/direct-messages.component';
 import Home from './components/routes/home/home.component';
-import { ServerContext } from './contexts/server.context';
 import { UserContext } from './contexts/user.context';
 import { SocketContext } from './contexts/socket.context';
 
