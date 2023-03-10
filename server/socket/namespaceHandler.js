@@ -37,8 +37,13 @@ module.exports = async (io) => {
         const updateUser = async ({ user, isOnConnect }) => {
             socket.user = user;
             if (isOnConnect) {
-                await addServerUser({ serverId: server.id, serverUserData: user })
-                await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN });
+                const serverUsers = await getServerUsers({ serverId: server.id });
+                const matchingUser = serverUsers.find(item => item.name === user.name);
+                console.log('matching user', matchingUser);
+                if (!matchingUser) {
+                    await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN });
+                }
+                await addServerUser({ serverId: server.id, serverUserData: user });
             }
             sendUsers();
         }
@@ -88,7 +93,7 @@ module.exports = async (io) => {
 
         const onDisconnecting = async () => {
             leaveRoom({ roomId: getCurrentRoom() });
-            await sendMessage({ message: 'has left the server', serverId: server.id, type: PostTypes.USER_LEAVE });
+            // await sendMessage({ message: 'has left the server', serverId: server.id, type: PostTypes.USER_LEAVE });
         }
         
         const onDisconnect = () => {

@@ -9,15 +9,9 @@ export const ServerProvider = ({ children }) => {
     const [currentChannel, setCurrentChannel] = useState(null);
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
-    const changeServer = (server) => {
-        setCurrentChannel(null);
-        setPosts([]);
-        setUsers([]);
-        setCurrentServer(server);
-    }
     const value = {
         servers, setServers,    
-        currentServer, setCurrentServer, changeServer,
+        currentServer, setCurrentServer,
         channels, setChannels,
         currentChannel, setCurrentChannel,
         posts, setPosts,

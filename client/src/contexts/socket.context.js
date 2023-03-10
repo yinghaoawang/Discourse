@@ -18,7 +18,7 @@ export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
     const { currentUser } = useContext(UserContext);
-    const { currentChannel, setCurrentChannel, setServers, setPosts, setChannels, setUsers } = useContext(ServerContext);
+    const { currentChannel, setCurrentChannel, setServers, setPosts, setChannels, setUsers, setCurrentServer } = useContext(ServerContext);
     
     const [socket, setSocket] = useState(null);
     const [isSocketConnecting, setIsSocketConnecting] = useState(false);
@@ -127,12 +127,21 @@ export const SocketProvider = ({ children }) => {
     const updateSocketUser = () => {
         socket.emit('updateUser', { user: currentUser });
     }
+
+    const changeServer = ({ server }) => {
+        setCurrentChannel(null);
+        setPosts([]);
+        setUsers([]);
+        setCurrentServer(server);
+        
+        if (server == null) {
+            changeNamespace('/');
+        } else {
+            changeNamespace('/' + server.name);
+        }
+    }
     
     const changeNamespace = (namespace) => {
-        if (currentChannel != null) {
-            setCurrentChannel(null);
-        }
-
         changeSocket(io(url + namespace, options));
     }
 
@@ -158,7 +167,7 @@ export const SocketProvider = ({ children }) => {
         socket, updateSocketUser,
         loadServers,
         addServer, addChannel, sendMessage,
-        changeNamespace, changeChannel,
+        changeServer, changeChannel,
         isSocketConnecting, setIsSocketConnecting
     };
     return <SocketContext.Provider value={ value }>{ children }</SocketContext.Provider>

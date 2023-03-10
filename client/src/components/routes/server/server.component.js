@@ -10,8 +10,8 @@ import { SocketContext } from '../../../contexts/socket.context';
 
 const Server = () => {
   const { id } = useParams();
-  const { servers, currentChannel, channels, currentServer, posts, changeServer, users } = useContext(ServerContext);
-  const { changeNamespace } = useContext(SocketContext);
+  const { servers, currentChannel, channels, currentServer, posts, users } = useContext(ServerContext);
+  const { changeServer } = useContext(SocketContext);
 
   // handles loading a server on page refresh
   useEffect(() => {
@@ -22,8 +22,7 @@ const Server = () => {
 
     if (server == null) return;
 
-    changeServer(server);
-    changeNamespace('/' + server.name);
+    changeServer({ server });
   }, [servers]);
 
   const reversedPosts = [...posts].reverse();

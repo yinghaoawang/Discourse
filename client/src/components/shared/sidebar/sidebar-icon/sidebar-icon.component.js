@@ -7,8 +7,8 @@ import './sidebar-icon.styles.scss';
 const SidebarIcon = ({ link, tooltipText = 'Tooltip placeholder', server, className, children, ...props }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { currentServer, changeServer } = useContext(ServerContext);
-    const { changeNamespace } = useContext(SocketContext);
+    const { currentServer } = useContext(ServerContext);
+    const { changeServer } = useContext(SocketContext);
     const tooltip = useRef(null);
   
     const iconClickHandler = () => {
@@ -17,13 +17,11 @@ const SidebarIcon = ({ link, tooltipText = 'Tooltip placeholder', server, classN
         }
 
         if (server != null) {
-            changeServer(server);
-            changeNamespace('/' + server.name);
+            changeServer({ server });
             navigate(`/server/${ server.id }`);
         } else if (link != null) {
             navigate(link);
             changeServer(null);
-            changeNamespace('/');
         } else {
             throw new Error('Invalid icon, link or server does not exist.')
         }
