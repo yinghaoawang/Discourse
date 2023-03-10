@@ -36,7 +36,7 @@ const router = createBrowserRouter(routes, {
 
 const App = () => {
 	const { setCurrentUser } = useContext(UserContext);
-	const { changeNamespace } = useContext(SocketContext);
+	const { loadServers } = useContext(SocketContext);
 	
 	useEffect(() => {
 		while (true) {
@@ -51,7 +51,8 @@ const App = () => {
 				break;
 			}
 		}
-        changeNamespace('/');
+
+		loadServers();
 	}, []);
 	
 	return <RouterProvider router={ router } />;

@@ -5,14 +5,13 @@ import ChannelItem from './channel-item/channel-item.component';
 import './inner-sidebar.styles.scss';
 
 const InnerSidebar = ({ channels }) => {
-    const { socket } = useContext(SocketContext);
+    const { addChannel } = useContext(SocketContext);
     const createNewChannelHandler = () => {
         const channelName = prompt('What is the name of the channel?')?.trim();
         if (channelName == null || channelName.length === 0) {
-            // alert('Channel was not created.');
             return;
         }
-        socket.emit('addChannel', { channelData: { name: channelName } });
+        addChannel({ channelName });
     }
 
     return (
@@ -23,7 +22,7 @@ const InnerSidebar = ({ channels }) => {
                 { channels.map((channel, index) => 
                     <ChannelItem key={ index } channel={ channel } />
                 )}
-                <ChannelItem className='new-room-item' onClick={ createNewChannelHandler }><FaPlus /> New Channel</ChannelItem>
+                <ChannelItem className='new-room-item' onClick={ createNewChannelHandler }><FaPlus />New Channel</ChannelItem>
             </div>
         </div>
     );

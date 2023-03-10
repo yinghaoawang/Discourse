@@ -45,15 +45,16 @@ module.exports = async (io) => {
 
         const sendMessage = async ({ message, roomId, type }) => {
             const { user } = socket;
-            console.log('sending message: ' + message + ' to ' + (roomId ? ('room' + roomId) : 'FIRSTROOM') + ' in ' + namespace.name);
             const dateCreated = new Date();
 
+            // if room not specified, use first room if exists
             if (roomId == null) {
                 const channels = await getChannels({ serverId: server.id });
                 if (channels.length === 0) return;
 
                 roomId = channels[0].id;
             }
+            console.log('sending message: ' + message + ' to room ' + roomId + ' in ' + namespace.name);
 
             namespace.to(roomId).emit('message', { message, dateCreated, type, user });
             const postData = { message, dateCreated, type, user };
@@ -66,6 +67,7 @@ module.exports = async (io) => {
         }
 
         const joinRoom = async ({ roomId }) => {
+            console.log('joining room', roomId);
             sendPosts({ roomId });
             socket.join(roomId);
             sendUsers();
@@ -95,6 +97,7 @@ module.exports = async (io) => {
         }
 
         const onAddChannel = async ({ channelData}) => {
+            console.log('adding channel');
             let channels = await getChannels({ serverId: server.id });
             await addChannel({ serverId: server.id, channelData: { ...channelData, id: channels.length } });
             const nsp = io.of('/' + server.name);

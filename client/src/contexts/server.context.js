@@ -1,20 +1,6 @@
 import { createContext, useState } from 'react';
 
-export const ServerContext = createContext({
-    servers: [],
-    setServers: () => null,
-    currentServer: null,
-    channels: [],
-    setChannels: () => null,
-    currentChannel: null,
-    setCurrentChannel: () => null,
-    posts: [],
-    setPosts: () => null,
-    users: [],
-    setUsers: () => null,
-    setCurrentServer: () => null,
-    changeServer: () => null,
-});
+export const ServerContext = createContext();
 
 export const ServerProvider = ({ children }) => {
     const [servers, setServers] = useState([]);

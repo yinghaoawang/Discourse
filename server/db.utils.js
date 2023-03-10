@@ -71,7 +71,12 @@ const addServerUser = async ({ serverId, serverUserData }) => {
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
         const data = JSON.parse(cacheResults);
-        await redisClient.set(keyName, JSON.stringify([...data, serverUserData]))
+        const matchingUser = data.find(item => serverUserData.name === item.name);
+        if (matchingUser) {
+            await redisClient.set(keyName, JSON.stringify([...data]))
+        } else {
+            await redisClient.set(keyName, JSON.stringify([...data, serverUserData]))
+        }
     } else {
         await redisClient.set(keyName, JSON.stringify([serverUserData]));
     }

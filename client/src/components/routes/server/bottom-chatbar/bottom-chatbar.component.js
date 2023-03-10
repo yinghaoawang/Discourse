@@ -1,18 +1,10 @@
-import { useRef, useEffect, useContext } from 'react';
-import { ServerContext } from '../../../../contexts/server.context';
+import { useRef, useContext } from 'react';
 import { SocketContext } from '../../../../contexts/socket.context';
-import { UserContext } from '../../../../contexts/user.context';
 import './bottom-chatbar.styles.scss';
 
 const BottomChatbar = () => {
     const textAreaRef =  useRef(null);
-    const { socket } = useContext(SocketContext);
-    const { currentUser } = useContext(UserContext);
-    const { currentChannel } = useContext(ServerContext);
-
-    const sendMessage = (message) => {
-        socket.emit('message', { message, user: currentUser, roomId: currentChannel.id });
-    }
+    const { sendMessage } = useContext(SocketContext);
 
     const keyDownHandler = (event) => {
         if (event.keyCode === 13 && !event.shiftKey) {
@@ -20,7 +12,7 @@ const BottomChatbar = () => {
             const message = textAreaRef.current.value;
             if (message === '') return;
 
-            sendMessage(textAreaRef.current.value);
+            sendMessage({ message });
             textAreaRef.current.value = '';
         }
     }
