@@ -3,8 +3,14 @@
     pt-2 px-2
     flex flex-col
     bg-gray-900 text-gray-400 overflow-y-scroll;
-    
-    .category-label {
-        @apply ml-4 mt-2 select-none;
+
+    .category-users-container {
+        @apply mb-2;
+
+        .category-label {
+        @apply ml-4 mt-4 select-none;
     }
+    }
+    
+    
 }

@@ -40,21 +40,20 @@ export const SocketProvider = ({ children }) => {
         }
 
         newSocket.on('connect', () => {
-            setIsSocketConnecting(false);
-            console.log('connected');
+            const onConnect = () => {
+                console.log('connected');
+                setIsSocketConnecting(false);
 
-            newSocket.emit('updateUser', { user: currentUser, isOnConnect: true });
-            newSocket.emit('getChannels');
+                newSocket.emit('updateUser', { user: currentUser, isOnConnect: true });
+                newSocket.emit('getChannels');
+            }
 
             newSocket.on('posts', (data) => {
-                console.log('posts', data);
                 const { posts } = data;
                 setPosts(posts);
-              });
+            });
           
-              newSocket.on('channels', (data) => {
-                console.log('channels', data);
-          
+            newSocket.on('channels', (data) => {
                 const { channels } = data;
                 setChannels(channels);
 
@@ -64,22 +63,30 @@ export const SocketProvider = ({ children }) => {
                     setCurrentChannel(firstChannel);
                     newSocket.emit('getPosts', { roomId: firstChannel.id })
                 }
-              });
+            });
           
-              newSocket.on('message', (data) => {
-                  const { message, user, dateCreated, type } = data;
-                  const newPost = {
-                    message, user, dateCreated, type
-                  };
-                  setPosts(posts => [...posts, newPost]);
-              });
+            newSocket.on('message', (data) => {
+                const { message, user, dateCreated, type } = data;
+                const newPost = {
+                message, user, dateCreated, type
+                };
+                setPosts(posts => [...posts, newPost]);
+            });
           
-              newSocket.on('serverUsers', (data) => {
-                console.log('users', data);
+            newSocket.on('serverUsers', (data) => {
                 const { users, connectedUsers } = data;
-                // const offlineUsers = users.filter(user => )
-                setUsers(users);
-              })
+                const categorizedUsers = users.map(user => {
+                    if (connectedUsers.map(u => u.name).includes(user.name)) {
+                            user.category = 'Online'
+                        } else {
+                            user.category = 'Offline'
+                        }
+                        return user;
+                    });
+                setUsers(categorizedUsers);
+            })
+
+            onConnect();
         });
 
         newSocket.on('servers', (data) => {

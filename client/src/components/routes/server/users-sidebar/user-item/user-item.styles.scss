@@ -16,7 +16,7 @@
     }
 
     .infobox {
-        @apply flex flex-col leading-5 w-full;
+        @apply flex flex-col leading-5 w-full;  
 
         .name {
             @apply font-semibold;
@@ -24,6 +24,14 @@
 
         .status {
             @apply text-xs w-36;
+        }
+    }
+
+    &.offline {
+        @apply opacity-50;
+
+        &:hover {
+            @apply opacity-100;
         }
     }
 }

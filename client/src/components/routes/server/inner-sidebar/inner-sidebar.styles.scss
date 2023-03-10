@@ -5,9 +5,11 @@
     overflow-y-scroll;
 
     .category-label {
-        @apply mt-2 select-none;
+        @apply mt-4 ml-2 select-none;
     }
     .channels-container {
+        @apply ml-2;
+        
         .new-room-item {
             @apply cursor-pointer;
         }

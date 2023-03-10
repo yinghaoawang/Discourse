@@ -73,7 +73,7 @@ const addServerUser = async ({ serverId, serverUserData }) => {
         const data = JSON.parse(cacheResults);
         await redisClient.set(keyName, JSON.stringify([...data, serverUserData]))
     } else {
-        await redisClient.set(keyName, JSON.stringify([]));
+        await redisClient.set(keyName, JSON.stringify([serverUserData]));
     }
 }
 

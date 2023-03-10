@@ -31,19 +31,15 @@ module.exports = async (io) => {
 
         const sendPosts = async ({ roomId }) => {
             const posts = await getPosts({ serverId: server.id, channelId: roomId });
-            console.log(posts);
             socket.emit('posts', { posts });
         }
 
         const updateUser = async ({ user, isOnConnect }) => {
             socket.user = user;
-            console.log('updating')
             if (isOnConnect) {
-                console.log('is on connect');
                 await addServerUser({ serverId: server.id, serverUserData: user })
                 await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN });
             }
-            console.log('updated')
             sendUsers();
         }
 
