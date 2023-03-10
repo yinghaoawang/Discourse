@@ -42,8 +42,7 @@ export const SocketProvider = ({ children }) => {
         newSocket.on('connect', () => {
             setIsSocketConnecting(false);
             console.log('connected');
-            newSocket.emit('updateUser', { user: currentUser });
-            console.log('emitting, ', currentUser);
+            newSocket.emit('updateUser', { user: currentUser, isOnConnect: true });
         });
 
         newSocket.on('servers', (data) => {

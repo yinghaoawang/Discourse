@@ -1,25 +1,12 @@
 const { PostTypes } = require('./socketConstants');
 const { addPost, getChannels, addChannel, getPosts } = require('../db.utils');
 
-const getUsersInNamespace = ({ namespace }) => {
-    const users = [];
-    for (const [key, value] of namespace.sockets.entries()) {
-        const { user } = value;
-        if (!user) {
-            console.error('Namespace socket user does not exist')
-        } else {
-            users.push(user);
-        }
-    }
-    return users;
-}
+
 
 module.exports = async (io) => {
     const onNamespaceConnect = async ({ socket, server }) => {
-        console.log('connected to ' + server.name);
-
         const namespace = io.of('/' + server.name);
-
+        
         const sendChannels = async () => {
             const channels = await getChannels({ serverId: server.id });
             socket.emit('channels', { channels });
@@ -29,46 +16,77 @@ module.exports = async (io) => {
             namespace.emit('serverUsers', { users: getUsersInNamespace({ namespace }), name: namespace.name });
         }
 
-        const updateUser = ({ user }) => {
+        const updateUser = async ({ user, isOnConnect }) => {
             socket.user = user;
             sendUsers();
+            if (isOnConnect) {
+                await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN });
+            }
         }
 
         const sendMessage = async ({ message, roomId, type }) => {
             const { user } = socket;
-            console.log('sending message: ' + message + ' to ' + roomId + ' in ' + namespace.name);
+            console.log('sending message: ' + message + ' to ' + (roomId ? ('room' + roomId) : 'FIRSTROOM') + ' in ' + namespace.name);
             const dateCreated = new Date();
+
+            if (roomId == null) {
+                const channels = await getChannels({ serverId: server.id });
+                if (channels.length === 0) return;
+
+                roomId = channels[0].id;
+            }
+
             namespace.to(roomId).emit('message', { message, dateCreated, type, user });
             const postData = { message, dateCreated, type, user };
             await addPost({ serverId: server.id, channelId: roomId, postData });
+            
         };
 
         const getCurrentRoom = () => {
             return [...socket.rooms][1];
         }
 
-        const joinRoom = async ({ roomId, message }) => {
+        const getUsersInNamespace = () => {
+            const users = [];
+            for (const [key, value] of namespace.sockets.entries()) {
+                const { user } = value;
+                if (!user) {
+                    console.error('Namespace socket user does not exist')
+                } else {
+                    users.push(user);
+                }
+            }
+            return users;
+        }
+
+        const joinRoom = async ({ roomId }) => {
             const posts = await getPosts({ serverId: server.id, channelId: roomId });
             socket.emit('posts', { posts });
             socket.join(roomId);
-            if (message == null) {
-                message = 'has joined the channel';
-            }
-            await sendMessage({ message, roomId, type: PostTypes.USER_JOIN });
             sendUsers();
         };
 
-        const leaveRoom = async ({ roomId, message }) => {
+        const leaveRoom = async ({ roomId }) => {
             if (roomId == null) {
                 console.error('Error handling leaveRoom: room does not exist');
                 return;
             }
-            if (message == null) {
-                message = 'has left the channel';
-            }
-            await sendMessage({ message, roomId, type: PostTypes.USER_LEAVE });
             socket.leave(roomId);
             sendUsers();
+        }
+
+        const onConnect = async () => {
+            console.log('connected to ' + server.name);
+        }
+
+        const onDisconnecting = async () => {
+            leaveRoom({ roomId: getCurrentRoom() });
+            await sendMessage({ message: 'has left the server', serverId: server.id, type: PostTypes.USER_LEAVE });
+        }
+        
+        const onDisconnect = () => {
+            sendUsers();
+            console.log('disconnect from ', namespace.name);
         }
 
         const onAddChannel = async ({ channelData}) => {
@@ -77,15 +95,6 @@ module.exports = async (io) => {
             const nsp = io.of('/' + server.name);
             channels = await getChannels({ serverId: server.id });
             nsp.emit('channels', { channels });
-        }
-
-        const onDisconnecting = () => {
-            leaveRoom({ roomId: getCurrentRoom(), message: 'has signed out' });
-        }
-
-        const onDisconnect = () => {
-            sendUsers();
-            console.log('disconnect from ', namespace.name);
         }
 
         socket.on('getChannels', sendChannels);
@@ -97,6 +106,8 @@ module.exports = async (io) => {
         socket.on('leaveRoom', leaveRoom);
         socket.on('updateUser', updateUser);
         socket.on('addChannel', onAddChannel);
+
+        onConnect();
     }
 
     return {
