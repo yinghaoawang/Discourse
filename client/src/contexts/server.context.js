@@ -10,6 +10,10 @@ export const ServerContext = createContext({
     setCurrentChannel: () => null,
     posts: [],
     setPosts: () => null,
+    users: [],
+    setUsers: () => null,
+    setCurrentServer: () => null,
+    changeServer: () => null,
 });
 
 export const ServerProvider = ({ children }) => {
@@ -18,12 +22,20 @@ export const ServerProvider = ({ children }) => {
     const [channels, setChannels] = useState([]);
     const [currentChannel, setCurrentChannel] = useState(null);
     const [posts, setPosts] = useState([]);
+    const [users, setUsers] = useState([]);
+    const changeServer = (server) => {
+        setCurrentChannel(null);
+        setPosts([]);
+        setUsers([]);
+        setCurrentServer(server);
+    }
     const value = {
         servers, setServers,    
-        currentServer, setCurrentServer,
+        currentServer, setCurrentServer, changeServer,
         channels, setChannels,
         currentChannel, setCurrentChannel,
         posts, setPosts,
+        users, setUsers
     };
 
     return <ServerContext.Provider value={ value }>{ children }</ServerContext.Provider>;

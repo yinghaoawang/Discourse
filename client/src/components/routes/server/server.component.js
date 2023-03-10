@@ -10,34 +10,38 @@ import { SocketContext } from '../../../contexts/socket.context';
 
 const Server = () => {
   const { id } = useParams();
-  const { servers, currentChannel, channels, currentServer, posts, setPosts, setChannels, setCurrentServer, setCurrentChannel } = useContext(ServerContext);
-  const { socket, changeRoom, changeNamespace } = useContext(SocketContext);
+  const { servers, currentChannel, channels, currentServer, posts, setPosts, setChannels, changeServer, setCurrentChannel, setUsers, users } = useContext(ServerContext);
+  const { socket, isSocketConnecting, changeRoom, changeNamespace } = useContext(SocketContext);
 
   // handles loading a server on page refresh
   useEffect(() => {
     if (servers.length === 0 || currentServer != null) return;
 
     // sets current server to the corresponding params id
-    const matchingServer = servers.find(s => s.id === parseInt(id));
-    if (matchingServer === null) throw new Error('uh oh cheerio');
-    setCurrentServer(matchingServer);
-
-    // sets corresponding namespace to server w/ params id
     const server = servers.find(s => s.id === parseInt(id));
-    setCurrentServer(server);
+
+    if (server == null) return;
+
+    changeServer(server);
     changeNamespace('/' + server.name);
   }, [servers]);
 
   // gets post history and socket listeners on server load
   useEffect(() => {
-    if (socket == null) return;
+    if (socket == null || isSocketConnecting === true) return;
+
+    socket.emit('getChannels');
+    socket.emit('getUsers');
   
     socket.on('posts', (data) => {
+      console.log('posts', data);
       const { posts } = data;
       setPosts(posts);
     });
 
     socket.on('channels', (data) => {
+      console.log('channels', data);
+
       const { channels } = data;
       setChannels(channels);
     });
@@ -48,17 +52,25 @@ const Server = () => {
           message, user, dateCreated, type
         };
         setPosts(posts => [...posts, newPost]);
+    });
+
+    socket.on('serverUsers', (data) => {
+      console.log('users', data);
+      const { users } = data;
+      setUsers(users);
     })
+
     return () => {
-        socket.off('message');
-        socket.off('posts');
-        socket.off('channels')
-    }
-  }, [socket]);
+      socket.off('message');
+      socket.off('posts');
+      socket.off('channels')
+      socket.on('serverUsers')
+  }
+  }, [isSocketConnecting]);
 
   // selects first channel on server load
   useEffect(() => {
-    if (currentServer == null || channels.length === 0) return;
+    if (isSocketConnecting === true) return
     if (currentChannel != null && channels.find(c => c.id === currentChannel.id)) return;
 
     const firstChannel = channels?.[0];
@@ -66,7 +78,7 @@ const Server = () => {
 
     changeRoom(firstChannel.id);
     setCurrentChannel(firstChannel);
-  }, [socket, currentServer, channels]);
+  }, [channels]);
 
   const reversedPosts = [...posts].reverse();
 
@@ -87,10 +99,10 @@ const Server = () => {
             }
             
           </div>
-          <UsersSidebar users={ currentServer?.users || [] } />
+          <UsersSidebar users={ users } />
         </>
         : <div className='flex justify-center items-center w-full'>Server does not exist</div>
-        }
+      }
         
     </div>
   );

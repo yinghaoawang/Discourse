@@ -6,7 +6,7 @@ module.exports = async (io) => {
     const setupServerListeners = ({ server }) => {
         const namespace = io.of('/' + server.name);
         namespace.on('connect', socket => {
-            onNamespaceConnect({ socket, server, namespace })
+            onNamespaceConnect({ socket, server })
             socket.on('addServer', (payload) => {
                 onAddServer(payload);
             });
@@ -15,8 +15,9 @@ module.exports = async (io) => {
 
     const onAddServer = async ({ serverData }) => {
         let servers = await getServers();
-        await addServer({ serverData: { ...serverData, id: servers.length } });
-        setupServerListeners({ server: serverData });
+        const newServerData = { ...serverData, id: servers.length };
+        await addServer({ serverData: newServerData });
+        setupServerListeners({ server: newServerData });
         
         for (const nspKey of io._nsps.keys()) {
             const nsp = io.of(nspKey);

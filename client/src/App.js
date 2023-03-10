@@ -36,14 +36,13 @@ const router = createBrowserRouter(routes, {
 });
 
 const App = () => {
-	const { servers, setServers } = useContext(ServerContext);
 	const { setCurrentUser } = useContext(UserContext);
-	const { socket } = useContext(SocketContext);
+	const { changeNamespace } = useContext(SocketContext);
 	
 	useEffect(() => {
 		while (true) {
 			if (process.env.NODE_ENV === 'development') {
-				setCurrentUser({ name: 'Test' });
+				setCurrentUser({ name: 'Test' + Math.floor(Math.random() * 1000) });
 				break;
 			}
 			
@@ -53,20 +52,9 @@ const App = () => {
 				break;
 			}
 		}
-	}, [])
-
-	useEffect(() => {
-		if (socket == null) return;
-		socket.on('servers', (data) => {
-			const { servers } = data;
-			setServers(servers);
-		});
-		
-		return () => {
-			socket.off('servers');
-		}
-	}, [socket]);
-
+        changeNamespace('/');
+	}, []);
+	
 	return <RouterProvider router={ router } />;
 };
 
