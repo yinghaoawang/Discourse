@@ -30,8 +30,27 @@
     h1 {
         @apply mb-4 text-4xl font-bold;
     }
+
+    input {
+        @apply bg-gray-800 pl-1;
+    }
 }
 
 .body-container {
     @apply flex h-screen;
+}
+
+.modal-overlay {
+    @apply top-0 left-0 right-0 bottom-0 fixed bg-gray-900/80;
+}
+
+.modal-content {
+    @apply bg-gray-600 p-5 rounded-xl
+    absolute top-10 bottom-10 left-10 right-10
+    outline-none border-none;
+
+    &.fit {
+        @apply mr-[-50%] translate-x-[-50%] translate-y-[-50%]
+        top-1/2 left-1/2 right-auto bottom-auto ;
+    }
 }
