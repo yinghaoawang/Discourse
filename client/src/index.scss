@@ -34,6 +34,10 @@
     input {
         @apply bg-gray-800 pl-1;
     }
+
+    input[type='radio'] {
+        @apply w-[18px] h-[18px] accent-white;
+    }
 }
 
 .body-container {

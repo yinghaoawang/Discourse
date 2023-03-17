@@ -1,2 +1,82 @@
 .create-channel-modal-content {
+    @apply p-0;
+
+    .header {
+        @apply mb-1 font-semibold;
+    }
+
+    .top {
+        @apply px-5 py-3;
+
+        .header {
+            @apply flex justify-between;
+    
+            .title {
+                @apply font-normal text-2xl mb-2 min-w-[300px];
+            }
+    
+            .close-button {
+                span {
+                    @apply text-4xl align-text-top relative;
+                }
+            }
+        }
+
+        .channel-type-container {
+            @apply mb-4 flex flex-col;
+
+            .option {
+                @apply flex justify-between
+                p-4 font-semibold bg-gray-700 my-2 rounded-sm;
+
+                .icon {
+                    @apply flex items-center w-14;
+                }
+
+                .description {
+                    @apply flex flex-col basis-full;
+                    .details {
+                        @apply font-normal;
+                    }
+                }
+
+                .input {
+                    @apply px-2 ml-5 my-auto;
+                }
+
+                &:hover {
+                    @apply bg-gray-800;
+                }
+            }
+        }
+
+        .channel-name-container {
+            @apply mb-3;
+            .input-row {
+                @apply flex items-center bg-gray-800;
+                .channel-input-symbol {
+                    @apply pl-2;
+                }
+                input {
+                    @apply w-full rounded-sm bg-gray-800 py-2 pl-2 outline-none;
+                }
+            }
+            
+        }
+    }
+
+    .bottom {
+        @apply bg-gray-800 px-5 py-4 rounded-b-xl;
+        .action-buttons-container {
+            @apply flex justify-end;
+
+            .create-channel-button {
+                @apply ml-5 bg-blue-500 px-3 py-2 rounded-sm;
+
+                &:hover {
+                    @apply bg-blue-600;
+                }
+            }
+        }
+    }
 }
