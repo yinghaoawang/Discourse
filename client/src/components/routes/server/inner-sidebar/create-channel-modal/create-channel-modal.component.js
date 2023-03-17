@@ -24,6 +24,7 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
 
     const submitModalHandler = (event) => {
         event.preventDefault();
+        console.log('HEYA');
         const trimmedChannelName = channelName.trim();
         if (trimmedChannelName === '') {
             alert('Channel name cannot be empty.');
@@ -69,8 +70,8 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                     </div>
                     <label className='channel-type-container' htmlFor='channelTypeText'>
                         <div className='header'>Channel Type</div>
-                        <div className='option text'>
-                            <div className='icon'><SpeakerIcon size={'23px'} /></div>
+                        <div className={ `option text ${ channelType === ChannelTypeOptions.TEXT ? 'selected' : ''}`} htmlFor='channelTypeText' >
+                            <div className='icon'><HashtagIcon size={'23px'} /></div>
                             <div className='description'>
                                 <div className='title'>Text</div>
                                 <div className='details'>Send text, jokes, opinions, and puns</div>
@@ -79,8 +80,8 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                                 <input checked={ channelType === ChannelTypeOptions.TEXT } id='channelTypeText' type='radio' value={ ChannelTypeOptions.TEXT } onChange={ e => setChannelType(e?.target?.value) } name='channelType' />
                             </div>
                         </div>
-                        <label className='option voice' htmlFor='channelTypeVoice'>
-                            <div className='icon'><HashtagIcon size={'23px'} /></div>
+                        <label className={ `option voice ${ channelType === ChannelTypeOptions.VOICE ? 'selected' : ''}`} htmlFor='channelTypeVoice'>
+                            <div className='icon'><SpeakerIcon size={'23px'} /></div>
                             <div className='description'>
                                 <div className='title'>Voice</div>
                                 <div className='details'>Hang out with your friends using voice</div>
@@ -94,7 +95,11 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                         <div className='header'>Channel Name</div>
                         <div className='input-row'>
                             <div className='channel-input-symbol'>
-                                <HashtagIcon size={ '15px' }  />
+                                { channelType === ChannelTypeOptions.TEXT ?
+                                    <HashtagIcon size={ '15px' } /> :
+                                    <SpeakerIcon size={ '15px' } />
+                                }
+                                
                             </div>
                             <input value={ channelName } onChange={ e => setChannelName(e?.target?.value) } />
                         </div>

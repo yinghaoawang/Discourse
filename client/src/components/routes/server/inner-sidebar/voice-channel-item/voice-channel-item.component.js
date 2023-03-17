@@ -21,8 +21,6 @@ const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
         console.log(voiceChannel, currentVoiceChannel);;
     }
 
-    
-
     return (
         <div onClick={ channelClickHandler } className={ `channel-item-container ${ className } ${ isSelected ? 'selected' : '' }` } { ...props }>
             { children ? children :

@@ -44,7 +44,7 @@
                     @apply px-2 ml-5 my-auto;
                 }
 
-                &:hover {
+                &:hover, &.selected {
                     @apply bg-gray-800;
                 }
             }
@@ -54,6 +54,7 @@
             @apply mb-3;
             .input-row {
                 @apply flex items-center bg-gray-800;
+                
                 .channel-input-symbol {
                     @apply pl-2;
                 }
