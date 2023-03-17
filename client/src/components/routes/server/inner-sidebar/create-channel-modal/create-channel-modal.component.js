@@ -1,5 +1,5 @@
 import Modal from 'react-modal';
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { VscChromeClose as CloseIcon } from 'react-icons/vsc'
 import { FaHashtag as HashtagIcon } from 'react-icons/fa';
 import { HiSpeakerWave as SpeakerIcon } from 'react-icons/hi2';
@@ -16,11 +16,39 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
     const [channelType, setChannelType] = useState('');
     const [channelName, setChannelName] = useState('');
     const { addChannel } = useContext(SocketContext);
+
+    const resetFormValues = () => {
+        setChannelType(ChannelTypeOptions.TEXT);
+        setChannelName('');
+    }
+
     const submitModalHandler = (event) => {
         event.preventDefault();
         console.log(channelType, channelName);
-        // addChannel({ channelName });
+        switch (channelType) {
+            case ChannelTypeOptions.TEXT:
+                const trimmedChannelName = channelName.trim();
+                if (trimmedChannelName === '') {
+                    alert('Channel name cannot be empty.')
+                } else {
+                    addChannel({ channelName });
+                }
+
+                resetFormValues();
+                closeModal();
+
+                break;
+            case ChannelTypeOptions.VOICE:
+
+                break;
+            default:
+                throw new Error('Unhandled channelType in submitModalHandler');
+        }
     }
+
+    useEffect(() => {
+        resetFormValues();
+    }, [])
     
     return (
         <Modal
