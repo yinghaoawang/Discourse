@@ -22,19 +22,41 @@ const getServers = async () => {
     }
 }
 
-const addChannel = async ({ serverId, channelData }) => {
-    const keyName = `${ serverId }/channels`;
+const addTextChannel = async ({ serverId, textChannelData }) => {
+    const keyName = `${ serverId }/text-channels`;
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
         const data = JSON.parse(cacheResults);
-        await redisClient.set(keyName, JSON.stringify([...data, channelData]));
+        await redisClient.set(keyName, JSON.stringify([...data, textChannelData]));
     } else {
-        await redisClient.set(keyName, JSON.stringify([channelData]));
+        await redisClient.set(keyName, JSON.stringify([textChannelData]));
     }
 }
 
-const getChannels = async ({ serverId }) => {
-    const keyName = `${ serverId }/channels`; 
+const getTextChannels = async ({ serverId }) => {
+    const keyName = `${ serverId }/text-channels`; 
+    const cacheResults = await redisClient.get(keyName);
+    if (cacheResults) {
+        return JSON.parse(cacheResults);
+    } else {
+        await redisClient.set(keyName, JSON.stringify([]));
+        return [];
+    }
+}
+
+const addVoiceChannel = async ({ serverId, voiceChannelData }) => {
+    const keyName = `${ serverId }/voice-channels`;
+    const cacheResults = await redisClient.get(keyName);
+    if (cacheResults) {
+        const data = JSON.parse(cacheResults);
+        await redisClient.set(keyName, JSON.stringify([...data, voiceChannelData]));
+    } else {
+        await redisClient.set(keyName, JSON.stringify([voiceChannelData]));
+    }
+}
+
+const getVoiceChannels = async ({ serverId }) => {
+    const keyName = `${ serverId }/voice-channels`; 
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
         return JSON.parse(cacheResults);
@@ -94,5 +116,5 @@ const getServerUsers = async ({ serverId }) => {
 }
 
 module.exports = {
-    addPost, getPosts, addServer, getServers, addChannel, getChannels, addServerUser, getServerUsers
+    addPost, getPosts, addServer, getServers, addTextChannel, getTextChannels, addVoiceChannel, getVoiceChannels, addServerUser, getServerUsers
 }

@@ -5,15 +5,19 @@ export const ServerContext = createContext();
 export const ServerProvider = ({ children }) => {
     const [servers, setServers] = useState([]);
     const [currentServer, setCurrentServer] = useState(null);
-    const [channels, setChannels] = useState([]);
-    const [currentChannel, setCurrentChannel] = useState(null);
+    const [textChannels, setTextChannels] = useState([]);
+    const [voiceChannels, setVoiceChannels] = useState([]);
+    const [currentTextChannel, setCurrentTextChannel] = useState(null);
+    const [currentVoiceChannel, setCurrentVoiceChannel] = useState(null);
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
     const value = {
         servers, setServers,    
         currentServer, setCurrentServer,
-        channels, setChannels,
-        currentChannel, setCurrentChannel,
+        textChannels, setTextChannels,
+        voiceChannels, setVoiceChannels,
+        currentTextChannel, setCurrentTextChannel,
+        currentVoiceChannel, setCurrentVoiceChannel,
         posts, setPosts,
         users, setUsers
     };

@@ -10,7 +10,7 @@ import { SocketContext } from '../../../contexts/socket.context';
 
 const Server = () => {
   const { id } = useParams();
-  const { servers, currentChannel, channels, currentServer, posts, users } = useContext(ServerContext);
+  const { servers, currentTextChannel, textChannels, voiceChannels, currentServer, posts, users } = useContext(ServerContext);
   const { changeServer } = useContext(SocketContext);
 
   // handles loading a server on page refresh
@@ -31,9 +31,9 @@ const Server = () => {
     <div className='server-container'>
         { currentServer ?
         <>
-          <InnerSidebar channels={ channels } />
+          <InnerSidebar textChannels={ textChannels } voiceChannels={ voiceChannels } />
           <div className='content-bottom-chatbar-container'>
-            { currentChannel ? <>
+            { currentTextChannel ? <>
                 <div className='content-container'>
                 { reversedPosts.map((post, index) => {
                   return <PostItem key={ index } post={ post } />

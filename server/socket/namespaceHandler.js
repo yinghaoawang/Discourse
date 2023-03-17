@@ -1,5 +1,5 @@
 const { PostTypes } = require('./socketConstants');
-const { addPost, getChannels, addChannel, getPosts, addServerUser, getServerUsers } = require('../db.utils');
+const { addPost, getTextChannels, addTextChannel, getVoiceChannels, addVoiceChannel, getPosts, addServerUser, getServerUsers } = require('../db.utils');
 
 
 
@@ -20,9 +20,14 @@ module.exports = async (io) => {
             return users;
         }
         
-        const sendChannels = async () => {
-            const channels = await getChannels({ serverId: server.id });
-            socket.emit('channels', { channels });
+        const sendAllChannels = async (payload) => {
+            const textChannels = await getTextChannels({ serverId: server.id });
+            const voiceChannels = await getVoiceChannels({ serverId: server.id });
+            if (payload != null && payload.target != null) {
+                payload.target.emit('channels', { textChannels, voiceChannels });
+            } else {
+                socket.emit('channels', { textChannels, voiceChannels });
+            }
         }
         
         const sendUsers = async () => {
@@ -54,7 +59,7 @@ module.exports = async (io) => {
 
             // if room not specified, use first room if exists
             if (roomId == null) {
-                const channels = await getChannels({ serverId: server.id });
+                const channels = await getTextChannels({ serverId: server.id });
                 if (channels.length === 0) return;
 
                 roomId = channels[0].id;
@@ -101,17 +106,24 @@ module.exports = async (io) => {
             console.log('disconnect from ', namespace.name);
         }
 
-        const onAddChannel = async ({ channelData}) => {
+        const onAddTextChannel = async ({ textChannelData}) => {
             console.log('adding channel');
-            let channels = await getChannels({ serverId: server.id });
-            await addChannel({ serverId: server.id, channelData: { ...channelData, id: channels.length } });
-            const nsp = io.of('/' + server.name);
-            channels = await getChannels({ serverId: server.id });
-            nsp.emit('channels', { channels });
+            let channels = await getTextChannels({ serverId: server.id });
+            await addTextChannel({ serverId: server.id, textChannelData: { ...textChannelData, id: channels.length } });
+            channels = await getTextChannels({ serverId: server.id });
+            sendAllChannels({ target: namespace });
+        }
+
+        const onAddVoiceChannel = async ({ voiceChannelData}) => {
+            console.log('adding voice channel');
+            let voiceChannels = await getVoiceChannels({ serverId: server.id });
+            await addVoiceChannel({ serverId: server.id, voiceChannelData: { ...voiceChannelData, id: voiceChannels.length } });
+            voiceChannels = await getVoiceChannels({ serverId: server.id });
+            sendAllChannels({ target: namespace });
         }
 
         socket.on('getPosts', sendPosts);
-        socket.on('getChannels', sendChannels);
+        socket.on('getChannels', sendAllChannels);
         socket.on('getUsers', sendUsers);
         socket.on('message', sendMessage);
         socket.on('disconnecting', onDisconnecting);
@@ -119,7 +131,8 @@ module.exports = async (io) => {
         socket.on('joinRoom', joinRoom);
         socket.on('leaveRoom', leaveRoom);
         socket.on('updateUser', updateUser);
-        socket.on('addChannel', onAddChannel);
+        socket.on('addTextChannel', onAddTextChannel);
+        socket.on('addVoiceChannel', onAddVoiceChannel);
 
         onConnect();
     }

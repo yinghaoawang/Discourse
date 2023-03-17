@@ -18,7 +18,9 @@ export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
     const { currentUser } = useContext(UserContext);
-    const { currentChannel, setCurrentChannel, setServers, setPosts, setChannels, setUsers, setCurrentServer } = useContext(ServerContext);
+    const { currentTextChannel, setCurrentTextChannel, setCurrentVoiceChannel,
+        setServers, setPosts, setVoiceChannels, setTextChannels, 
+        setUsers, setCurrentServer } = useContext(ServerContext);
     
     const [socket, setSocket] = useState(null);
     const [isSocketConnecting, setIsSocketConnecting] = useState(false);
@@ -45,12 +47,17 @@ export const SocketProvider = ({ children }) => {
     }
 
     const sendMessage = ({ message }) => {
-        socket.emit('message', { message, user: currentUser, roomId: currentChannel.id });
+        socket.emit('message', { message, user: currentUser, roomId: currentTextChannel.id });
     }
 
-    const addChannel = ({ channelName }) => {
-        const channelData = { name: channelName };
-        socket.emit('addChannel', { channelData });
+    const addTextChannel = ({ channelName }) => {
+        const textChannelData = { name: channelName };
+        socket.emit('addTextChannel', { textChannelData });
+    }
+
+    const addVoiceChannel = ({ channelName }) => {
+        const voiceChannelData = { name: channelName };
+        socket.emit('addVoiceChannel', { voiceChannelData });
     }
 
     const addServer = ({ serverName }) => {
@@ -66,14 +73,15 @@ export const SocketProvider = ({ children }) => {
         });
       
         newSocket.on('channels', (data) => {
-            console.log('channels', data);
-            const { channels } = data;
-            setChannels(channels);
+            const { textChannels, voiceChannels } = data;
+            console.log(textChannels, voiceChannels);
+            setTextChannels(textChannels);
+            setVoiceChannels(voiceChannels);
 
-            const firstChannel = channels?.[0];
+            const firstChannel = textChannels?.[0];
             if (firstChannel) {
                 console.log('first channel exists');
-                changeChannel({ channel: firstChannel, currentSocket: newSocket });
+                changeTextChannel({ textChannel: firstChannel, currentSocket: newSocket });
                 console.log(newSocket);
                 newSocket.emit('getPosts', { roomId: firstChannel.id })
             }
@@ -124,6 +132,10 @@ export const SocketProvider = ({ children }) => {
         setSocket(newSocket);
     }
 
+    const changeNamespace = (namespace) => {
+        changeSocket(io(url + namespace, options));
+    }
+
     const updateSocketUser = () => {
         socket.emit('updateUser', { user: currentUser });
     }
@@ -131,8 +143,9 @@ export const SocketProvider = ({ children }) => {
     const changeServer = (data) => {
         let server = null;
         if (data != null) server = data.server;
-         
-        setCurrentChannel(null);
+
+        setCurrentTextChannel(null);
+        setCurrentVoiceChannel(null);
         setPosts([]);
         setUsers([]);
         setCurrentServer(server);
@@ -143,34 +156,36 @@ export const SocketProvider = ({ children }) => {
             changeNamespace('/' + server.name);
         }
     }
-    
-    const changeNamespace = (namespace) => {
-        changeSocket(io(url + namespace, options));
-    }
 
     const changeRoom = ({ roomId, currentSocket }) => {
         if (currentSocket == null) {
             currentSocket = socket;    
         }
 
-        if (currentChannel != null) {
-            currentSocket.emit('leaveRoom', { roomId: currentChannel.id });
+        if (currentTextChannel != null) {
+            currentSocket.emit('leaveRoom', { roomId: currentTextChannel.id });
         }
         currentSocket.emit('joinRoom', { roomId });
         console.log('CHANGE ROOM');
     }
     
-    const changeChannel = ({ channel, currentSocket }) => {
-        console.log(channel);
-        changeRoom({ roomId: channel.id, currentSocket });
-        setCurrentChannel(channel);
+    const changeTextChannel = ({ textChannel, currentSocket }) => {
+        console.log(textChannel);
+        changeRoom({ roomId: textChannel.id, currentSocket });
+        setCurrentTextChannel(textChannel);
+    }
+
+    const changeVoiceChannel = ({ voiceChannel, currentSocket }) => {
+        // TODO MAKE WORK
+        // changeRoom({ roomId: voiceChannel.id, currentSocket });
+        setCurrentVoiceChannel(voiceChannel);
     }
 
     const value = {
         socket, updateSocketUser,
         loadServers,
-        addServer, addChannel, sendMessage,
-        changeServer, changeChannel,
+        addServer, addTextChannel, addVoiceChannel, sendMessage,
+        changeServer, changeTextChannel, changeVoiceChannel,
         isSocketConnecting, setIsSocketConnecting
     };
     return <SocketContext.Provider value={ value }>{ children }</SocketContext.Provider>

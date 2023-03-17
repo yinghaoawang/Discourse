@@ -15,7 +15,7 @@ const ChannelTypeOptions = {
 const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
     const [channelType, setChannelType] = useState('');
     const [channelName, setChannelName] = useState('');
-    const { addChannel } = useContext(SocketContext);
+    const { addTextChannel, addVoiceChannel } = useContext(SocketContext);
 
     const resetFormValues = () => {
         setChannelType(ChannelTypeOptions.TEXT);
@@ -24,26 +24,26 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
 
     const submitModalHandler = (event) => {
         event.preventDefault();
+        const trimmedChannelName = channelName.trim();
+        if (trimmedChannelName === '') {
+            alert('Channel name cannot be empty.');
+            return;
+        }
+
         console.log(channelType, channelName);
         switch (channelType) {
             case ChannelTypeOptions.TEXT:
-                const trimmedChannelName = channelName.trim();
-                if (trimmedChannelName === '') {
-                    alert('Channel name cannot be empty.')
-                } else {
-                    addChannel({ channelName });
-                }
-
-                resetFormValues();
-                closeModal();
-
+                addTextChannel({ channelName });
                 break;
             case ChannelTypeOptions.VOICE:
-
+                addVoiceChannel({ channelName });
                 break;
             default:
                 throw new Error('Unhandled channelType in submitModalHandler');
         }
+
+        resetFormValues();
+        closeModal();
     }
 
     useEffect(() => {
