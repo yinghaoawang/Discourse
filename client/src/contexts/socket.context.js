@@ -128,7 +128,10 @@ export const SocketProvider = ({ children }) => {
         socket.emit('updateUser', { user: currentUser });
     }
 
-    const changeServer = ({ server }) => {
+    const changeServer = (data) => {
+        let server = null;
+        if (data != null) server = data.server;
+         
         setCurrentChannel(null);
         setPosts([]);
         setUsers([]);
