@@ -1,7 +1,7 @@
 const { PostTypes } = require('./socketConstants');
 const { addPost, getTextChannels, addTextChannel, getVoiceChannels, addVoiceChannel, getPosts, addServerUser, getServerUsers } = require('../db.utils');
 
-
+const { voiceRooms, joinVoiceRoom, leaveVoiceRoom } = require('./voiceRooms');
 
 module.exports = async (io) => {
     const onNamespaceConnect = async ({ socket, server }) => {
@@ -18,6 +18,14 @@ module.exports = async (io) => {
                 }
             }
             return users;
+        }
+
+        const sendVoiceRoomData = async (payload) => {
+            if (payload != null && payload.target != null) {
+                payload.target.emit('voiceRooms', { voiceRooms });
+            } else {
+                namespace.emit('voiceRooms', { voiceRooms });
+            }
         }
         
         const sendAllChannels = async (payload) => {
@@ -92,6 +100,16 @@ module.exports = async (io) => {
             sendUsers();
         }
 
+        const onJoinVoiceRoom = async ({ roomId }) => {
+            joinVoiceRoom({ roomId, socket });
+            sendVoiceRoomData();
+        }
+
+        const onLeaveVoiceRoom = async({ roomId }) => {
+            leaveVoiceRoom({ roomId, socket });
+            sendVoiceRoomData();
+        }
+
         const onConnect = async () => {
             console.log('connected to ' + server.name);
         }
@@ -124,12 +142,15 @@ module.exports = async (io) => {
 
         socket.on('getPosts', sendPosts);
         socket.on('getChannels', sendAllChannels);
+        socket.on('getVoiceRooms', sendVoiceRoomData);
         socket.on('getUsers', sendUsers);
         socket.on('message', sendMessage);
         socket.on('disconnecting', onDisconnecting);
         socket.on('disconnect', onDisconnect);
         socket.on('joinRoom', joinRoom);
         socket.on('leaveRoom', leaveRoom);
+        socket.on('joinVoiceRoom', onJoinVoiceRoom);
+        socket.on('leaveVoiceRoom', onLeaveVoiceRoom);
         socket.on('updateUser', updateUser);
         socket.on('addTextChannel', onAddTextChannel);
         socket.on('addVoiceChannel', onAddVoiceChannel);

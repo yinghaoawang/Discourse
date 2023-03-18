@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useState } from 'react'
 import { UserContext } from './user.context';
 import { ServerContext } from './server.context';
 
@@ -18,9 +18,10 @@ export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
     const { currentUser } = useContext(UserContext);
-    const { currentTextChannel, setCurrentTextChannel, setCurrentVoiceChannel,
-        setServers, setPosts, setVoiceChannels, setTextChannels, 
-        setUsers, setCurrentServer } = useContext(ServerContext);
+    const { currentTextChannel, setCurrentTextChannel,
+        currentVoiceChannel, setCurrentVoiceChannel,
+        setServers, setPosts, setVoiceChannels, setVoiceRooms,
+        setTextChannels, setUsers, setCurrentServer } = useContext(ServerContext);
     
     const [socket, setSocket] = useState(null);
     const [isSocketConnecting, setIsSocketConnecting] = useState(false);
@@ -70,6 +71,10 @@ export const SocketProvider = ({ children }) => {
             console.log('posts', data);
             const { posts } = data;
             setPosts(posts);
+        });
+
+        newSocket.on('voiceRooms', (data) => {
+            setVoiceRooms(data.voiceRooms);
         });
       
         newSocket.on('channels', (data) => {
@@ -127,6 +132,7 @@ export const SocketProvider = ({ children }) => {
             addNspListeners(newSocket);
             newSocket.emit('updateUser', { user: currentUser, isOnConnect: true });
             newSocket.emit('getChannels');
+            newSocket.emit('getVoiceRooms');
         });
 
         setSocket(newSocket);
@@ -168,6 +174,23 @@ export const SocketProvider = ({ children }) => {
         currentSocket.emit('joinRoom', { roomId });
         console.log('CHANGE ROOM');
     }
+
+    const changeVoiceRoom = ({ roomId, currentSocket }) => {
+        if (currentSocket == null) {
+            currentSocket = socket;    
+        }
+
+        if (currentVoiceChannel != null) {
+            currentSocket.emit('leaveVoiceRoom', { roomId: currentVoiceChannel.id });
+        }
+
+        if (roomId != null) {
+            currentSocket.emit('joinVoiceRoom', { roomId });
+            console.log('CHANGE ROOM SUCCESS');
+        } else {
+            console.log('CHANGE ROOM FAIL');
+        }
+    }
     
     const changeTextChannel = ({ textChannel, currentSocket }) => {
         console.log(textChannel);
@@ -176,8 +199,11 @@ export const SocketProvider = ({ children }) => {
     }
 
     const changeVoiceChannel = ({ voiceChannel, currentSocket }) => {
-        // TODO MAKE WORK
-        // changeRoom({ roomId: voiceChannel.id, currentSocket });
+        let roomId = null;
+        if (voiceChannel != null) {
+            roomId = voiceChannel.id;
+        }
+        changeVoiceRoom({ roomId, currentSocket });
         setCurrentVoiceChannel(voiceChannel);
     }
 

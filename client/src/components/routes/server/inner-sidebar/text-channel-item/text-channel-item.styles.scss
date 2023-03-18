@@ -6,7 +6,7 @@
     }
 
     &.selected {
-        @apply bg-gray-600;
+        @apply bg-gray-600 text-gray-300;
     }
 
     &:hover {
