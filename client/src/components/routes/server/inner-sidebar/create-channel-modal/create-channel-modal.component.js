@@ -58,7 +58,8 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
             onRequestClose={ closeModal }
             className='modal-content fit create-channel-modal-content'
             overlayClassName='modal-overlay'
-            contentLabel="Example Modal"
+            closeTimeoutMS={ 200 }
+            contentLabel="Create Channel"
         >
             <form onSubmit={ submitModalHandler }>
                 <div className='top'>
@@ -107,7 +108,7 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                 </div>
                 <div className='bottom'>
                     <div className='action-buttons-container'>
-                        <button>Cancel</button>
+                        <button onClick={ closeModal }>Cancel</button>
                         <button className='create-channel-button'>Create Channel</button>
                     </div>
                 </div>

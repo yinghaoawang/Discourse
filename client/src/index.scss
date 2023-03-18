@@ -44,6 +44,18 @@
     @apply flex h-screen;
 }
 
+.ReactModal__Overlay {
+    @apply opacity-0 transition-opacity duration-200 ease-in-out;
+}
+
+.ReactModal__Overlay--after-open {
+    @apply opacity-100;
+}
+
+.ReactModal__Overlay--before-close {
+    @apply opacity-0;
+}
+
 .modal-overlay {
     @apply top-0 left-0 right-0 bottom-0 fixed bg-gray-900/80;
 }
