@@ -18,17 +18,18 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
 
     return (
         <div className="inner-sidebar-container">
-            <div className='category-label'>Text channels</div>
             <div className='channels-container'>
+                <div className='category-label'>Text channels</div>
                 <CreateChannelModal closeModal={ closeModal } isModalOpen={ isModalOpen } />
                 { textChannels.map((textChannel, index) => 
                     <TextChannelItem key={ index } textChannel={ textChannel } />
                 )}
+                <div className='category-label'>Voice channels</div>
                 { voiceChannels.map((voiceChannel, index) => 
                     <VoiceChannelItem key={ index } voiceChannel={ voiceChannel } />
                 )}
-                <TextChannelItem className='new-room-item' onClick={ openModal }><FaPlus />New Channel</TextChannelItem>
             </div>
+            <TextChannelItem className='new-room-item' onClick={ openModal }><FaPlus />New Channel</TextChannelItem>
         </div>
     );
 };

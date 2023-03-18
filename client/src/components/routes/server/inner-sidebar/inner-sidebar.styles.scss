@@ -4,14 +4,18 @@
     bg-gray-800 text-gray-400
     overflow-y-scroll;
 
-    .category-label {
-        @apply mt-4 ml-2 select-none;
-    }
+    
     .channels-container {
         @apply ml-2;
-        
-        .new-room-item {
-            @apply cursor-pointer;
+        .category-label {
+            @apply mt-4 select-none font-semibold;
+
+            &:hover {
+                @apply text-gray-300;
+            }
         }
+    }
+    .new-room-item {
+        @apply ml-2 cursor-pointer;
     }
 }

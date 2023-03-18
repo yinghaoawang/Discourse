@@ -1,5 +1,5 @@
 .channel-item-container {
-    @apply flex items-center mt-0.5 py-1.5 px-2 select-none;
+    @apply flex items-center mt-0.5 py-1.5 px-2 select-none cursor-pointer;
 
     svg {
         @apply mr-2;
@@ -10,6 +10,6 @@
     }
 
     &:hover {
-        @apply bg-gray-700;
+        @apply bg-gray-700 text-gray-300;;
     }
 }
