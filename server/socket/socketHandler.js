@@ -44,12 +44,12 @@ module.exports = async (io) => {
     })();
 
     const onSocketConnect = async (socket) => {
-        console.log('connect');
+        console.log('connect to /');
 
         addSocketListeners({ socket });
     
         socket.on('disconnect', () => {
-            console.log('disconnect');
+            console.log('disconnect from /');
         })
     }
     

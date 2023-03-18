@@ -33,7 +33,8 @@ const joinVoiceRoom = ({ roomId, socket }) => {
 
 const leaveVoiceRoom = ({ roomId, socket }) => {
     const voiceRoom = voiceRooms.find(v => v.roomId === roomId);
-    if (voiceRooms == null) {
+    console.log(voiceRoom, roomId);
+    if (voiceRoom == null) {
         console.error('Voice room is null in leaveVoiceRoom');
         return;
     }

@@ -44,6 +44,7 @@ const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
                         <div className='username'>
                             { voiceUser.name }
                         </div>
+                        <div className='mic-icons'></div>
                     </div>
                 )})}
             </div>

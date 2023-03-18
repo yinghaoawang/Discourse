@@ -52,7 +52,6 @@ module.exports = async (io) => {
             if (isOnConnect) {
                 const serverUsers = await getServerUsers({ serverId: server.id });
                 const matchingUser = serverUsers.find(item => item.name === user.name);
-                console.log('matching user', matchingUser);
                 if (!matchingUser) {
                     await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN });
                 }
@@ -80,8 +79,16 @@ module.exports = async (io) => {
             
         };
 
-        const getCurrentRoom = () => {
+        const getCurrentRoomId = () => {
             return [...socket.rooms][1];
+        }
+
+        const getCurrentVoiceRoomId = () => {
+            for (let voiceRoom of voiceRooms) {
+                const matchingUser = voiceRoom?.users?.find(u => u.id == socket.id);
+                if (matchingUser) return voiceRoom.roomId;
+            }
+            return null;
         }
 
         const joinRoom = async ({ roomId }) => {
@@ -101,11 +108,13 @@ module.exports = async (io) => {
         }
 
         const onJoinVoiceRoom = async ({ roomId }) => {
+            console.log('joining vc room', roomId);
             joinVoiceRoom({ roomId, socket });
             sendVoiceRoomData();
         }
 
         const onLeaveVoiceRoom = async({ roomId }) => {
+            console.log('leaving vc room', roomId);
             leaveVoiceRoom({ roomId, socket });
             sendVoiceRoomData();
         }
@@ -115,13 +124,14 @@ module.exports = async (io) => {
         }
 
         const onDisconnecting = async () => {
-            leaveRoom({ roomId: getCurrentRoom() });
+            leaveRoom({ roomId: getCurrentRoomId() });
+            onLeaveVoiceRoom({ roomId: getCurrentVoiceRoomId() })
             // await sendMessage({ message: 'has left the server', serverId: server.id, type: PostTypes.USER_LEAVE });
         }
         
         const onDisconnect = () => {
             sendUsers();
-            console.log('disconnect from ', namespace.name);
+            console.log('disconnected from ', namespace.name);
         }
 
         const onAddTextChannel = async ({ textChannelData}) => {
