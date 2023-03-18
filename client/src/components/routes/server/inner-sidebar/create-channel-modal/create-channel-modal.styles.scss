@@ -72,10 +72,10 @@
             @apply flex justify-end;
 
             .create-channel-button {
-                @apply ml-5 bg-blue-500 px-3 py-2 rounded-sm;
+                @apply ml-5 bg-blue-600 px-3 py-2 rounded-sm;
 
                 &:hover {
-                    @apply bg-blue-600;
+                    @apply bg-blue-700;
                 }
             }
         }
