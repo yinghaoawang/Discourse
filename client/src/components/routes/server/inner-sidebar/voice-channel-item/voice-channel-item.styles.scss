@@ -1,22 +1,44 @@
+.channel-item-container.voice-channel.selected {
+    @apply bg-inherit;
+
+    &:hover {
+        @apply bg-gray-700;
+    }
+}
+
 .voice-channel-users {
-    @apply ml-5;
+    @apply ml-4;
     .channel-user {
-        @apply flex py-1.5 text-gray-300;
+        @apply flex py-1.5 text-gray-300 justify-between;
 
         &:hover {
             @apply bg-gray-700;
         }
 
-        .icon {
-            @apply shrink-0
-            flex items-center justify-center
-            w-6 h-6 mx-2
-            bg-green-600
-            rounded-full select-none;
-    
-            .char {
-                @apply text-[14px] text-white;
+        .user {
+            @apply flex items-center;
+            .icon {
+                @apply shrink-0
+                flex items-center justify-center
+                w-6 h-6 mx-2
+                bg-green-600
+                rounded-full select-none;
+        
+                .char {
+                    @apply text-[14px] text-white;
+                }
+
+            }
+            
+            .username {
+                @apply text-sm text-gray-400;
             }
         }
+
+        .mic-icons {
+            @apply flex items-center justify-end text-gray-500 mr-1;
+        }
+
+        
     }
 }
