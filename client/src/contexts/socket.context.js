@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 import { createContext, useContext, useState } from 'react'
 import { UserContext } from './user.context';
 import { ServerContext } from './server.context';
+import { WebRTCContext } from './webRTC.context';
 
 let url = 'localhost:1250';
 let options = { transports: ['websocket'] };
@@ -17,6 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
+    const { getLocalStream, setStream } = useContext(WebRTCContext);
     const { currentUser } = useContext(UserContext);
     const { currentTextChannel, setCurrentTextChannel,
         currentVoiceChannel, setCurrentVoiceChannel,
@@ -175,7 +177,7 @@ export const SocketProvider = ({ children }) => {
         console.log('CHANGE ROOM');
     }
 
-    const changeVoiceRoom = ({ roomId, currentSocket }) => {
+    const changeVoiceRoom = async ({ roomId, currentSocket }) => {
         if (currentSocket == null) {
             currentSocket = socket;    
         }
@@ -186,8 +188,13 @@ export const SocketProvider = ({ children }) => {
 
         if (roomId != null) {
             currentSocket.emit('joinVoiceRoom', { roomId });
+            const stream = await getLocalStream();
+            if (stream != null) {
+                setStream(stream);
+            };
             console.log('CHANGE ROOM SUCCESS');
         } else {
+            setStream(null);
             console.log('CHANGE ROOM FAIL');
         }
     }

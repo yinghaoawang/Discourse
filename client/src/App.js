@@ -8,10 +8,12 @@ import DirectMessages from './components/routes/direct-messages/direct-messages.
 import Home from './components/routes/home/home.component';
 import { UserContext } from './contexts/user.context';
 import { SocketContext } from './contexts/socket.context';
+import { WebRTCContext } from './contexts/webRTC.context';
 
 const NavbarWrapper = () => {
 	return (
 		<div className='body-container'>
+			<audio id='audio' autoPlay />
 			<Sidebar />
 			<Outlet />
 		</div>
@@ -37,6 +39,12 @@ const router = createBrowserRouter(routes, {
 const App = () => {
 	const { setCurrentUser } = useContext(UserContext);
 	const { loadServers } = useContext(SocketContext);
+	const { stream } = useContext(WebRTCContext);
+
+    useEffect(() => {
+        const audioObject = document.getElementById('audio');
+        audioObject.srcObject = stream;
+    }, [stream]);
 	
 	useEffect(() => {
 		while (true) {
