@@ -13,6 +13,10 @@ const ChannelTypeOptions = {
 }
 
 const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
+    const afterOpenModalWrapper = () => {
+        if (afterOpenModal != null) afterOpenModal();
+        document.getElementById('channelNameInput').focus();
+    }
     const [channelType, setChannelType] = useState('');
     const [channelName, setChannelName] = useState('');
     const { addTextChannel, addVoiceChannel } = useContext(SocketContext);
@@ -54,7 +58,7 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
     return (
         <Modal
             isOpen={ isModalOpen }
-            onAfterOpen={ afterOpenModal }
+            onAfterOpen={ afterOpenModalWrapper }
             onRequestClose={ closeModal }
             className='modal-content fit create-channel-modal-content'
             overlayClassName='modal-overlay'
@@ -102,7 +106,7 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                                 }
                                 
                             </div>
-                            <input value={ channelName } onChange={ e => setChannelName(e?.target?.value) } />
+                            <input id='channelNameInput' value={ channelName } onChange={ e => setChannelName(e?.target?.value) } />
                         </div>
                     </div>
                 </div>
