@@ -4,17 +4,8 @@ import { UserContext } from './user.context';
 import { ServerContext } from './server.context';
 import { WebRTCContext } from './webRTC.context';
 import { getLocalStream } from '../util/webRTC.util';
+import { getSocket, setSocket, url, options } from '../util/socket.util';
 
-let url = 'localhost:1250';
-let options = { transports: ['websocket'] };
-if (process.env.NODE_ENV === 'production') {
-    url = process.env.REACT_APP_SOCKET_URL;
-    options = {
-        ...options,
-        path: process.env.REACT_APP_SOCKET_PATH,
-        secure: process.env.NODE_ENV ? true : false
-    };
-}
 
 export const SocketContext = createContext();
 
@@ -26,7 +17,6 @@ export const SocketProvider = ({ children }) => {
         setServers, setPosts, setVoiceChannels, setVoiceRooms,
         setTextChannels, setUsers, setCurrentServer } = useContext(ServerContext);
     
-    const [socket, setSocket] = useState(null);
     const [isSocketConnecting, setIsSocketConnecting] = useState(false);
 
     const addSocketListeners = (newSocket) => {
@@ -38,9 +28,9 @@ export const SocketProvider = ({ children }) => {
     }
 
     const loadServers = () => {
-        const currSocket = socket || io(url, options);
+        const currSocket = getSocket() || io(url, options);
         console.log('loading servers');
-        if (socket == null) {
+        if (getSocket() == null) {
             setSocket(currSocket);
         }
 
@@ -51,22 +41,22 @@ export const SocketProvider = ({ children }) => {
     }
 
     const sendMessage = ({ message }) => {
-        socket.emit('message', { message, user: currentUser, roomId: currentTextChannel.id });
+        getSocket().emit('message', { message, user: currentUser, roomId: currentTextChannel.id });
     }
 
     const addTextChannel = ({ channelName }) => {
         const textChannelData = { name: channelName };
-        socket.emit('addTextChannel', { textChannelData });
+        getSocket().emit('addTextChannel', { textChannelData });
     }
 
     const addVoiceChannel = ({ channelName }) => {
         const voiceChannelData = { name: channelName };
-        socket.emit('addVoiceChannel', { voiceChannelData });
+        getSocket().emit('addVoiceChannel', { voiceChannelData });
     }
 
     const addServer = ({ serverName }) => {
         const serverData = { name: serverName };
-        socket.emit('addServer', { serverData });
+        getSocket().emit('addServer', { serverData });
     }
 
     const addNspListeners = (newSocket) => {
@@ -123,8 +113,8 @@ export const SocketProvider = ({ children }) => {
     const changeSocket = (newSocket) => {
         setIsSocketConnecting(true);
 
-        if (socket != null) {
-            socket.close();
+        if (getSocket() != null) {
+            getSocket().close();
         }
 
         newSocket.on('connect', () => {
@@ -146,7 +136,7 @@ export const SocketProvider = ({ children }) => {
     }
 
     const updateSocketUser = () => {
-        socket.emit('updateUser', { user: currentUser });
+        getSocket().emit('updateUser', { user: currentUser });
     }
 
     const changeServer = (data) => {
@@ -168,7 +158,7 @@ export const SocketProvider = ({ children }) => {
 
     const changeRoom = ({ roomId, currentSocket }) => {
         if (currentSocket == null) {
-            currentSocket = socket;    
+            currentSocket = getSocket();    
         }
 
         if (currentTextChannel != null) {
@@ -180,7 +170,7 @@ export const SocketProvider = ({ children }) => {
 
     const changeVoiceRoom = async ({ roomId, currentSocket }) => {
         if (currentSocket == null) {
-            currentSocket = socket;    
+            currentSocket = getSocket();    
         }
 
         if (currentVoiceChannel != null) {
@@ -219,7 +209,7 @@ export const SocketProvider = ({ children }) => {
     }
 
     const value = {
-        socket, updateSocketUser,
+        updateSocketUser,
         loadServers,
         addServer, addTextChannel, addVoiceChannel, sendMessage,
         changeServer, changeTextChannel, changeVoiceChannel,
