@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
 export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
-    const { getLocalStream, setStream, stream } = useContext(WebRTCContext);
+    const { getLocalStream, setLocalStream, localStream } = useContext(WebRTCContext);
     const { currentUser } = useContext(UserContext);
     const { currentTextChannel, setCurrentTextChannel,
         currentVoiceChannel, setCurrentVoiceChannel,
@@ -186,21 +186,19 @@ export const SocketProvider = ({ children }) => {
             currentSocket.emit('leaveVoiceRoom', { roomId: currentVoiceChannel.id });
 
         }
-        
-        if (stream != null) {
-            stream.getTracks().forEach(track => track.stop())
+
+        if (localStream != null) {
+            localStream.getTracks().forEach(track => track.stop())
         }
 
         if (roomId != null) {
             currentSocket.emit('joinVoiceRoom', { roomId });
-            const localStream = await getLocalStream();
-            if (localStream != null) {
-                setStream(localStream);
-            };
+            const stream = await getLocalStream();
+            setLocalStream(stream);
             console.log('CHANGE ROOM SUCCESS');
         } else {
-            setStream(null);
-            console.log('CHANGE ROOM FAIL');
+            setLocalStream(null);
+            console.log('CHANGE ROOM LEAVE');
         }
     }
     

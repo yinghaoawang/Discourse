@@ -7,13 +7,13 @@ import { WebRTCContext } from '../../../../../contexts/webRTC.context';
 import './voice-channel-item.styles.scss';
 
 const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
-    const { stream } = useContext(WebRTCContext);
+    const { localStream } = useContext(WebRTCContext);
     const { currentVoiceChannel, voiceRooms } = useContext(ServerContext);
     const { changeVoiceChannel } = useContext(SocketContext);
     const voiceRoom = voiceRooms.find(v => v.roomId === voiceChannel.id);
     const voiceUsers = voiceRoom?.users;
 
-    const isMuted = stream == null;
+    const isMuted = localStream == null;
 
     const isSelected = currentVoiceChannel != null && voiceChannel != null &&
         currentVoiceChannel.id === voiceChannel.id;

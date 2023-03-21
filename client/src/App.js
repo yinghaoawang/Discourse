@@ -39,12 +39,13 @@ const router = createBrowserRouter(routes, {
 const App = () => {
 	const { setCurrentUser } = useContext(UserContext);
 	const { loadServers } = useContext(SocketContext);
-	const { stream } = useContext(WebRTCContext);
+	const { localStream } = useContext(WebRTCContext);
 
     useEffect(() => {
         const audioObject = document.getElementById('audio');
-        audioObject.srcObject = stream;
-    }, [stream]);
+        audioObject.srcObject = localStream;
+		console.log(localStream);
+    }, [localStream]);
 	
 	useEffect(() => {
 		while (true) {

@@ -11,7 +11,7 @@ const getConfig = () => {
 
 export const WebRTCContext = createContext();
 
-const getLocalStream = async () => {
+const getLocalStream = () => {
     const stream = navigator.mediaDevices.getUserMedia({
         video: false,
         audio: true
@@ -22,17 +22,24 @@ const getLocalStream = async () => {
 
 export const WebRTCProvider = ({ children }) => {
     const [peers, setPeers] = useState(null);
-    const [stream, setStream] = useState(null);
-    const prepareNewPeerConnection = ({ socketId, initiator }) => {
+    const [localStream, setLocalStream] = useState(null);
+    const prepareNewPeerConnection = ({ socketId, isInitiator }) => {
         const config = getConfig();
-        peers[socketId] = new Peer({
-            initiator,
+        const peer = new Peer({
+            initiator: isInitiator,
             config,
+            stream: localStream
         });
-        // TODO
+
+        peers[socketId] = peer;
+        peer.on('stream', (stream) => {
+
+        })
+
+
     };
 
-    const value = { peers, setPeers, prepareNewPeerConnection, getLocalStream, stream, setStream };
+    const value = { peers, setPeers, prepareNewPeerConnection, getLocalStream, localStream, setLocalStream };
 
     return <WebRTCContext.Provider value={ value }>{ children }</WebRTCContext.Provider>;
 }
