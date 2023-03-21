@@ -65,58 +65,56 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
             closeTimeoutMS={ 200 }
             contentLabel="Create Channel"
         >
-            <form onSubmit={ submitModalHandler }>
-                <div className='top'>
-                    <div className='header'>
-                        <div className='title'>
-                            Create Channel
-                        </div>
-                        <button className='close-button' onClick={ closeModal }><CloseIcon size={ '25px' } /></button>
+            <div className='top'>
+                <div className='header'>
+                    <div className='title'>
+                        Create Channel
                     </div>
-                    <label className='channel-type-container' htmlFor='channelTypeText'>
-                        <div className='header'>Channel Type</div>
-                        <div className={ `option text ${ channelType === ChannelTypeOptions.TEXT ? 'selected' : ''}`} htmlFor='channelTypeText' >
-                            <div className='icon'><HashtagIcon size={'23px'} /></div>
-                            <div className='description'>
-                                <div className='title'>Text</div>
-                                <div className='details'>Send text, jokes, opinions, and puns</div>
-                            </div>
-                            <div className='input'>
-                                <input checked={ channelType === ChannelTypeOptions.TEXT } id='channelTypeText' type='radio' value={ ChannelTypeOptions.TEXT } onChange={ e => setChannelType(e?.target?.value) } name='channelType' />
-                            </div>
+                    <button className='close-button' onClick={ closeModal }><CloseIcon size={ '25px' } /></button>
+                </div>
+                <label className='channel-type-container' htmlFor='channelTypeText'>
+                    <div className='header'>Channel Type</div>
+                    <div className={ `option text ${ channelType === ChannelTypeOptions.TEXT ? 'selected' : ''}`} htmlFor='channelTypeText' >
+                        <div className='icon'><HashtagIcon size={'23px'} /></div>
+                        <div className='description'>
+                            <div className='title'>Text</div>
+                            <div className='details'>Send text, jokes, opinions, and puns</div>
                         </div>
-                        <label className={ `option voice ${ channelType === ChannelTypeOptions.VOICE ? 'selected' : ''}`} htmlFor='channelTypeVoice'>
-                            <div className='icon'><SpeakerIcon size={'23px'} /></div>
-                            <div className='description'>
-                                <div className='title'>Voice</div>
-                                <div className='details'>Hang out with your friends using voice</div>
-                            </div>
-                            <div className='input'>
-                                <input checked={ channelType === ChannelTypeOptions.VOICE } id='channelTypeVoice' type='radio' value={ ChannelTypeOptions.VOICE } onChange={ e => setChannelType(e?.target?.value) } name='channelType'/>
-                            </div>
-                        </label>
+                        <div className='input'>
+                            <input checked={ channelType === ChannelTypeOptions.TEXT } id='channelTypeText' type='radio' value={ ChannelTypeOptions.TEXT } onChange={ e => setChannelType(e?.target?.value) } name='channelType' />
+                        </div>
+                    </div>
+                    <label className={ `option voice ${ channelType === ChannelTypeOptions.VOICE ? 'selected' : ''}`} htmlFor='channelTypeVoice'>
+                        <div className='icon'><SpeakerIcon size={'23px'} /></div>
+                        <div className='description'>
+                            <div className='title'>Voice</div>
+                            <div className='details'>Hang out with your friends using voice</div>
+                        </div>
+                        <div className='input'>
+                            <input checked={ channelType === ChannelTypeOptions.VOICE } id='channelTypeVoice' type='radio' value={ ChannelTypeOptions.VOICE } onChange={ e => setChannelType(e?.target?.value) } name='channelType'/>
+                        </div>
                     </label>
-                    <div className='channel-name-container'>
-                        <div className='header'>Channel Name</div>
-                        <div className='input-row'>
-                            <div className='channel-input-symbol'>
-                                { channelType === ChannelTypeOptions.TEXT ?
-                                    <HashtagIcon size={ '15px' } /> :
-                                    <SpeakerIcon size={ '15px' } />
-                                }
-                                
-                            </div>
-                            <input id='channelNameInput' value={ channelName } onChange={ e => setChannelName(e?.target?.value) } />
+                </label>
+                <div className='channel-name-container'>
+                    <div className='header'>Channel Name</div>
+                    <div className='input-row'>
+                        <div className='channel-input-symbol'>
+                            { channelType === ChannelTypeOptions.TEXT ?
+                                <HashtagIcon size={ '15px' } /> :
+                                <SpeakerIcon size={ '15px' } />
+                            }
+                            
                         </div>
+                        <input id='channelNameInput' value={ channelName } onChange={ e => setChannelName(e?.target?.value) } />
                     </div>
                 </div>
-                <div className='bottom'>
-                    <div className='action-buttons-container'>
-                        <button onClick={ closeModal }>Cancel</button>
-                        <button className='create-channel-button'>Create Channel</button>
-                    </div>
+            </div>
+            <div className='bottom'>
+                <div className='action-buttons-container'>
+                    <button onClick={ closeModal }>Cancel</button>
+                    <button type='submit' onClick={ submitModalHandler } className='create-channel-button'>Create Channel</button>
                 </div>
-            </form>
+            </div>
             
         </Modal>
     );
