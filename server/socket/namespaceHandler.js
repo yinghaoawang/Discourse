@@ -111,6 +111,10 @@ module.exports = async (io) => {
             console.log('joining vc room', roomId);
             const voiceRoom = joinVoiceRoom({ roomId, socket });
 
+            if (voiceRoom == null) {
+                console.error('Voice room could not be joined in onJoinVoiceRoom');
+                return;
+            } 
             const { users } = voiceRoom;
             for (const user of users) {
                 if (user.id == socket.id) continue;
