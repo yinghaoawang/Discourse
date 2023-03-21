@@ -25,7 +25,11 @@ const getLocalStream = async () => {
     return stream;
 }
 
-const prepareNewPeerConnection = ({ socketId, isInitiator, localStream }) => {
+const getAudioObjectIdFromSocketId = (socketId) => {
+    return socketId + '-audio';
+}
+
+const prepareNewPeerConnection = ({ connSocketId, isInitiator, localStream }) => {
     const config = getConfig(); 
     const peer = new Peer({
         initiator: isInitiator,
@@ -33,14 +37,14 @@ const prepareNewPeerConnection = ({ socketId, isInitiator, localStream }) => {
         stream: localStream
     });
 
-    peers[socketId] = peer;
+    peers[connSocketId] = peer;
 
     peer.on('signal', (data) => {
 
         console.log('signal', data);
         const signalData = {    
             signal: data,
-            connSocketId: socketId,
+            connSocketId,
         }
 
         const socket = getSocket();
@@ -49,11 +53,16 @@ const prepareNewPeerConnection = ({ socketId, isInitiator, localStream }) => {
 
     peer.on('stream', (stream) => {
         console.log('new stream came');
-        // add stream
+
+        const audioId = getAudioObjectIdFromSocketId(connSocketId);
+
+        const existingAudioObject = document.getElementById(audioId);
+        if (existingAudioObject) return;
+
         const audioObject = document.createElement('audio');
+        audioObject.id = audioId;
         audioObject.autoplay = true;
         // audioObject.controls = true;
-        // audioObject.style.width = '150px';
         audioObject.srcObject = stream;
 
         const audioContainer = document.getElementById('audio-container');
@@ -61,9 +70,28 @@ const prepareNewPeerConnection = ({ socketId, isInitiator, localStream }) => {
 
         streams =  [...streams, stream];
     });
-
     console.log('peers', peers);
 };
+
+const closePeerConnection = ({ connSocketId }) => {
+    console.log('close connection ', connSocketId);
+    const audioObject = document.getElementById(getAudioObjectIdFromSocketId(connSocketId));
+    if (audioObject == null) throw new Error('Audio object could not be found in closePeerConnection');
+    for (const track of audioObject.srcObject.getTracks()) {
+        track.stop();
+    }
+    audioObject.remove();
+    if (peers[connSocketId]) {
+        peers[connSocketId].destroy();
+    }
+    delete peers[connSocketId];
+}
+
+const closeAllPeerConnections = () => {
+    for (const key in peers) {
+        closePeerConnection({ connSocketId: key });
+    }
+}
 
 const addWebRTCListeners = (socket, namespace) => {
     socket.on('webRTCConnSignal', ({ signalData }) => {
@@ -75,13 +103,17 @@ const addWebRTCListeners = (socket, namespace) => {
 
     socket.on('webRTCConnPrepare', async ({ connSocketId }) => {
         console.log('PREPARE', connSocketId);
-        prepareNewPeerConnection({ socketId: connSocketId, isInitator: false, localStream: await getLocalStream() });
+        prepareNewPeerConnection({ connSocketId, isInitator: false, localStream: await getLocalStream() });
         socket.emit('webRTCConnInit', { connSocketId: connSocketId });
     });
 
     socket.on('webRTCConnInit', async ({ connSocketId }) => {
-        prepareNewPeerConnection({ socketId: connSocketId, isInitiator: true, localStream: await getLocalStream() });
+        prepareNewPeerConnection({ connSocketId, isInitiator: true, localStream: await getLocalStream() });
+    });
+
+    socket.on('webRTCConnClose', async ({ connSocketId }) => {
+        closePeerConnection({ connSocketId });
     });
 }
 
-export { streams, peers, getLocalStream, prepareNewPeerConnection, addWebRTCListeners };
+export { closePeerConnection, closeAllPeerConnections, getLocalStream, prepareNewPeerConnection, addWebRTCListeners };

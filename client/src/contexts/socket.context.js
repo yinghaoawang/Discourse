@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import { createContext, useContext, useState } from 'react'
 import { UserContext } from './user.context';
 import { ServerContext } from './server.context';
-import { getLocalStream, prepareNewPeerConnection, addWebRTCListeners } from '../util/webRTC.util';
+import { closeAllPeerConnections, getLocalStream, prepareNewPeerConnection, addWebRTCListeners } from '../util/webRTC.util';
 import { getSocket, setSocket, url, options } from '../util/socket.util';
 
 
@@ -122,6 +122,7 @@ export const SocketProvider = ({ children }) => {
     }
 
     const changeNamespace = (namespace) => {
+        closeAllPeerConnections();
         changeSocket(io(url + namespace, options), namespace);
     }
 
@@ -164,6 +165,7 @@ export const SocketProvider = ({ children }) => {
 
         if (currentVoiceChannel != null) {
             currentSocket.emit('leaveVoiceRoom', { roomId: currentVoiceChannel.id });
+            closeAllPeerConnections();
         }
 
         if (roomId != null) {
@@ -180,7 +182,7 @@ export const SocketProvider = ({ children }) => {
             const isInitiator = users.length === 0;
 
             console.log('initator', isInitiator);
-            prepareNewPeerConnection({ socketId: currentSocket.id, isInitiator, localStream: await getLocalStream() })
+            prepareNewPeerConnection({ connSocketId: currentSocket.id, isInitiator, localStream: await getLocalStream() })
 
             console.log('CHANGE ROOM SUCCESS');
         } else {

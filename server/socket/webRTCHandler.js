@@ -12,12 +12,8 @@ module.exports = async (io) => {
             namespace.to(connSocketId).emit('webRTCConnInit', { connSocketId: socket.id });
         }
 
-        const onConnPrepare = async () => {
-            
-        }
 
         socket.on('webRTCConnSignal', onConnSignal);
-        socket.on('webRTCConnPrepare', onConnPrepare);
         socket.on('webRTCConnInit', onConnInit);
     }
 

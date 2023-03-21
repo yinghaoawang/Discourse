@@ -110,6 +110,7 @@ module.exports = async (io) => {
         const onJoinVoiceRoom = async ({ roomId }) => {
             console.log('joining vc room', roomId);
             const voiceRoom = joinVoiceRoom({ roomId, socket });
+
             const { users } = voiceRoom;
             for (const user of users) {
                 if (user.id == socket.id) continue;
@@ -125,6 +126,21 @@ module.exports = async (io) => {
 
         const onLeaveVoiceRoom = async({ roomId }) => {
             console.log('leaving vc room', roomId);
+            const voiceRoom = voiceRooms.find(v => v.roomId === roomId);
+            if (voiceRoom == null) console.error('Voice room ' + roomId + ' could not be found in onLeaveVoiceRoom');
+
+            const users = voiceRoom?.users;
+            if (users) {
+                for (const user of users) {
+                    if (user.id == socket.id) continue;
+                    // emit to everyone in the room to prepare 
+                    for (const u of users) {
+                        console.log('sending to ', u.id);
+                        namespace.to(u.id).emit('webRTCConnClose', { connSocketId: socket.id });
+                    }
+                }
+            }
+            
             leaveVoiceRoom({ roomId, socket });
             sendVoiceRoomData();
         }
