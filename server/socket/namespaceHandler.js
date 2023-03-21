@@ -109,7 +109,17 @@ module.exports = async (io) => {
 
         const onJoinVoiceRoom = async ({ roomId }) => {
             console.log('joining vc room', roomId);
-            joinVoiceRoom({ roomId, socket });
+            const voiceRoom = joinVoiceRoom({ roomId, socket });
+            const { users } = voiceRoom;
+            for (const user of users) {
+                if (user.id == socket.id) continue;
+                // emit to everyone in the room to prepare 
+                for (const u of users) {
+                    console.log('sending to ', u.id);
+                    namespace.to(u.id).emit('webRTCConnPrepare', { connSocketId: socket.id });
+                }
+            }
+            
             sendVoiceRoomData();
         }
 

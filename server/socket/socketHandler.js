@@ -2,6 +2,7 @@ const { getServers, addServer } = require('../db.utils');
 
 module.exports = async (io) => {
     const { onNamespaceConnect } = await require('./namespaceHandler')(io);
+    const { addWebRTCListeners } = await require('./webRTCHandler')(io);
 
     addSocketListeners = ({ socket }) => {
         const sendServers = async () => {
@@ -20,6 +21,7 @@ module.exports = async (io) => {
                 onAddServer(payload);
             });
             addSocketListeners({ socket });
+            addWebRTCListeners({ socket, namespace });
         });
     }
 
@@ -47,7 +49,7 @@ module.exports = async (io) => {
         console.log('connect to /');
 
         addSocketListeners({ socket });
-    
+
         socket.on('disconnect', () => {
             console.log('disconnect from /');
         })

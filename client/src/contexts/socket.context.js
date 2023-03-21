@@ -2,17 +2,15 @@ import io from 'socket.io-client';
 import { createContext, useContext, useState } from 'react'
 import { UserContext } from './user.context';
 import { ServerContext } from './server.context';
-import { WebRTCContext } from './webRTC.context';
-import { getLocalStream } from '../util/webRTC.util';
+import { getLocalStream, prepareNewPeerConnection, addWebRTCListeners } from '../util/webRTC.util';
 import { getSocket, setSocket, url, options } from '../util/socket.util';
 
 
 export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
-    const { setLocalStream, localStream } = useContext(WebRTCContext);
     const { currentUser } = useContext(UserContext);
-    const { currentTextChannel, setCurrentTextChannel,
+    const { voiceRooms, currentTextChannel, setCurrentTextChannel,
         currentVoiceChannel, setCurrentVoiceChannel,
         setServers, setPosts, setVoiceChannels, setVoiceRooms,
         setTextChannels, setUsers, setCurrentServer } = useContext(ServerContext);
@@ -22,14 +20,12 @@ export const SocketProvider = ({ children }) => {
     const addSocketListeners = (newSocket) => {
         newSocket.on('servers', (data) => {
 			const { servers } = data;
-            console.log(data);  
 			setServers(servers);
 		});
     }
 
     const loadServers = () => {
         const currSocket = getSocket() || io(url, options);
-        console.log('loading servers');
         if (getSocket() == null) {
             setSocket(currSocket);
         }
@@ -61,7 +57,6 @@ export const SocketProvider = ({ children }) => {
 
     const addNspListeners = (newSocket) => {
         newSocket.on('posts', (data) => {
-            console.log('posts', data);
             const { posts } = data;
             setPosts(posts);
         });
@@ -72,22 +67,17 @@ export const SocketProvider = ({ children }) => {
       
         newSocket.on('channels', (data) => {
             const { textChannels, voiceChannels } = data;
-            console.log(textChannels, voiceChannels);
             setTextChannels(textChannels);
             setVoiceChannels(voiceChannels);
 
             const firstChannel = textChannels?.[0];
             if (firstChannel) {
-                console.log('first channel exists');
                 changeTextChannel({ textChannel: firstChannel, currentSocket: newSocket });
-                console.log(newSocket);
                 newSocket.emit('getPosts', { roomId: firstChannel.id })
             }
         });
       
-        console.log('adding onmessage for', newSocket);
         newSocket.on('message', (data) => {
-            console.log('message', data);
             const { message, user, dateCreated, type } = data;
             const newPost = {
                 message, user, dateCreated, type
@@ -96,7 +86,6 @@ export const SocketProvider = ({ children }) => {
         });
       
         newSocket.on('serverUsers', (data) => {
-            console.log('users', data);
             const { users, connectedUsers } = data;
             const categorizedUsers = users.map(user => {
                 if (connectedUsers.map(u => u.name).includes(user.name)) {
@@ -110,7 +99,7 @@ export const SocketProvider = ({ children }) => {
         });
     }
 
-    const changeSocket = (newSocket) => {
+    const changeSocket = (newSocket, namespace) => {
         setIsSocketConnecting(true);
 
         if (getSocket() != null) {
@@ -123,6 +112,7 @@ export const SocketProvider = ({ children }) => {
 
             addSocketListeners(newSocket);
             addNspListeners(newSocket);
+            addWebRTCListeners(newSocket, namespace);
             newSocket.emit('updateUser', { user: currentUser, isOnConnect: true });
             newSocket.emit('getChannels');
             newSocket.emit('getVoiceRooms');
@@ -132,7 +122,7 @@ export const SocketProvider = ({ children }) => {
     }
 
     const changeNamespace = (namespace) => {
-        changeSocket(io(url + namespace, options));
+        changeSocket(io(url + namespace, options), namespace);
     }
 
     const updateSocketUser = () => {
@@ -165,7 +155,6 @@ export const SocketProvider = ({ children }) => {
             currentSocket.emit('leaveRoom', { roomId: currentTextChannel.id });
         }
         currentSocket.emit('joinRoom', { roomId });
-        console.log('CHANGE ROOM');
     }
 
     const changeVoiceRoom = async ({ roomId, currentSocket }) => {
@@ -175,26 +164,31 @@ export const SocketProvider = ({ children }) => {
 
         if (currentVoiceChannel != null) {
             currentSocket.emit('leaveVoiceRoom', { roomId: currentVoiceChannel.id });
-
-        }
-
-        if (localStream != null) {
-            localStream.getTracks().forEach(track => track.stop())
         }
 
         if (roomId != null) {
             currentSocket.emit('joinVoiceRoom', { roomId });
-            const stream = await getLocalStream();
-            setLocalStream(stream);
+
+            let voiceRoom = voiceRooms.find(v => v.roomId === roomId);
+            if (voiceRoom == null) {
+                console.error(voiceRooms);
+                console.error('Voice room ' + roomId + ' could not be found in voiceRooms in changeVoiceRoom');
+                voiceRoom = { users: [] };
+            }
+
+            const { users } = voiceRoom;
+            const isInitiator = users.length === 0;
+
+            console.log('initator', isInitiator);
+            prepareNewPeerConnection({ socketId: currentSocket.id, isInitiator, localStream: await getLocalStream() })
+
             console.log('CHANGE ROOM SUCCESS');
         } else {
-            setLocalStream(null);
             console.log('CHANGE ROOM LEAVE');
         }
     }
     
     const changeTextChannel = ({ textChannel, currentSocket }) => {
-        console.log(textChannel);
         changeRoom({ roomId: textChannel.id, currentSocket });
         setCurrentTextChannel(textChannel);
     }
