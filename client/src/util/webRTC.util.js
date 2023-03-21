@@ -50,9 +50,15 @@ const prepareNewPeerConnection = ({ socketId, isInitiator, localStream }) => {
     peer.on('stream', (stream) => {
         console.log('new stream came');
         // add stream
-        const audioObject = document.getElementById('audio');
+        const audioObject = document.createElement('audio');
+        audioObject.autoplay = true;
+        // audioObject.controls = true;
+        // audioObject.style.width = '150px';
         audioObject.srcObject = stream;
-        console.log(stream);
+
+        const audioContainer = document.getElementById('audio-container');
+        audioContainer.appendChild(audioObject);
+
         streams =  [...streams, stream];
     });
 

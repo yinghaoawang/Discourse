@@ -12,7 +12,7 @@
             @apply flex justify-between;
     
             .title {
-                @apply font-normal text-2xl mb-2 min-w-[300px];
+                @apply font-normal text-2xl min-w-[300px] mb-2;
             }
     
             .close-button {

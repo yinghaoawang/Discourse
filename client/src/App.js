@@ -12,8 +12,8 @@ import { SocketContext } from './contexts/socket.context';
 const NavbarWrapper = () => {
 	return (
 		<div className='body-container'>
-			<audio id='audio' autoPlay />
 			<Sidebar />
+			<div id='audio-container'></div>
 			<Outlet />
 		</div>
 	);
