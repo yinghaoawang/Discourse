@@ -3,6 +3,7 @@ import { createContext, useContext, useState } from 'react'
 import { UserContext } from './user.context';
 import { ServerContext } from './server.context';
 import { WebRTCContext } from './webRTC.context';
+import { getLocalStream } from '../util/webRTC.util';
 
 let url = 'localhost:1250';
 let options = { transports: ['websocket'] };
@@ -18,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
 export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
-    const { getLocalStream, setLocalStream, localStream } = useContext(WebRTCContext);
+    const { setLocalStream, localStream } = useContext(WebRTCContext);
     const { currentUser } = useContext(UserContext);
     const { currentTextChannel, setCurrentTextChannel,
         currentVoiceChannel, setCurrentVoiceChannel,
