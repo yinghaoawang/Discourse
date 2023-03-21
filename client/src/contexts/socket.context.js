@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import { createContext, useContext, useState } from 'react'
 import { UserContext } from './user.context';
 import { ServerContext } from './server.context';
-import { closeAllPeerConnections, getLocalStream, prepareNewPeerConnection, addWebRTCListeners } from '../util/webRTC.util';
+import { closeAllPeerConnections, resetLocalStream, getLocalStream, prepareNewPeerConnection, addWebRTCListeners } from '../util/webRTC.util';
 import { getSocket, setSocket, url, options } from '../util/socket.util';
 
 
@@ -183,7 +183,7 @@ export const SocketProvider = ({ children }) => {
 
             console.log('initator', isInitiator);
             prepareNewPeerConnection({ connSocketId: currentSocket.id, isInitiator, localStream: await getLocalStream() })
-
+            resetLocalStream();
             console.log('CHANGE ROOM SUCCESS');
         } else {
             console.log('CHANGE ROOM LEAVE');

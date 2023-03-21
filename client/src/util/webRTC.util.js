@@ -13,16 +13,20 @@ const getConfig = () => {
     }
 }
 
-const getLocalStream = async () => {
-    if (localStream != null) return localStream;
-
+const resetLocalStream = async () => {
     const stream = await navigator.mediaDevices.getUserMedia({
         video: false,
         audio: true
     });
 
     localStream = stream;
-    return stream;
+    return localStream;
+}
+
+const getLocalStream = async () => {
+    if (localStream != null) return localStream;
+
+    return await resetLocalStream();
 }
 
 const getAudioObjectIdFromSocketId = (socketId) => {
@@ -91,6 +95,11 @@ const closeAllPeerConnections = () => {
     for (const key in peers) {
         closePeerConnection({ connSocketId: key });
     }
+    getLocalStream().then((stream) => {
+        stream.getTracks().forEach(function(track) {
+            track.stop();
+        });
+    });
 }
 
 const addWebRTCListeners = (socket, namespace) => {
@@ -116,4 +125,4 @@ const addWebRTCListeners = (socket, namespace) => {
     });
 }
 
-export { closePeerConnection, closeAllPeerConnections, getLocalStream, prepareNewPeerConnection, addWebRTCListeners };
+export { closePeerConnection, closeAllPeerConnections, resetLocalStream, getLocalStream, prepareNewPeerConnection, addWebRTCListeners };
