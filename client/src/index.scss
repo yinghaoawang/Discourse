@@ -39,9 +39,8 @@
         @apply w-[18px] h-[18px] accent-gray-600;
     }
 }
-
 .body-container {
-    @apply flex h-screen;
+    @apply flex h-screen overflow-y-hidden;
 }
 
 .ReactModal__Overlay {
