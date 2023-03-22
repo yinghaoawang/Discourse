@@ -70,7 +70,7 @@ const prepareNewPeerConnection = async ({ connSocketId, isInitiator }) => {
         const audioObject = document.createElement('audio');
         audioObject.id = audioId;
         audioObject.autoplay = true;
-        audioObject.controls = true;
+        // audioObject.controls = true;
         audioObject.srcObject = stream;
 
         const audioContainer = document.getElementById('audio-container');
