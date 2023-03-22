@@ -14,6 +14,9 @@ const getConfig = () => {
 }
 
 const resetLocalStream = async () => {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    const audioDevices = devices.filter(({ kind }) => kind === 'audiooutput');
+
     const stream = await navigator.mediaDevices.getUserMedia({
         video: false,
         audio: true
@@ -33,7 +36,9 @@ const getAudioObjectIdFromSocketId = (socketId) => {
     return socketId + '-audio';
 }
 
-const prepareNewPeerConnection = ({ connSocketId, isInitiator, localStream }) => {
+const prepareNewPeerConnection = async ({ connSocketId, isInitiator }) => {
+    console.log('preparing new connection: ', connSocketId, 'isInitiator', isInitiator)
+    const localStream = await getLocalStream();
     const config = getConfig(); 
     const peer = new Peer({
         initiator: isInitiator,
@@ -44,15 +49,11 @@ const prepareNewPeerConnection = ({ connSocketId, isInitiator, localStream }) =>
     peers[connSocketId] = peer;
 
     peer.on('signal', (data) => {
-
-        console.log('signal', data);
-        const signalData = {    
+        const socket = getSocket();
+        socket.emit('wrtcSignal', {    
             signal: data,
             connSocketId,
-        }
-
-        const socket = getSocket();
-        socket.emit('webRTCConnSignal', { signalData });
+        });
     });
 
     peer.on('stream', (stream) => {
@@ -61,12 +62,15 @@ const prepareNewPeerConnection = ({ connSocketId, isInitiator, localStream }) =>
         const audioId = getAudioObjectIdFromSocketId(connSocketId);
 
         const existingAudioObject = document.getElementById(audioId);
-        if (existingAudioObject) return;
+        if (existingAudioObject) {
+            console.log('AUDIO OBJECT EXISTS, NOT ADDING', audioId);
+            return;
+        }
 
         const audioObject = document.createElement('audio');
         audioObject.id = audioId;
         audioObject.autoplay = true;
-        // audioObject.controls = true;
+        audioObject.controls = true;
         audioObject.srcObject = stream;
 
         const audioContainer = document.getElementById('audio-container');
@@ -79,15 +83,22 @@ const prepareNewPeerConnection = ({ connSocketId, isInitiator, localStream }) =>
 
 const closePeerConnection = ({ connSocketId }) => {
     console.log('close connection ', connSocketId);
-    const audioObject = document.getElementById(getAudioObjectIdFromSocketId(connSocketId));
-    if (audioObject == null) throw new Error('Audio object could not be found in closePeerConnection');
-    for (const track of audioObject.srcObject.getTracks()) {
-        track.stop();
+    try {
+        const audioObject = document.getElementById(getAudioObjectIdFromSocketId(connSocketId));
+        if (audioObject == null) throw new Error('Audio object could not be found in closePeerConnection');
+        
+        for (const track of audioObject.srcObject.getTracks()) {
+            track.stop();
+        }
+        audioObject.remove();
+    } catch (error) {
+        console.error(error);
     }
-    audioObject.remove();
-    if (peers[connSocketId]) {
+   
+    if (peers[connSocketId] != null) {
         peers[connSocketId].destroy();
     }
+
     delete peers[connSocketId];
 }
 
@@ -103,24 +114,21 @@ const closeAllPeerConnections = () => {
 }
 
 const addWebRTCListeners = (socket, namespace) => {
-    socket.on('webRTCConnSignal', ({ signalData }) => {
-        console.log('signal received', signalData);
-        const { connSocketId, signal } = signalData;
-        console.log(connSocketId, signal);
+    socket.on('wrtcPrepare', async ({ connSocketId }) => {
+        await prepareNewPeerConnection({ connSocketId, isInitator: false });
+        socket.emit('wrtcInit', { connSocketId });
+    });
+
+    socket.on('wrtcSignal', ({ connSocketId, signal }) => {
+        console.log('signal', connSocketId, signal);
         peers[connSocketId].signal(signal);
     });
 
-    socket.on('webRTCConnPrepare', async ({ connSocketId }) => {
-        console.log('PREPARE', connSocketId);
-        prepareNewPeerConnection({ connSocketId, isInitator: false, localStream: await getLocalStream() });
-        socket.emit('webRTCConnInit', { connSocketId: connSocketId });
+    socket.on('wrtcInit', async ({ connSocketId }) => {
+        await prepareNewPeerConnection({ connSocketId, isInitiator: true });
     });
 
-    socket.on('webRTCConnInit', async ({ connSocketId }) => {
-        prepareNewPeerConnection({ connSocketId, isInitiator: true, localStream: await getLocalStream() });
-    });
-
-    socket.on('webRTCConnClose', async ({ connSocketId }) => {
+    socket.on('wrtcClose', async ({ connSocketId }) => {
         closePeerConnection({ connSocketId });
     });
 }

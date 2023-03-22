@@ -182,8 +182,8 @@ export const SocketProvider = ({ children }) => {
             const isInitiator = users.length === 0;
 
             console.log('initator', isInitiator);
-            prepareNewPeerConnection({ connSocketId: currentSocket.id, isInitiator, localStream: await getLocalStream() })
-            resetLocalStream();
+            await resetLocalStream();
+            await prepareNewPeerConnection({ connSocketId: currentSocket.id, isInitiator })
             console.log('CHANGE ROOM SUCCESS');
         } else {
             console.log('CHANGE ROOM LEAVE');
@@ -195,12 +195,12 @@ export const SocketProvider = ({ children }) => {
         setCurrentTextChannel(textChannel);
     }
 
-    const changeVoiceChannel = ({ voiceChannel, currentSocket }) => {
+    const changeVoiceChannel = async ({ voiceChannel, currentSocket }) => {
         let roomId = null;
         if (voiceChannel != null) {
             roomId = voiceChannel.id;
         }
-        changeVoiceRoom({ roomId, currentSocket });
+        await changeVoiceRoom({ roomId, currentSocket });
         setCurrentVoiceChannel(voiceChannel);
     }
 

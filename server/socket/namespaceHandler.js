@@ -1,8 +1,6 @@
 const { PostTypes } = require('./socketConstants');
 const { addPost, getTextChannels, addTextChannel, getVoiceChannels, addVoiceChannel, getPosts, addServerUser, getServerUsers } = require('../db.utils');
 
-const { voiceRooms, joinVoiceRoom, leaveVoiceRoom } = require('./voiceRooms');
-
 module.exports = async (io) => {
     const onNamespaceConnect = async ({ socket, server }) => {
         const namespace = io.of('/' + server.name);
@@ -18,14 +16,6 @@ module.exports = async (io) => {
                 }
             }
             return users;
-        }
-
-        const sendVoiceRoomData = async (payload) => {
-            if (payload != null && payload.target != null) {
-                payload.target.emit('voiceRooms', { voiceRooms });
-            } else {
-                namespace.emit('voiceRooms', { voiceRooms });
-            }
         }
         
         const sendAllChannels = async (payload) => {
@@ -83,14 +73,6 @@ module.exports = async (io) => {
             return [...socket.rooms][1];
         }
 
-        const getCurrentVoiceRoomId = () => {
-            for (let voiceRoom of voiceRooms) {
-                const matchingUser = voiceRoom?.users?.find(u => u.id == socket.id);
-                if (matchingUser) return voiceRoom.roomId;
-            }
-            return null;
-        }
-
         const joinRoom = async ({ roomId }) => {
             console.log('joining room', roomId);
             sendPosts({ roomId });
@@ -107,56 +89,12 @@ module.exports = async (io) => {
             sendUsers();
         }
 
-        const onJoinVoiceRoom = async ({ roomId }) => {
-            console.log('joining vc room', roomId);
-            const voiceRoom = joinVoiceRoom({ roomId, socket });
-
-            if (voiceRoom == null) {
-                console.error('Voice room could not be joined in onJoinVoiceRoom');
-                return;
-            } 
-            const { users } = voiceRoom;
-            for (const user of users) {
-                if (user.id == socket.id) continue;
-                // emit to everyone in the room to prepare 
-                for (const u of users) {
-                    console.log('sending to ', u.id);
-                    namespace.to(u.id).emit('webRTCConnPrepare', { connSocketId: socket.id });
-                }
-            }
-            
-            sendVoiceRoomData();
-        }
-
-        const onLeaveVoiceRoom = async({ roomId }) => {
-            console.log('leaving vc room', roomId);
-            const voiceRoom = voiceRooms.find(v => v.roomId === roomId);
-            if (voiceRoom == null) console.error('Voice room ' + roomId + ' could not be found in onLeaveVoiceRoom');
-
-            const users = voiceRoom?.users;
-            if (users) {
-                for (const user of users) {
-                    if (user.id == socket.id) continue;
-                    // emit to everyone in the room to prepare 
-                    for (const u of users) {
-                        console.log('sending to ', u.id);
-                        namespace.to(u.id).emit('webRTCConnClose', { connSocketId: socket.id });
-                    }
-                }
-            }
-            
-            leaveVoiceRoom({ roomId, socket });
-            sendVoiceRoomData();
-        }
-
         const onConnect = async () => {
             console.log('connected to ' + server.name);
         }
 
         const onDisconnecting = async () => {
             leaveRoom({ roomId: getCurrentRoomId() });
-            onLeaveVoiceRoom({ roomId: getCurrentVoiceRoomId() })
-            // await sendMessage({ message: 'has left the server', serverId: server.id, type: PostTypes.USER_LEAVE });
         }
         
         const onDisconnect = () => {
@@ -182,15 +120,12 @@ module.exports = async (io) => {
 
         socket.on('getPosts', sendPosts);
         socket.on('getChannels', sendAllChannels);
-        socket.on('getVoiceRooms', sendVoiceRoomData);
         socket.on('getUsers', sendUsers);
         socket.on('message', sendMessage);
         socket.on('disconnecting', onDisconnecting);
         socket.on('disconnect', onDisconnect);
         socket.on('joinRoom', joinRoom);
         socket.on('leaveRoom', leaveRoom);
-        socket.on('joinVoiceRoom', onJoinVoiceRoom);
-        socket.on('leaveVoiceRoom', onLeaveVoiceRoom);
         socket.on('updateUser', updateUser);
         socket.on('addTextChannel', onAddTextChannel);
         socket.on('addVoiceChannel', onAddVoiceChannel);

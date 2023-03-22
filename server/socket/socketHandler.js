@@ -2,7 +2,7 @@ const { getServers, addServer } = require('../db.utils');
 
 module.exports = async (io) => {
     const { onNamespaceConnect } = await require('./namespaceHandler')(io);
-    const { addWebRTCListeners } = await require('./webRTCHandler')(io);
+    const { addVoiceRoomListeners } = await require('./voiceRoomHandler')(io);
 
     addSocketListeners = ({ socket }) => {
         const sendServers = async () => {
@@ -21,7 +21,7 @@ module.exports = async (io) => {
                 onAddServer(payload);
             });
             addSocketListeners({ socket });
-            addWebRTCListeners({ socket, namespace });
+            addVoiceRoomListeners({ socket, namespace });
         });
     }
 
