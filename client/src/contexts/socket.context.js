@@ -185,6 +185,10 @@ export const SocketProvider = ({ children }) => {
             console.log('CHANGE ROOM LEAVE');
         }
     }
+
+    const leaveVoiceChannel = async () => {
+        await changeVoiceChannel({ voiceChannel: null });
+    }
     
     const changeTextChannel = ({ textChannel, currentSocket }) => {
         changeRoom({ roomId: textChannel.id, currentSocket });
@@ -202,7 +206,7 @@ export const SocketProvider = ({ children }) => {
 
     const value = {
         updateSocketUser,
-        loadServers,
+        loadServers, leaveVoiceChannel,
         addServer, addTextChannel, addVoiceChannel, sendMessage,
         changeServer, changeTextChannel, changeVoiceChannel,
         isSocketConnecting, setIsSocketConnecting

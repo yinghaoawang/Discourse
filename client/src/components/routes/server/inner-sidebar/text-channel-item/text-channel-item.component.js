@@ -19,7 +19,8 @@ const TextChannelItem = ({ textChannel, className, children, ...props }) => {
         <div onClick={ channelClickHandler } className={ `channel-item-container ${ className } ${ isSelected ? 'selected' : '' }` } { ...props }>
             { children ? children :
             <>
-                <FaHashtag /> { textChannel?.name }
+                <FaHashtag />
+                <span className='text'>{ textChannel?.name }</span>
             </>
             }
         </div>

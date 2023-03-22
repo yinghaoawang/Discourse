@@ -1,9 +1,12 @@
 .channel-item-container {
     @apply flex items-center mt-0.5 py-1.5 px-2 select-none cursor-pointer;
-
-    svg {
-        @apply mr-2;
-    }
+        .text {
+            @apply truncate;
+        }
+    
+        svg {
+            @apply mr-2 shrink-0;
+        }
 
     &.selected {
         @apply bg-gray-600 text-gray-300;

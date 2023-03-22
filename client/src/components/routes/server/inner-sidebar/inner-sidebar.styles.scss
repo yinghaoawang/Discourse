@@ -1,21 +1,69 @@
 .inner-sidebar-container {
-    @apply w-[250px] p-2
-    flex flex-col shrink-0
-    bg-gray-800 text-gray-400
-    overflow-y-scroll;
-
+    @apply w-[250px]
+    flex flex-col justify-between
+    bg-gray-800 text-gray-400;
     
-    .channels-container {
-        @apply ml-2;
-        .category-label {
-            @apply mt-4 select-none font-semibold;
+
+    .room-items-container {
+        @apply flex flex-col p-2 overflow-auto;
+
+        .channels-container {
+            @apply ml-2;
+            .category-label {
+                @apply mt-4 select-none font-semibold;
+    
+                &:hover {
+                    @apply text-gray-300;
+                }
+            }
+        }
+
+        .new-room-item {
+            @apply ml-2 cursor-pointer;
+        }
+    }
+
+    .voice-panel-container {
+        @apply flex items-center h-16 bg-gray-900 py-3;
+
+        .user {
+            @apply flex p-1.5 ml-2 rounded-md shrink overflow-hidden;
+            
+            .icon {
+                @apply flex justify-center
+                items-center mr-2
+                w-8 h-8 shrink-0
+                rounded-full bg-green-600
+                text-xl text-white;
+            }
+        
+            .infobox {
+                @apply flex flex-col leading-5 justify-center overflow-hidden;
+        
+                .name {
+                    @apply font-semibold truncate;
+                }
+        
+                .status {
+                    @apply text-xs truncate;
+                }
+            }
 
             &:hover {
-                @apply text-gray-300;
+                @apply bg-gray-700;
+            }
+        }
+
+        .buttons-container {
+            @apply flex mx-2;
+
+            .button {
+                @apply p-1.5 cursor-pointer rounded-md;
+                &:hover {
+                    @apply bg-gray-600;
+                }
             }
         }
     }
-    .new-room-item {
-        @apply ml-2 cursor-pointer;
-    }
+    
 }

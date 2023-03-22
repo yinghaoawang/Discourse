@@ -16,14 +16,14 @@
     }
 
     .infobox {
-        @apply flex flex-col leading-5 w-full;  
+        @apply flex flex-col leading-5 w-full overflow-hidden;
 
         .name {
-            @apply font-semibold;
+            @apply font-semibold truncate;
         }
 
         .status {
-            @apply text-xs w-36;
+            @apply text-xs truncate;
         }
     }
 

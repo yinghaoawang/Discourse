@@ -7,7 +7,7 @@ import './voice-channel-item.styles.scss';
 
 const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
     const { currentVoiceChannel, voiceRooms } = useContext(ServerContext);
-    const { changeVoiceChannel } = useContext(SocketContext);
+    const { changeVoiceChannel, leaveVoiceChannel } = useContext(SocketContext);
     const voiceRoom = voiceRooms.find(v => v.roomId === voiceChannel.id);
     const voiceUsers = voiceRoom?.users;
 
@@ -19,7 +19,7 @@ const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
     const channelClickHandler = () => {
         if (voiceChannel == null) return;
         if (currentVoiceChannel != null && voiceChannel.id === currentVoiceChannel.id && isSelected) {
-            changeVoiceChannel({ voiceChannel: null });
+            leaveVoiceChannel();
         } else {
             changeVoiceChannel({ voiceChannel });
         }
@@ -30,7 +30,8 @@ const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
             <div onClick={ channelClickHandler } className={ `channel-item-container voice-channel ${ className } ${ isSelected ? 'selected' : '' }` } { ...props }>
                 { children ? children :
                 <>
-                    <SpeakerIcon /> { voiceChannel?.name }
+                    <SpeakerIcon />
+                    <span className='text'>{ voiceChannel?.name }</span>
                 </>
                 }
             </div>

@@ -22,6 +22,7 @@
 
     .sidebar-tooltip {
         @apply fixed left-16 p-2 m-2
+        max-w-[100px] truncate
         rounded-md shadow-md
         bg-gray-900 text-white
         text-xs font-semibold
