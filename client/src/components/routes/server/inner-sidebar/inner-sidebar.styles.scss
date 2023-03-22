@@ -24,7 +24,7 @@
     }
 
     .voice-panel-container {
-        @apply flex items-center h-16 bg-gray-900 py-3;
+        @apply flex items-center h-16 bg-gray-900 py-3 justify-between;
 
         .user {
             @apply flex p-1.5 ml-2 rounded-md shrink overflow-hidden;
