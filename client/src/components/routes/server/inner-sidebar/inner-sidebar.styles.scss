@@ -1,5 +1,5 @@
 .inner-sidebar-container {
-    @apply w-[250px]
+    @apply w-[250px] shrink-0
     flex flex-col justify-between
     bg-gray-800 text-gray-400;
     
