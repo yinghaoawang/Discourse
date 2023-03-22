@@ -11,13 +11,13 @@ if (process.env.NODE_ENV === 'production') {
     };
 }
 
-const socketWrapper = { socket: null };
+let socket = null;
 const getSocket = () => {
-    return socketWrapper.socket;
+    return socket;
 }
 
-const setSocket = (socket) => { 
-    socketWrapper.socket = socket;
+const setSocket = (newSocket) => { 
+    socket = newSocket;
 }
 
 export { getSocket, setSocket, url, options }
