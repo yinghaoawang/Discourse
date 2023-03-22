@@ -2,7 +2,7 @@ import io from 'socket.io-client';
 import { createContext, useContext, useState } from 'react'
 import { UserContext } from './user.context';
 import { ServerContext } from './server.context';
-import { closeAllPeerConnections, resetLocalStream, getLocalStream, prepareNewPeerConnection, addWebRTCListeners } from '../util/webRTC.util';
+import { closeAllPeerConnections, resetLocalStream, addWebRTCListeners } from '../util/webRTC.util';
 import { getSocket, setSocket, url, options } from '../util/socket.util';
 
 
@@ -169,6 +169,8 @@ export const SocketProvider = ({ children }) => {
         }
 
         if (roomId != null) {
+            await resetLocalStream();
+
             currentSocket.emit('joinVoiceRoom', { roomId });
 
             let voiceRoom = voiceRooms.find(v => v.roomId === roomId);
@@ -178,12 +180,6 @@ export const SocketProvider = ({ children }) => {
                 voiceRoom = { users: [] };
             }
 
-            const { users } = voiceRoom;
-            const isInitiator = users.length === 0;
-
-            console.log('initator', isInitiator);
-            await resetLocalStream();
-            await prepareNewPeerConnection({ connSocketId: currentSocket.id, isInitiator })
             console.log('CHANGE ROOM SUCCESS');
         } else {
             console.log('CHANGE ROOM LEAVE');

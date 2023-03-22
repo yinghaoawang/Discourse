@@ -13,7 +13,7 @@ module.exports = async (io) => {
         const voiceRoomEmit = ({ namespace = io, roomId, key, payload, excludeSelf = false }) => {
             const voiceRoom = voiceRooms.find(v => v.roomId === roomId);
             if (voiceRoom == null) {
-                console.error('Voice room ' + roomId + ' could not be found in onLeaveVoiceRoom');
+                console.error('Voice room ' + roomId + ' could not be found in voiceRoomEmit');
                 return;
             }
         
@@ -45,21 +45,23 @@ module.exports = async (io) => {
             namespace.to(connSocketId).emit('wrtcInit', { connSocketId: socket.id });
         }
 
-        const onJoinVoiceRoom = async ({ roomId }) => {
+        const joinVoiceRoomHandler = async ({ roomId }) => {
             console.log('joining vc room', roomId);
 
             const voiceRoom = joinVoiceRoom({ roomId, socket });
 
             if (voiceRoom == null) {
-                console.error('Voice room could not be joined in onJoinVoiceRoom');
+                console.error('Voice room could not be joined in joinVoiceRoomHandler');
                 return;
             } 
-            voiceRoomEmit({ namespace, roomId, key: 'wrtcPrepare', payload: { connSocketId: socket.id }, excludeSelf: true });
+            if (voiceRoom.users?.length > 1) {
+                voiceRoomEmit({ namespace, roomId, key: 'wrtcPrepare', payload: { connSocketId: socket.id }, excludeSelf: true });
+            }
 
             sendVoiceRoomData();
         }
 
-        const onLeaveVoiceRoom = async({ roomId }) => {
+        const leaveVoiceRoomHandler = async({ roomId }) => {
             console.log('leaving vc room', roomId);
             voiceRoomEmit({ namespace, roomId, key: 'wrtcClose', payload: { connSocketId: socket.id } });
             
@@ -68,12 +70,12 @@ module.exports = async (io) => {
         }
 
         const onDisconnecting = async () => {
-            onLeaveVoiceRoom({ roomId: getCurrentVoiceRoomId() });
+            leaveVoiceRoomHandler({ roomId: getCurrentVoiceRoomId() });
         }
 
         socket.on('getVoiceRooms', sendVoiceRoomData);
-        socket.on('joinVoiceRoom', onJoinVoiceRoom);
-        socket.on('leaveVoiceRoom', onLeaveVoiceRoom);
+        socket.on('joinVoiceRoom', joinVoiceRoomHandler);
+        socket.on('leaveVoiceRoom', leaveVoiceRoomHandler);
         socket.on('disconnecting', onDisconnecting);
         socket.on('wrtcSignal', onConnSignal);
         socket.on('wrtcInit', onConnInit);
