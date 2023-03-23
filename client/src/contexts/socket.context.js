@@ -2,8 +2,10 @@ import io from 'socket.io-client';
 import { createContext, useContext, useState } from 'react'
 import { UserContext } from './user.context';
 import { ServerContext } from './server.context';
+import { SettingsContext } from './settings.context';
 import { closeAllPeerConnections, resetLocalStream, addWebRTCListeners } from '../util/webRTC.util';
 import { getSocket, setSocket, url, options } from '../util/socket.util';
+import { getFirstinputDevice, getFirstOutputDevice } from '../util/helpers.util';
 
 
 export const SocketContext = createContext();
@@ -14,6 +16,7 @@ export const SocketProvider = ({ children }) => {
         currentVoiceChannel, setCurrentVoiceChannel,
         setServers, setPosts, setVoiceChannels, setVoiceRooms,
         setTextChannels, setUsers, setCurrentServer } = useContext(ServerContext);
+    const { currentInputDevice, setCurrentInputDevice, currentOutputDevice, setCurrentOutputDevice } = useContext(SettingsContext);
     
     const [isSocketConnecting, setIsSocketConnecting] = useState(false);
 
@@ -30,7 +33,13 @@ export const SocketProvider = ({ children }) => {
             setSocket(currSocket);
         }
 
-        currSocket.on('connect', () => {
+        currSocket.on('connect', async () => {
+            const inputDevice = currentInputDevice || await getFirstinputDevice();
+            setCurrentInputDevice(inputDevice);
+
+            const outputDevice = currentOutputDevice || await getFirstOutputDevice();
+            setCurrentOutputDevice(outputDevice);
+
             addSocketListeners(currSocket);
             currSocket.emit('getServers');
         })
@@ -158,6 +167,8 @@ export const SocketProvider = ({ children }) => {
         currentSocket.emit('joinRoom', { roomId });
     }
 
+    
+
     const changeVoiceRoom = async ({ roomId, currentSocket }) => {
         if (currentSocket == null) {
             currentSocket = getSocket();
@@ -169,8 +180,13 @@ export const SocketProvider = ({ children }) => {
         }
 
         if (roomId != null) {
-            await resetLocalStream();
+            const inputDevice = currentInputDevice || await getFirstinputDevice();
+            setCurrentInputDevice(inputDevice);
 
+            const outputDevice = currentOutputDevice || await getFirstOutputDevice();
+            setCurrentOutputDevice(outputDevice);
+
+            await resetLocalStream({ inputDevice });
             currentSocket.emit('joinVoiceRoom', { roomId });
 
             let voiceRoom = voiceRooms.find(v => v.roomId === roomId);

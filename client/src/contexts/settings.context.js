@@ -1,15 +1,11 @@
-import { createContext, useState, useEffect } from 'react';
+import { createContext, useState } from 'react';
 
 export const SettingsContext = createContext();
 
 export const SettingsProvider = ({ children }) => {
-    const [micInput, setMicInput] = useState(null);
-    const value = { micInput, setMicInput };
-
-    useEffect(() => {
-        console.log(micInput);
-    }, [micInput]);
-
+    const [currentInputDevice, setCurrentInputDevice] = useState(null);
+    const [currentOutputDevice, setCurrentOutputDevice] = useState(null);
+    const value = { currentInputDevice, setCurrentInputDevice, currentOutputDevice, setCurrentOutputDevice };
 
     return <SettingsContext.Provider value={ value }>{ children }</SettingsContext.Provider>;
 }

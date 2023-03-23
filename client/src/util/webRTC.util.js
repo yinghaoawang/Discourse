@@ -13,13 +13,12 @@ const getConfig = () => {
     }
 }
 
-const resetLocalStream = async () => {
-    const devices = await navigator.mediaDevices.enumerateDevices();
-    const audioDevices = devices.filter(({ kind }) => kind === 'audiooutput');
-
+const resetLocalStream = async ({ inputDevice }) => {
+    const inputDeviceId = inputDevice?.deviceId;
+    const deviceId = inputDeviceId ? { exact: inputDeviceId } : null;
     const stream = await navigator.mediaDevices.getUserMedia({
         video: false,
-        audio: true
+        audio: { deviceId }
     });
 
     localStream = stream;

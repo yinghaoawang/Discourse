@@ -2,7 +2,17 @@ import Modal from 'react-modal';
 import { VscChromeClose as CloseIcon } from 'react-icons/vsc'
 import '../../../../shared/modal/modal-layouts.scss';
 import './settings-modal.styles.scss';
+import { getDevices } from '../../../../../util/helpers.util';
+import { SettingsContext } from '../../../../../contexts/settings.context';
+import { SocketContext } from '../../../../../contexts/socket.context';
+import { ServerContext } from '../../../../../contexts/server.context';
+import { useContext, useEffect } from 'react';
 Modal.setAppElement('#root');
+
+const DeviceTypes = {
+    INPUT: 'INPUT', 
+    OUTPUT: 'OUTPUT'
+}
 
 const removeSelectOptions = (selectNode) => {
     while (selectNode.firstChild) {
@@ -10,28 +20,17 @@ const removeSelectOptions = (selectNode) => {
     }
 }
 
-const createOptionsForSelect = (selectNode, options, removePreviousOptions = true) => {
-    if (removePreviousOptions) {
-        removeSelectOptions(selectNode);
-    }
-
-    for (const option of options) {
-        const optionNode = document.createElement('option');
-        optionNode.value = option.value;
-        optionNode.text = option.text;
-        selectNode.appendChild(optionNode);
-    }
-}
-
 const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
+    const { currentInputDevice, setCurrentInputDevice, currentOutputDevice, setCurrentOutputDevice } = useContext(SettingsContext);
+    const { currentVoiceChannel } = useContext(ServerContext);
+    const { changeVoiceChannel, } = useContext(SocketContext);
+
     const afterOpenModalWrapper = async () => {
         if (afterOpenModal != null) afterOpenModal();
         const inputDeviceSelect = document.getElementById('inputDeviceSelect');
         const outputDeviceSelect = document.getElementById('outputDeviceSelect');
 
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        const inputDevices = devices.filter(({ kind }) => kind === 'audioinput');
-        const outputDevices = devices.filter(({ kind }) => kind === 'audiooutput');
+        const { inputDevices, outputDevices } = await getDevices();
 
         const inputOptions = inputDevices.map(audioDevice => {
             return {
@@ -47,11 +46,49 @@ const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
             };
         })
 
-        createOptionsForSelect(inputDeviceSelect, inputOptions);
-        createOptionsForSelect(outputDeviceSelect, outputOptions);
+        createOptionsForSelect(inputDeviceSelect, inputOptions, { selectedValue: currentInputDevice?.deviceId });
+        createOptionsForSelect(outputDeviceSelect, outputOptions, { selectedValue: currentOutputDevice?.deviceId });
     }
 
 
+    const createOptionsForSelect = (selectNode, options, { removePreviousOptions = true, selectedValue } = {}) => {
+        if (removePreviousOptions) {
+            removeSelectOptions(selectNode);
+        }
+
+        for (const option of options) {
+            const optionNode = document.createElement('option');
+            optionNode.value = option.value;
+            optionNode.text = option.text;
+            selectNode.appendChild(optionNode);
+        }
+        
+        selectNode.value = selectedValue;
+    }
+
+    useEffect(() => {
+        // rejoin current room on input/output device change
+        if (currentVoiceChannel == null) return;
+        
+        changeVoiceChannel({ voiceChannel: currentVoiceChannel });
+    }, [currentInputDevice, currentOutputDevice])
+
+    const changeInputDevice = async (value, type = DeviceTypes.INPUT) => {
+        switch (type) {
+            case DeviceTypes.INPUT:
+            const { inputDevices } = await getDevices();
+                const matchingInputDevice = inputDevices.find(d => d.deviceId === value);
+                setCurrentInputDevice(matchingInputDevice);
+                break;
+            case DeviceTypes.OUTPUT:
+                const { outputDevices } = await getDevices();
+                const matchingOutputDevice = outputDevices.find(d => d.deviceId === value);
+                setCurrentOutputDevice(matchingOutputDevice);
+                break;
+            default:
+                throw new Error('Unhandled deviceType in changeInputDeviceHandler');
+        }
+    }
 
     return (
         <Modal
@@ -75,11 +112,11 @@ const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                     <div className='content'>
                         <div className='input-device form-item'>
                             <label>Input Device</label>
-                            <select id='inputDeviceSelect' />
+                            <select onChange={ (e) => { changeInputDevice(e?.target?.value, DeviceTypes.INPUT) } } value={ currentInputDevice?.deviceId } id='inputDeviceSelect' />
                         </div>
                         <div className='output-device form-item'>
                             <label>Output Device</label>
-                            <select id='outputDeviceSelect' />
+                            <select onChange={ (e) => { changeInputDevice(e?.target?.value, DeviceTypes.OUTPUT) } } value={ currentOutputDevice?.deviceId } id='outputDeviceSelect' />
                         </div>
                     </div>
                     
@@ -88,8 +125,7 @@ const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
             </div>
             <div className='footer'>
                 <div className='action-buttons-container'>
-                    <button onClick={ closeModal }>Cancel</button>
-                    <button type='submit' onClick={ () => null } className='submit-button'>Save Changes</button>
+                    <button onClick={ closeModal }>Close</button>
                 </div>
             </div>
             
