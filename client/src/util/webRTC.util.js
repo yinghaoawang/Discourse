@@ -84,13 +84,16 @@ const prepareNewPeerConnection = async ({ connSocketId, isInitiator }) => {
 const closePeerConnection = ({ connSocketId }) => {
     console.log('close connection ', connSocketId);
     try {
-        const audioObject = document.getElementById(getAudioObjectIdFromSocketId(connSocketId));
-        if (audioObject == null) throw new Error('Audio object could not be found in closePeerConnection');
-        
-        for (const track of audioObject.srcObject.getTracks()) {
-            track.stop();
+        const audioObjectId = getAudioObjectIdFromSocketId(connSocketId);
+        if (connSocketId !== getSocket()?.id) {
+            const audioObject = document.getElementById(audioObjectId);
+            if (audioObject == null) throw new Error('Audio object could not be found in closePeerConnection');
+            
+            for (const track of audioObject.srcObject.getTracks()) {
+                track.stop();
+            }
+            audioObject.remove();
         }
-        audioObject.remove();
     } catch (error) {
         console.error(error);
     }

@@ -1,0 +1,21 @@
+.settings-modal-content {
+    @apply w-[450px];
+    & > .content {
+        .audio-settings-container {
+            & > .content {
+                @apply ml-2;
+            }
+            
+        }
+        .form-item {
+            @apply flex justify-between mb-2;
+            select {
+                @apply w-[250px] bg-gray-900 py-[3px] pl-3 appearance-none pb-1.5 truncate;
+
+                option {
+                    @apply bg-gray-800 truncate;
+                }
+            }
+        }
+    }
+}

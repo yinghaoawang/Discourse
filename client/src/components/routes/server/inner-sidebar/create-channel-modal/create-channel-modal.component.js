@@ -4,6 +4,7 @@ import { VscChromeClose as CloseIcon } from 'react-icons/vsc'
 import { FaHashtag as HashtagIcon } from 'react-icons/fa';
 import { HiSpeakerWave as SpeakerIcon } from 'react-icons/hi2';
 import { SocketContext } from '../../../../../contexts/socket.context';
+import '../../../../shared/modal/modal-layouts.scss';
 import './create-channel-modal.styles.scss';
 Modal.setAppElement('#root');
 
@@ -60,13 +61,13 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
             isOpen={ isModalOpen }
             onAfterOpen={ afterOpenModalWrapper }
             onRequestClose={ closeModal }
-            className='modal-content fit create-channel-modal-content'
+            className='modal-content fit create-channel-modal-content modal-layout-1'
             overlayClassName='modal-overlay'
             closeTimeoutMS={ 200 }
             contentLabel="Create Channel"
         >
-            <div className='top'>
-                <div className='header'>
+            <div className='content'>
+                <div className='heading'>
                     <div className='title'>
                         Create Channel
                     </div>
@@ -109,10 +110,10 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                     </div>
                 </div>
             </div>
-            <div className='bottom'>
+            <div className='footer'>
                 <div className='action-buttons-container'>
                     <button onClick={ closeModal }>Cancel</button>
-                    <button type='submit' onClick={ submitModalHandler } className='create-channel-button'>Create Channel</button>
+                    <button type='submit' onClick={ submitModalHandler } className='submit-button'>Create Channel</button>
                 </div>
             </div>
             

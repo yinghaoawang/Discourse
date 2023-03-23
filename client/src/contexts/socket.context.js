@@ -160,7 +160,7 @@ export const SocketProvider = ({ children }) => {
 
     const changeVoiceRoom = async ({ roomId, currentSocket }) => {
         if (currentSocket == null) {
-            currentSocket = getSocket();    
+            currentSocket = getSocket();
         }
 
         if (currentVoiceChannel != null) {
@@ -179,10 +179,6 @@ export const SocketProvider = ({ children }) => {
                 console.error('Voice room ' + roomId + ' could not be found in voiceRooms in changeVoiceRoom');
                 voiceRoom = { users: [] };
             }
-
-            console.log('CHANGE ROOM SUCCESS');
-        } else {
-            console.log('CHANGE ROOM LEAVE');
         }
     }
 

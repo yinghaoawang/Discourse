@@ -1,0 +1,72 @@
+/*
+// Sample usage:
+<Modal
+    isOpen={ isModalOpen }
+    onAfterOpen={ afterOpenModalWrapper }
+    onRequestClose={ closeModal }
+    className='modal-content fit modal-layout-1'
+    overlayClassName='modal-overlay'
+    closeTimeoutMS={ 200 }
+    contentLabel={ title }
+>
+    <div className='content'>
+        <div className='header'>
+            <div className='title'>
+                { title }
+            </div>
+            <button className='close-button' onClick={ closeModal }><CloseIcon size={ '25px' } /></button>
+        </div>
+    </div>
+    <div className='footer'>
+        <div className='action-buttons-container'>
+            <button onClick={ closeModal }>Cancel</button>
+            <button type='submit' onClick={ () => null } className='submit-button'>Save Changes</button>
+        </div>
+    </div>
+</Modal>
+*/
+
+.modal-layout-1 {
+    @apply p-0;
+
+    .heading {
+        @apply flex mt-1 mb-3 text-3xl justify-between;
+    }
+
+    .header {
+        @apply font-semibold mb-1.5;
+    }
+
+    & > .content {
+        @apply px-5 py-3;
+
+        .header {
+            @apply flex justify-between;
+    
+            .title {
+                @apply font-normal text-2xl min-w-[300px] mb-2;
+            }
+    
+            .close-button {
+                span {
+                    @apply text-4xl align-text-top relative;
+                }
+            }
+        }
+    }
+
+    .footer {
+        @apply bg-gray-800 px-5 py-4 rounded-b-xl;
+        .action-buttons-container {
+            @apply flex justify-end;
+
+            .submit-button {
+                @apply ml-5 bg-blue-600 px-3 py-2 rounded-sm;
+
+                &:hover {
+                    @apply bg-blue-700;
+                }
+            }
+        }
+    }
+}

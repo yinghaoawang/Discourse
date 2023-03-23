@@ -1,7 +1,8 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import TextChannelItem from './text-channel-item/text-channel-item.component';
 import CreateChannelModal from './create-channel-modal/create-channel-modal.component';
 import VoiceChannelItem from './voice-channel-item/voice-channel-item.component';
+import SettingsModal from './settings-modal/settings-modal.component';
 import { UserContext } from '../../../../contexts/user.context';
 import { IoMdMicOff as MutedMicIcon, IoMdMic as MicIcon } from 'react-icons/io';
 import { HiPhoneMissedCall as HangUpIcon } from 'react-icons/hi';
@@ -12,16 +13,24 @@ import { SocketContext } from '../../../../contexts/socket.context';
 import './inner-sidebar.styles.scss';
 
 const InnerSidebar = ({ textChannels, voiceChannels }) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] = useState(false);
+    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const { currentVoiceChannel } = useContext(ServerContext);
     const { leaveVoiceChannel } = useContext(SocketContext);
     const { currentUser } = useContext(UserContext);
 
-    const closeModal = () => {
-        setIsModalOpen(false);
+    const closeCreateChannelModal = () => {
+        setIsCreateChannelModalOpen(false);
     }
-    const openModal = () => {
-        setIsModalOpen(true);
+    const openCreateChannelModal = () => {
+        setIsCreateChannelModalOpen(true);
+    }
+
+    const closeSettingsModal = () => {
+        setIsSettingsModalOpen(false);
+    }
+    const openSettingsModal = () => {
+        setIsSettingsModalOpen(true);
     }
     
     const hangUpClickHandler = () => {
@@ -30,10 +39,12 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
 
     return (
         <div className="inner-sidebar-container">
+            <CreateChannelModal closeModal={ closeCreateChannelModal } isModalOpen={ isCreateChannelModalOpen } />
+            <SettingsModal closeModal={ closeSettingsModal } isModalOpen={ isSettingsModalOpen } />
+
             <div className='room-items-container'>
                 <div className='channels-container'>
                     <div className='category-label'>Text channels</div>
-                    <CreateChannelModal closeModal={ closeModal } isModalOpen={ isModalOpen } />
                     { textChannels.map((textChannel, index) => 
                         <TextChannelItem key={ index } textChannel={ textChannel } />
                     )}
@@ -42,7 +53,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
                         <VoiceChannelItem key={ index } voiceChannel={ voiceChannel } />
                     )}
                 </div>
-                <TextChannelItem className='new-room-item' onClick={ openModal }><FaPlus />New Channel</TextChannelItem>
+                <TextChannelItem className='new-room-item' onClick={ openCreateChannelModal }><FaPlus />New Channel</TextChannelItem>
             </div>
             { currentVoiceChannel != null && (
                 <div className='voice-panel-container'>
@@ -56,7 +67,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
                     <div className='buttons-container'>
                         <div className='button'><MicIcon size='20px' /></div>
                         <div onClick={ hangUpClickHandler } className='button'><HangUpIcon size='20px' /></div>
-                        <div className='button'><SettingsIcon size='20px' /></div>
+                        <div onClick={ openSettingsModal } className='button'><SettingsIcon size='20px' /></div>
                     </div>
                 </div>
             )}
