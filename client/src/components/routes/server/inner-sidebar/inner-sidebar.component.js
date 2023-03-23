@@ -55,7 +55,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
                 </div>
                 <TextChannelItem className='new-room-item' onClick={ openCreateChannelModal }><FaPlus />New Channel</TextChannelItem>
             </div>
-            { currentVoiceChannel != null && (
+            
                 <div className='voice-panel-container'>
                     <div className='user'>
                         <div className='icon'>U</div>
@@ -65,12 +65,15 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
                         </div>
                     </div>
                     <div className='buttons-container'>
-                        <div className='button'><MicIcon size='20px' /></div>
-                        <div onClick={ hangUpClickHandler } className='button'><HangUpIcon size='20px' /></div>
+                        { currentVoiceChannel != null && (
+                            <>
+                                <div className='button'><MicIcon size='20px' /></div>
+                                <div onClick={ hangUpClickHandler } className='button'><HangUpIcon size='20px' /></div>
+                            </>
+                        )}
                         <div onClick={ openSettingsModal } className='button'><SettingsIcon size='20px' /></div>
                     </div>
                 </div>
-            )}
             
         </div>
     );
