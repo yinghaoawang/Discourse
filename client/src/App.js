@@ -8,6 +8,8 @@ import DirectMessages from './components/routes/direct-messages/direct-messages.
 import Home from './components/routes/home/home.component';
 import { UserContext } from './contexts/user.context';
 import { SocketContext } from './contexts/socket.context';
+import { SettingsContext } from './contexts/settings.context';
+import { setOutputDevice } from './util/webRTC.util';
 
 const NavbarWrapper = () => {
 	return (
@@ -38,6 +40,7 @@ const router = createBrowserRouter(routes, {
 const App = () => {
 	const { setCurrentUser } = useContext(UserContext);
 	const { loadServers } = useContext(SocketContext);
+	const { currentOutputDevice } = useContext(SettingsContext);
 
 	useEffect(() => {
 		while (true) {
@@ -55,6 +58,11 @@ const App = () => {
 
 		loadServers();
 	}, []);
+
+	// updates webrtc's output device to match react component's output device
+	useEffect(() => {
+		setOutputDevice(currentOutputDevice);
+	}, [currentOutputDevice]);
 	
 	return <RouterProvider router={ router } />;
 };

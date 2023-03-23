@@ -28,7 +28,15 @@ const resetLocalStream = async ({ inputDevice }) => {
 const getLocalStream = async () => {
     if (localStream != null) return localStream;
 
-    return await resetLocalStream();
+    return await resetLocalStream({});
+}
+
+let wrapper = {};
+const getOutputDevice = () => {
+    return wrapper.outputDevice;
+}
+const setOutputDevice = (outputDevice) => {
+    wrapper.outputDevice = outputDevice;
 }
 
 const getAudioObjectIdFromSocketId = (socketId) => {
@@ -55,7 +63,7 @@ const prepareNewPeerConnection = async ({ connSocketId, isInitiator }) => {
         });
     });
 
-    peer.on('stream', (stream) => {
+    peer.on('stream', async (stream) => {
         console.log('new stream came');
 
         const audioId = getAudioObjectIdFromSocketId(connSocketId);
@@ -70,6 +78,12 @@ const prepareNewPeerConnection = async ({ connSocketId, isInitiator }) => {
         audioObject.id = audioId;
         audioObject.autoplay = true;
         // audioObject.controls = true;
+        const outputDevice = getOutputDevice();
+        if (outputDevice != null) {
+            console.log(outputDevice);
+            await audioObject.setSinkId(outputDevice.deviceId);
+        }
+        
         audioObject.srcObject = stream;
 
         const audioContainer = document.getElementById('audio-container');
@@ -135,4 +149,4 @@ const addWebRTCListeners = (socket, namespace) => {
     });
 }
 
-export { closePeerConnection, closeAllPeerConnections, resetLocalStream, getLocalStream, prepareNewPeerConnection, addWebRTCListeners };
+export { closePeerConnection, closeAllPeerConnections, resetLocalStream, getLocalStream, getOutputDevice, setOutputDevice, prepareNewPeerConnection, addWebRTCListeners };
