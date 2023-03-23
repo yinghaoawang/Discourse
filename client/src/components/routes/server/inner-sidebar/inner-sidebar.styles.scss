@@ -27,7 +27,7 @@
         @apply flex items-center h-16 bg-gray-900 py-3 justify-between;
 
         .user {
-            @apply flex p-1.5 ml-2 rounded-md shrink overflow-hidden;
+            @apply flex p-1.5 ml-2 mr-1.5 rounded-md shrink overflow-hidden w-full;
             
             .icon {
                 @apply flex justify-center
@@ -55,7 +55,7 @@
         }
 
         .buttons-container {
-            @apply flex mx-2;
+            @apply flex mr-2;
 
             .button {
                 @apply p-1.5 cursor-pointer rounded-md;
