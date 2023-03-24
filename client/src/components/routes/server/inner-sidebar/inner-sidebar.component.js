@@ -37,6 +37,8 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
         leaveVoiceChannel();
     }
 
+    const displayChar = currentUser?.name?.charAt(0).toUpperCase() || '?';
+
     return (
         <div className="inner-sidebar-container">
             <CreateChannelModal closeModal={ closeCreateChannelModal } isModalOpen={ isCreateChannelModalOpen } />
@@ -58,7 +60,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
             
                 <div className='voice-panel-container'>
                     <div className='user'>
-                        <div className='icon'>{ currentUser?.name?.charAt(0) || '?' }</div>
+                        <div className='icon'>{ displayChar }</div>
                         <div className='infobox'>
                             <div className='name'>{ currentUser.name }</div>
                             <div className='status'>{ currentUser.statusMessage || '' }</div>
