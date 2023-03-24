@@ -29,14 +29,12 @@ const CreateChannelModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
 
     const submitModalHandler = (event) => {
         event.preventDefault();
-        console.log('HEYA');
         const trimmedChannelName = channelName.trim();
         if (trimmedChannelName === '') {
             alert('Channel name cannot be empty.');
             return;
         }
 
-        console.log(channelType, channelName);
         switch (channelType) {
             case ChannelTypeOptions.TEXT:
                 addTextChannel({ channelName });

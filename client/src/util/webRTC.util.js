@@ -64,13 +64,13 @@ const prepareNewPeerConnection = async ({ connSocketId, isInitiator }) => {
     });
 
     peer.on('stream', async (stream) => {
-        console.log('new stream came');
+        console.log('new stream received');
 
         const audioId = getAudioObjectIdFromSocketId(connSocketId);
 
         const existingAudioObject = document.getElementById(audioId);
         if (existingAudioObject) {
-            console.log('AUDIO OBJECT EXISTS, NOT ADDING', audioId);
+            console.error('AUDIO OBJECT EXISTS, NOT ADDING', audioId);
             return;
         }
 
@@ -80,7 +80,6 @@ const prepareNewPeerConnection = async ({ connSocketId, isInitiator }) => {
         // audioObject.controls = true;
         const outputDevice = getOutputDevice();
         if (outputDevice != null) {
-            console.log(outputDevice);
             await audioObject.setSinkId(outputDevice.deviceId);
         }
         
@@ -136,7 +135,7 @@ const addWebRTCListeners = (socket, namespace) => {
     });
 
     socket.on('wrtcSignal', ({ connSocketId, signal }) => {
-        console.log('signal', connSocketId, signal);
+        // console.log('signal', connSocketId, signal);
         peers[connSocketId].signal(signal);
     });
 

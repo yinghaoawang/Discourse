@@ -54,6 +54,8 @@ module.exports = async (io) => {
                 console.error('Voice room could not be joined in joinVoiceRoomHandler');
                 return;
             } 
+
+            voiceRoomEmit({ namespace, roomId, key: 'userJoinedVoiceRoom' });
             if (voiceRoom.users?.length > 1) {
                 voiceRoomEmit({ namespace, roomId, key: 'wrtcPrepare', payload: { connSocketId: socket.id }, excludeSelf: true });
             }
@@ -64,6 +66,7 @@ module.exports = async (io) => {
         const leaveVoiceRoomHandler = async({ roomId }) => {
             console.log('leaving vc room', roomId);
             voiceRoomEmit({ namespace, roomId, key: 'wrtcClose', payload: { connSocketId: socket.id } });
+            voiceRoomEmit({ namespace, roomId, key: 'userLeftVoiceRoom' });
             
             leaveVoiceRoom({ roomId, socket });
             sendVoiceRoomData();

@@ -38,7 +38,6 @@ const playSound = async (filename) => {
         await audioObject.setSinkId(outputDevice.deviceId);
     }
     
-    console.log(path);
     audioObject.src = path;
 
     audioObject.addEventListener('ended', () => {

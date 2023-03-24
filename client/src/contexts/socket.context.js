@@ -74,6 +74,16 @@ export const SocketProvider = ({ children }) => {
         newSocket.on('voiceRooms', (data) => {
             setVoiceRooms(data.voiceRooms);
         });
+
+        newSocket.on('userJoinedVoiceRoom', () => {
+            console.log('user joined vc');
+            playSound('join-room.mp3');
+        });
+
+        newSocket.on('userLeftVoiceRoom', () => {
+            console.log('user left vc');
+            playSound('leave-room.mp3');
+        });
       
         newSocket.on('channels', (data) => {
             const { textChannels, voiceChannels } = data;
@@ -92,7 +102,7 @@ export const SocketProvider = ({ children }) => {
             const newPost = {
                 message, user, dateCreated, type
             };
-            console.log(type);
+            
             if (type === PostTypes.USER_MESSAGE) {
                 playSound('message.wav');
             }
