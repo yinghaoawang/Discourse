@@ -36,7 +36,7 @@
     }
 
     .message-col {
-        @apply py-1 mt-0.5;
+        @apply py-1 mt-0.5 overflow-hidden mr-3;
 
         .metadata {
             @apply flex items-center;
@@ -50,6 +50,8 @@
             }
         }
 
-        
+        .message {
+            @apply break-words;
+        }
     }    
 }
