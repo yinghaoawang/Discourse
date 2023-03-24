@@ -1,3 +1,5 @@
+import { getOutputDevice } from './webRTC.util.js';
+
 const generateRandomName = (nameLength = 10) => {
     let res = '';
     for(let i = 0; i < nameLength; i++){
@@ -26,4 +28,25 @@ const getDevices = async () => {
     return { devices, inputDevices, outputDevices };
 }
 
-export { generateRandomName, getDevices, getFirstinputDevice, getFirstOutputDevice };
+const playSound = async (filename) => {
+    const path = process.env.REACT_APP_BASENAME + '/' + filename;
+    const audioObject = document.createElement('audio');
+    audioObject.autoplay = true;
+    // audioObject.controls = true;
+    const outputDevice = getOutputDevice();
+    if (outputDevice != null) {
+        await audioObject.setSinkId(outputDevice.deviceId);
+    }
+    
+    console.log(path);
+    audioObject.src = path;
+
+    audioObject.addEventListener('ended', () => {
+        audioObject.remove();
+    })
+
+    const audioContainer = document.getElementById('audio-container');
+    audioContainer.appendChild(audioObject);
+}
+
+export { generateRandomName, getDevices, getFirstinputDevice, getFirstOutputDevice, playSound };

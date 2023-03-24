@@ -1,11 +1,6 @@
 import './post-item.styles.scss';
+import { PostTypes } from '../../../../util/constants.util';
 import Moment from 'react-moment';
-
-const PostTypes = {
-    USER_MESSAGE: 'USER_MESSAGE',
-    USER_LEAVE: 'USER_LEAVE',
-    USER_JOIN: 'USER_JOIN',
-}
 
 const PostItem = ({ post }) => {
     const { message, user = { name: '?'}, dateCreated, type = PostTypes.USER_MESSAGE } = post;

@@ -34,7 +34,7 @@ const routes = [{
 }];
 
 const router = createBrowserRouter(routes, {
-	basename: '/discourse'
+	basename: process.env.REACT_APP_BASENAME
 });
 
 const App = () => {

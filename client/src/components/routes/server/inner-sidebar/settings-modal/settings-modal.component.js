@@ -1,18 +1,14 @@
 import Modal from 'react-modal';
 import { VscChromeClose as CloseIcon } from 'react-icons/vsc'
-import '../../../../shared/modal/modal-layouts.scss';
-import './settings-modal.styles.scss';
 import { getDevices } from '../../../../../util/helpers.util';
 import { SettingsContext } from '../../../../../contexts/settings.context';
 import { SocketContext } from '../../../../../contexts/socket.context';
 import { ServerContext } from '../../../../../contexts/server.context';
+import { DeviceTypes } from '../../../../../util/constants.util';
 import { useContext, useEffect } from 'react';
+import '../../../../shared/modal/modal-layouts.scss';
+import './settings-modal.styles.scss';
 Modal.setAppElement('#root');
-
-const DeviceTypes = {
-    INPUT: 'INPUT', 
-    OUTPUT: 'OUTPUT'
-}
 
 const removeSelectOptions = (selectNode) => {
     while (selectNode.firstChild) {
@@ -69,7 +65,7 @@ const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
     useEffect(() => {
         // rejoin current room on input/output device change
         if (currentVoiceChannel == null) return;
-        
+
         changeVoiceChannel({ voiceChannel: currentVoiceChannel });
     }, [currentInputDevice, currentOutputDevice])
 

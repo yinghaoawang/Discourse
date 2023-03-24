@@ -5,7 +5,8 @@ import { ServerContext } from './server.context';
 import { SettingsContext } from './settings.context';
 import { closeAllPeerConnections, resetLocalStream, addWebRTCListeners } from '../util/webRTC.util';
 import { getSocket, setSocket, url, options } from '../util/socket.util';
-import { getFirstinputDevice, getFirstOutputDevice } from '../util/helpers.util';
+import { getFirstinputDevice, getFirstOutputDevice, playSound } from '../util/helpers.util';
+import { PostTypes } from '../util/constants.util';
 
 
 export const SocketContext = createContext();
@@ -46,7 +47,7 @@ export const SocketProvider = ({ children }) => {
     }
 
     const sendMessage = ({ message }) => {
-        getSocket().emit('message', { message, user: currentUser, roomId: currentTextChannel.id });
+        getSocket().emit('message', { message, user: currentUser, roomId: currentTextChannel.id, type: PostTypes.USER_MESSAGE });
     }
 
     const addTextChannel = ({ channelName }) => {
@@ -91,6 +92,10 @@ export const SocketProvider = ({ children }) => {
             const newPost = {
                 message, user, dateCreated, type
             };
+            console.log(type);
+            if (type === PostTypes.USER_MESSAGE) {
+                playSound('message.wav');
+            }
             setPosts(posts => [...posts, newPost]);
         });
       
