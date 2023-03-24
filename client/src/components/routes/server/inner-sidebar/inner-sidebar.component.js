@@ -58,7 +58,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
             
                 <div className='voice-panel-container'>
                     <div className='user'>
-                        <div className='icon'>U</div>
+                        <div className='icon'>{ currentUser?.name?.charAt(0) || '?' }</div>
                         <div className='infobox'>
                             <div className='name'>{ currentUser.name }</div>
                             <div className='status'>{ currentUser.statusMessage || '' }</div>
