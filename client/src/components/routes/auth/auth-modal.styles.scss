@@ -4,7 +4,7 @@
         @apply flex;
         .left {
             .auth-container {
-                @apply flex flex-col justify-evenly gap-3 mb-2 min-h-[120px];
+                @apply flex flex-col justify-evenly gap-3 min-h-[120px] mb-2;
                 .form-item {
                     @apply flex justify-between items-center;
                     label {
@@ -17,7 +17,7 @@
             }
         }
         .vl {
-            @apply border-l-gray-400 mx-6 my-2 border-l-[1px];
+            @apply border-l-gray-400 border-l-[1px] mx-6 my-2;
         }
         .right {
             .api-buttons {

@@ -1,15 +1,12 @@
 import Modal from 'react-modal';
 import { ReactComponent as GoogleLogo } from '../../../assets/google-logo.svg';
-import { useContext, useEffect, useState } from 'react';
+import { useState } from 'react';
 import '../../shared/modal/modal-layouts.scss';
 import './auth-modal.styles.scss';
-import { UserContext } from '../../../contexts/user.context';
-import { SocketContext } from '../../../contexts/socket.context';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
 Modal.setAppElement('#root');
 
 const AuthModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
-    const { setCurrentUser } = useContext(UserContext);
-	const { loadServers } = useContext(SocketContext);
     const afterOpenModalWrapper = async () => {
         if (afterOpenModal != null) afterOpenModal();
     }
@@ -24,14 +21,32 @@ const AuthModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
         setIsLogin(!isLogin);
     }
 
-    const login = () => {
-        setCurrentUser({ name: 'Test' + Math.floor(Math.random() * 1000) });
-        loadServers();
+    const loginHandler = async () => {
+        try {
+            const auth = getAuth();
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            console.log('logged in', user);
+        } catch(error) {
+            const errorMessage = error.message;
+            alert(errorMessage);
+        }
     }
 
-    const signUp = () => {
-        setCurrentUser({ name: 'Test' + Math.floor(Math.random() * 1000) });
-        loadServers();
+    const signUpHandler = async () => {
+        try {
+            const auth = getAuth();
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+
+            console.log('signed up', userCredential.user);
+        } catch(error) {
+            const errorMessage = error.message;
+            alert(errorMessage);
+        }
+    }
+
+    const googleSignInHandler = async () => {
+        alert('Coming soon!')
     }
 
     return (
@@ -79,7 +94,7 @@ const AuthModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                 <div className='vl' />
                 <div className='right'>
                     <div className='api-buttons'>
-                        <button className='api-button google'><GoogleLogo  />Continue with Google</button>
+                        <button onClick={ googleSignInHandler } className='api-button google'><GoogleLogo  />Continue with Google</button>
                     </div>
                 </div>
                 
@@ -88,8 +103,8 @@ const AuthModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                 <div className='action-buttons-container'>
                     <button onClick={ toggleIsLogin } className='button'>{ isLogin ? 'Sign up' : 'Login' }</button>
                     
-                    { isLogin ? <button onClick={ login } className='submit-button'>Login</button>
-                              : <button onClick={ signUp } className='submit-button'>Sign up</button>
+                    { isLogin ? <button onClick={ loginHandler } className='submit-button'>Login</button>
+                              : <button onClick={ signUpHandler } className='submit-button'>Sign up</button>
                     }
                 </div>
             </div>

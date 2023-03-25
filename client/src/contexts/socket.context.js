@@ -31,6 +31,7 @@ export const SocketProvider = ({ children }) => {
     const loadServers = () => {
         const currSocket = getSocket() || io(url, options);
         if (getSocket() == null) {
+            console.log(currSocket);
             setSocket(currSocket);
         }
 
@@ -223,7 +224,9 @@ export const SocketProvider = ({ children }) => {
     }
     
     const changeTextChannel = ({ textChannel, currentSocket }) => {
-        changeRoom({ roomId: textChannel.id, currentSocket });
+        if (textChannel != null) {
+            changeRoom({ roomId: textChannel.id, currentSocket });
+        }
         setCurrentTextChannel(textChannel);
     }
 

@@ -28,28 +28,27 @@ const Server = () => {
   const reversedPosts = [...posts].reverse();
 
   return (
-    <div className='server-container'>
-        { currentServer ?
-        <>
-          <InnerSidebar textChannels={ textChannels } voiceChannels={ voiceChannels } />
-          <div className='content-bottom-chatbar-container'>
-            { currentTextChannel ? <>
-                <div className='content-container'>
-                { reversedPosts.map((post, index) => {
-                  return <PostItem key={ index } post={ post } />
-                })}
-              </div>
-              <BottomChatbar />
-            </> : ''
-            }
-            
-          </div>
-          <UsersSidebar users={ users } />
-        </>
-        : <div className='flex justify-center items-center w-full'>Server does not exist</div>
-      }
-        
-    </div>
+  <div className='server-container'>
+      { currentServer ?
+      <>
+        <InnerSidebar textChannels={ textChannels } voiceChannels={ voiceChannels } />
+        <div className='content-bottom-chatbar-container'>
+          { currentTextChannel ? <>
+              <div className='content-container'>
+              { reversedPosts.map((post, index) => {
+                return <PostItem key={ index } post={ post } />
+              })}
+            </div>
+            <BottomChatbar />
+          </> : ''
+          }
+          
+        </div>
+        <UsersSidebar users={ users } />
+      </>
+      : <div className='flex justify-center items-center w-full'>Server does not exist</div>
+    }
+  </div>
   );
 };
 

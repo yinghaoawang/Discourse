@@ -13,7 +13,7 @@ export const ServerProvider = ({ children }) => {
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
     const value = {
-        servers, setServers,    
+        servers, setServers,
         currentServer, setCurrentServer,
         textChannels, setTextChannels,
         voiceRooms, setVoiceRooms,

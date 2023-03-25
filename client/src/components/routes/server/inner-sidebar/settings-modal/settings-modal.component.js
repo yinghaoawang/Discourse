@@ -6,8 +6,10 @@ import { SocketContext } from '../../../../../contexts/socket.context';
 import { ServerContext } from '../../../../../contexts/server.context';
 import { DeviceTypes } from '../../../../../util/constants.util';
 import { useContext, useEffect } from 'react';
+import { getAuth, deleteUser, signOut } from 'firebase/auth';
 import '../../../../shared/modal/modal-layouts.scss';
 import './settings-modal.styles.scss';
+import { useNavigate } from 'react-router-dom';
 Modal.setAppElement('#root');
 
 const removeSelectOptions = (selectNode) => {
@@ -19,7 +21,44 @@ const removeSelectOptions = (selectNode) => {
 const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
     const { currentInputDevice, setCurrentInputDevice, currentOutputDevice, setCurrentOutputDevice } = useContext(SettingsContext);
     const { currentVoiceChannel } = useContext(ServerContext);
-    const { changeVoiceChannel, } = useContext(SocketContext);
+    const { changeVoiceChannel, changeServer } = useContext(SocketContext);
+    const navigate = useNavigate();
+
+    const signOutHandler = async () => {
+        const auth = getAuth();
+        
+        try {
+            await signOut(auth);
+            changeServer(null);
+            navigate('/');
+        } catch (error) {
+            const errorMessage = error.message;
+            alert(errorMessage);
+        }
+    }
+
+    const closeAccountHandler = async () => {
+        const confirmRes = window.confirm('Your account will be deleted permanently. Proceed?');
+        if (confirmRes === false) return;
+
+        const auth = getAuth();
+        const user = auth.currentUser;
+
+        try {
+            await deleteUser(user);
+            changeServer(null);
+            navigate('/');
+        } catch(error) {
+            const errorCode = error.code;
+            if (errorCode === 'auth/requires-recent-login') {
+                alert('Reauthenticate to close account.');
+                signOutHandler();
+            } else {
+                const errorMessage = error.message;
+                alert(errorMessage);
+            }
+        }
+    }
 
     const afterOpenModalWrapper = async () => {
         if (afterOpenModal != null) afterOpenModal();
@@ -116,6 +155,16 @@ const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                         </div>
                     </div>
                     
+                </div>
+                <div className='account-settings-container'>
+                    <div className='header'>Account Settings</div>
+                    <div className='form-item'>
+                        <div></div>
+                        <div className='danger-buttons'>
+                            <button className='close-account-button' onClick={ closeAccountHandler }>Close Account</button>
+                            <button className='logout-button' onClick={ signOutHandler }>Sign out</button>
+                        </div>
+                    </div>
                 </div>
                 
             </div>
