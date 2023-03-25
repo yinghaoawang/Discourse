@@ -4,14 +4,17 @@ import UsersSidebar from './users-sidebar/users-sidebar.component';
 import './server.styles.scss';
 import { useContext, useEffect } from 'react';
 import { ServerContext } from '../../../contexts/server.context';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PostItem from './post-item/post-item.component';
 import { SocketContext } from '../../../contexts/socket.context';
+import { UserContext } from '../../../contexts/user.context';
 
 const Server = () => {
   const { id } = useParams();
+  const { currentUser } = useContext(UserContext);
   const { servers, currentTextChannel, textChannels, voiceChannels, currentServer, posts, users } = useContext(ServerContext);
   const { changeServer } = useContext(SocketContext);
+  const navigate = useNavigate();
 
   // handles loading a server on page refresh
   useEffect(() => {
@@ -24,6 +27,12 @@ const Server = () => {
 
     changeServer({ server });
   }, [servers]);
+
+  useEffect(() => {
+    if (currentUser == null) {
+      navigate('/');
+    }
+  }, [currentUser]);
 
   const reversedPosts = [...posts].reverse();
 

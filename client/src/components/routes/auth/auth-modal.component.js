@@ -3,7 +3,8 @@ import { ReactComponent as GoogleLogo } from '../../../assets/google-logo.svg';
 import { useState } from 'react';
 import '../../shared/modal/modal-layouts.scss';
 import './auth-modal.styles.scss';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { getSocket } from '../../../util/socket.util';
 Modal.setAppElement('#root');
 
 const AuthModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
@@ -27,6 +28,7 @@ const AuthModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
             const userCredential = await signInWithEmailAndPassword(auth, email, password);
             const user = userCredential.user;
             console.log('logged in', user);
+            getSocket().emit('getUser', { userId: user.uid });
         } catch(error) {
             const errorMessage = error.message;
             alert(errorMessage);
@@ -37,8 +39,10 @@ const AuthModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
         try {
             const auth = getAuth();
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const { user } = userCredential;
+            getSocket().emit('addUser', { email, displayName, userId: user.uid });
 
-            console.log('signed up', userCredential.user);
+            console.log('signed up', user);
         } catch(error) {
             const errorMessage = error.message;
             alert(errorMessage);

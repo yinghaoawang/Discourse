@@ -16,19 +16,15 @@ import { SocketContext } from './contexts/socket.context';
 
 const NavbarWrapper = () => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
-	const { loadServers } = useContext(SocketContext);
+	const { connectSocket } = useContext(SocketContext);
 	const { currentOutputDevice } = useContext(SettingsContext);
 	useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
+		
+		onAuthStateChanged(auth, (user) => {
             if (user) {
                 // User is signed in, see docs for a list of available properties
                 // https://firebase.google.com/docs/reference/js/firebase.User
-				console.log(user.displayName, user);
-                setCurrentUser({
-                    name: user.displayName,
-                    id: user.uid,
-                })
-                loadServers();
+				connectSocket({ loadServers: false, getUser: true });
             } else {
                 setCurrentUser(null);
                 console.log('user not exist');

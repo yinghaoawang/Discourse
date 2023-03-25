@@ -7,12 +7,13 @@ import { closeAllPeerConnections, resetLocalStream, addWebRTCListeners } from '.
 import { getSocket, setSocket, url, options } from '../util/socket.util';
 import { getFirstinputDevice, getFirstOutputDevice, playSound } from '../util/helpers.util';
 import { PostTypes } from '../util/constants.util';
+import { getAuth } from 'firebase/auth';
 
 
 export const SocketContext = createContext();
 
 export const SocketProvider = ({ children }) => {
-    const { currentUser } = useContext(UserContext);
+    const { currentUser, setCurrentUser } = useContext(UserContext);
     const { voiceRooms, currentTextChannel, setCurrentTextChannel,
         currentVoiceChannel, setCurrentVoiceChannel,
         setServers, setPosts, setVoiceChannels, setVoiceRooms,
@@ -26,14 +27,22 @@ export const SocketProvider = ({ children }) => {
 			const { servers } = data;
 			setServers(servers);
 		});
+
+        newSocket.on('currentUser', ({ displayName }) => {
+            const auth = getAuth();
+            const userId = auth.currentUser.uid;
+            const email = auth.currentUser.email;
+            setCurrentUser({ email, name: displayName, userId });
+            console.log({ email, displayName, userId });
+            getSocket().emit('getServers');
+        })
     }
 
-    const loadServers = () => {
+    const connectSocket = ({ loadServers = true, getUser = false }) => {
+        if (getSocket() !== null) return;
+
         const currSocket = getSocket() || io(url, options);
-        if (getSocket() == null) {
-            console.log(currSocket);
-            setSocket(currSocket);
-        }
+        setSocket(currSocket);
 
         currSocket.on('connect', async () => {
             const inputDevice = currentInputDevice || await getFirstinputDevice();
@@ -43,7 +52,13 @@ export const SocketProvider = ({ children }) => {
             setCurrentOutputDevice(outputDevice);
 
             addSocketListeners(currSocket);
-            currSocket.emit('getServers');
+            if (loadServers) {
+                currSocket.emit('getServers');
+            }
+            if (getUser) {
+                const user = getAuth();
+                getSocket().emit('getUser', { userId: user.uid });
+            }
         })
     }
 
@@ -241,7 +256,7 @@ export const SocketProvider = ({ children }) => {
 
     const value = {
         updateSocketUser,
-        loadServers, leaveVoiceChannel,
+        connectSocket, leaveVoiceChannel,
         addServer, addTextChannel, addVoiceChannel, sendMessage,
         changeServer, changeTextChannel, changeVoiceChannel,
         isSocketConnecting, setIsSocketConnecting

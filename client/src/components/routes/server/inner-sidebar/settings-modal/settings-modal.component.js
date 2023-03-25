@@ -30,7 +30,7 @@ const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
         try {
             await signOut(auth);
             changeServer(null);
-            navigate('/');
+            // navigate('/');
         } catch (error) {
             const errorMessage = error.message;
             alert(errorMessage);
@@ -47,7 +47,7 @@ const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
         try {
             await deleteUser(user);
             changeServer(null);
-            navigate('/');
+            // navigate('/');
         } catch(error) {
             const errorCode = error.code;
             if (errorCode === 'auth/requires-recent-login') {
