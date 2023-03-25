@@ -6,9 +6,9 @@ import { SocketContext } from '../../../../../contexts/socket.context';
 import './voice-channel-item.styles.scss';
 
 const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
-    const { currentVoiceChannel, voiceRooms } = useContext(ServerContext);
+    const { currentVoiceChannel, voiceRooms, currentServer } = useContext(ServerContext);
     const { changeVoiceChannel, leaveVoiceChannel } = useContext(SocketContext);
-    const voiceRoom = voiceRooms.find(v => v.roomId === voiceChannel.id);
+    const voiceRoom = voiceRooms.find(v => v.roomId === voiceChannel.id && v.serverId === currentServer.id);
     const voiceUsers = voiceRoom?.users;
 
     const isMuted = false;

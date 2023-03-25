@@ -9,10 +9,10 @@ const addUserToVoiceRoom = ({ voiceRoom, socket }) => {
     return user;
 }
 
-const joinVoiceRoom = ({ roomId, socket }) => {
-    let voiceRoom = voiceRooms.find(v => v.roomId === roomId);
+const joinVoiceRoom = ({ roomId, socket, serverId }) => {
+    let voiceRoom = voiceRooms.find(v => v.roomId === roomId && v.serverId === serverId);
     if (voiceRoom == null) {
-        voiceRoom = { roomId, users: [] };
+        voiceRoom = { roomId, users: [], serverId: serverId };
         voiceRooms.push(voiceRoom);
     }
 
@@ -32,8 +32,8 @@ const joinVoiceRoom = ({ roomId, socket }) => {
     return voiceRoom;
 }
 
-const leaveVoiceRoom = ({ roomId, socket }) => {
-    const voiceRoom = voiceRooms.find(v => v.roomId === roomId);
+const leaveVoiceRoom = ({ roomId, socket, serverId }) => {
+    const voiceRoom = voiceRooms.find(v => v.roomId === roomId && v.serverId === serverId);
     
     if (voiceRoom == null) {
         console.error('Voice room is null in leaveVoiceRoom');

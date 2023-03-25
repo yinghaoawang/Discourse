@@ -21,7 +21,7 @@ module.exports = async (io) => {
                 onAddServer(payload);
             });
             addSocketListeners({ socket });
-            addVoiceRoomListeners({ socket, namespace });
+            addVoiceRoomListeners({ socket, namespace, server });
         });
     }
 

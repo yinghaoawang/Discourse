@@ -1,7 +1,7 @@
 const { voiceRooms, joinVoiceRoom, leaveVoiceRoom } = require('./voiceRooms');
 
 module.exports = async (io) => {
-    const addVoiceRoomListeners = async ({ socket, namespace }) => {
+    const addVoiceRoomListeners = async ({ socket, namespace, server }) => {
         const sendVoiceRoomData = async (payload) => {
             if (payload != null && payload.target != null) {
                 payload.target.emit('voiceRooms', { voiceRooms });
@@ -10,8 +10,8 @@ module.exports = async (io) => {
             }
         }
 
-        const voiceRoomEmit = ({ namespace = io, roomId, key, payload, excludeSelf = false }) => {
-            const voiceRoom = voiceRooms.find(v => v.roomId === roomId);
+        const voiceRoomEmit = ({ namespace = io, serverId = server.id, roomId, key, payload, excludeSelf = false }) => {
+            const voiceRoom = voiceRooms.find(v => v.roomId === roomId && v.serverId === serverId);
             if (voiceRoom == null) {
                 console.error('Voice room ' + roomId + ' could not be found in voiceRoomEmit');
                 return;
@@ -28,12 +28,16 @@ module.exports = async (io) => {
             }
         }
 
-        const getCurrentVoiceRoomId = () => {
+        const getCurrentVoiceRoom = () => {
             for (const voiceRoom of voiceRooms) {
                 const matchingUser = voiceRoom?.users?.find(u => u.id == socket.id);
-                if (matchingUser) return voiceRoom.roomId;
+                if (matchingUser) return voiceRoom;
             }
             return null;
+        }
+
+        const getCurrentVoiceRoomId = () => {
+            return getCurrentVoiceRoom()?.id;
         }
 
         const onConnSignal = async ({ signal, connSocketId }) => {
@@ -47,8 +51,7 @@ module.exports = async (io) => {
 
         const joinVoiceRoomHandler = async ({ roomId }) => {
             console.log('joining vc room', roomId);
-
-            const voiceRoom = joinVoiceRoom({ roomId, socket });
+            const voiceRoom = joinVoiceRoom({ roomId, socket, serverId: server.id });
 
             if (voiceRoom == null) {
                 console.error('Voice room could not be joined in joinVoiceRoomHandler');
@@ -68,7 +71,7 @@ module.exports = async (io) => {
             voiceRoomEmit({ namespace, roomId, key: 'wrtcClose', payload: { connSocketId: socket.id } });
             voiceRoomEmit({ namespace, roomId, key: 'userLeftVoiceRoom' });
             
-            leaveVoiceRoom({ roomId, socket });
+            leaveVoiceRoom({ roomId, socket, serverId: server.id });
             sendVoiceRoomData();
         }
 

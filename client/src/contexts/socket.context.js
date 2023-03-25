@@ -158,8 +158,8 @@ export const SocketProvider = ({ children }) => {
         let server = null;
         if (data != null) server = data.server;
 
-        setCurrentTextChannel(null);
-        setCurrentVoiceChannel(null);
+        leaveTextChannel();
+        leaveVoiceChannel();
         setPosts([]);
         setUsers([]);
         setCurrentServer(server);
@@ -190,6 +190,7 @@ export const SocketProvider = ({ children }) => {
         }
 
         if (currentVoiceChannel != null) {
+            console.log(currentVoiceChannel);
             currentSocket.emit('leaveVoiceRoom', { roomId: currentVoiceChannel.id });
             closeAllPeerConnections();
         }
@@ -215,6 +216,10 @@ export const SocketProvider = ({ children }) => {
 
     const leaveVoiceChannel = async () => {
         await changeVoiceChannel({ voiceChannel: null });
+    }
+    
+    const leaveTextChannel = async () => {
+        await changeTextChannel({ textChannel: null });
     }
     
     const changeTextChannel = ({ textChannel, currentSocket }) => {
