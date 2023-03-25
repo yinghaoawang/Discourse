@@ -28,7 +28,12 @@ export const SocketProvider = ({ children }) => {
 			setServers(servers);
 		});
 
-        newSocket.on('currentUser', ({ displayName }) => {
+        newSocket.on('updateCurrentUser', (payload) => {
+            if (payload == null) {
+                return;
+            }
+            const { displayName } = payload;
+            
             const auth = getAuth();
             const userId = auth.currentUser.uid;
             const email = auth.currentUser.email;

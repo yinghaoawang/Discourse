@@ -13,13 +13,13 @@ module.exports = async (io) => {
             await addUser({ userId, userData: { displayName }});
             const user = await getUser({ userId });
             console.log('created user, got', user);
-            socket.emit('currentUser', user);
+            socket.emit('updateCurrentUser', user);
         });
 
         socket.on('getUser', async ({ userId }) => {
             const user = await getUser({ userId });
             console.log('getting user', user);
-            socket.emit('currentUser', user);
+            socket.emit('updateCurrentUser', user);
         });
 
         socket.on('getServers', sendServers)
