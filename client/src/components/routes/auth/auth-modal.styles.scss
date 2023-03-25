@@ -1,0 +1,41 @@
+.auth-modal-content {
+    @apply max-w-[620px] w-full;
+    .content {
+        @apply flex;
+        .left {
+            .auth-container {
+                @apply flex flex-col justify-evenly gap-3 mb-2 min-h-[120px];
+                .form-item {
+                    @apply flex justify-between items-center;
+                    label {
+                        @apply w-36;
+                    }
+                    input {
+                        @apply rounded-md w-full h-8 px-1.5;
+                    }
+                }
+            }
+        }
+        .vl {
+            @apply border-l-gray-400 mx-6 my-2 border-l-[1px];
+        }
+        .right {
+            .api-buttons {
+                @apply flex flex-col justify-evenly h-full;
+
+                .api-button {
+                    @apply flex gap-3 px-2 py-3 justify-center items-center w-56;
+
+                    &.google {
+                        @apply bg-white rounded-xl text-black font-medium;
+                    }
+
+                    svg {
+                        @apply w-4 h-4;
+                    }
+                }
+            }
+        }
+    }
+    
+}

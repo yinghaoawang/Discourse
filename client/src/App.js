@@ -10,10 +10,26 @@ import { UserContext } from './contexts/user.context';
 import { SocketContext } from './contexts/socket.context';
 import { SettingsContext } from './contexts/settings.context';
 import { setOutputDevice } from './util/webRTC.util';
+import AuthModal from './components/routes/auth/auth-modal.component';
 
 const NavbarWrapper = () => {
+	const { currentUser, setCurrentUser } = useContext(UserContext);
+	const { loadServers } = useContext(SocketContext);
+	const { currentOutputDevice } = useContext(SettingsContext);
+
+	useEffect(() => {
+
+	}, []);
+	// updates webrtc's output device to match react component's output device
+	useEffect(() => {
+		setOutputDevice(currentOutputDevice);
+	}, [currentOutputDevice]);
+
+	const isAuthModalOpen = currentUser === null;
+
 	return (
 		<div className='body-container'>
+			<AuthModal isModalOpen={ isAuthModalOpen } />
 			<Sidebar />
 			<div id='audio-container'></div>
 			<Outlet />
@@ -38,32 +54,6 @@ const router = createBrowserRouter(routes, {
 });
 
 const App = () => {
-	const { setCurrentUser } = useContext(UserContext);
-	const { loadServers } = useContext(SocketContext);
-	const { currentOutputDevice } = useContext(SettingsContext);
-
-	useEffect(() => {
-		while (true) {
-			if (process.env.NODE_ENV === 'development') {
-				setCurrentUser({ name: 'Test' + Math.floor(Math.random() * 1000) });
-				break;
-			}
-			
-			const username = prompt('What is your name?')?.trim();
-			if (username != null && username.length !== 0) {
-				setCurrentUser({ name: username });
-				break;
-			}
-		}
-
-		loadServers();
-	}, []);
-
-	// updates webrtc's output device to match react component's output device
-	useEffect(() => {
-		setOutputDevice(currentOutputDevice);
-	}, [currentOutputDevice]);
-	
 	return <RouterProvider router={ router } />;
 };
 
