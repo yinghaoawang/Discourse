@@ -33,7 +33,7 @@ export const SocketProvider = ({ children }) => {
                 return;
             }
             const { displayName } = payload;
-            
+
             const auth = getAuth();
             const userId = auth.currentUser.uid;
             const email = auth.currentUser.email;
@@ -44,8 +44,6 @@ export const SocketProvider = ({ children }) => {
     }
 
     const connectSocket = ({ loadServers = true, getUser = false }) => {
-        if (getSocket() !== null) return;
-
         const currSocket = getSocket() || io(url, options);
         setSocket(currSocket);
 
@@ -61,8 +59,9 @@ export const SocketProvider = ({ children }) => {
                 currSocket.emit('getServers');
             }
             if (getUser) {
-                const user = getAuth();
-                getSocket().emit('getUser', { userId: user.uid });
+                const auth = getAuth();
+                const userId = auth.currentUser.uid;
+                getSocket().emit('getUser', { userId });
             }
         })
     }
