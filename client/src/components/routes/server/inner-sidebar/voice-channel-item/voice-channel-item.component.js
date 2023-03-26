@@ -38,7 +38,7 @@ const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
             </div>
             <div className='voice-channel-users'>
                 { voiceUsers != null && voiceUsers.map((voiceUser, index) => {
-                const displayChar = voiceUser?.displayName?.charAt(0).toUpperCase() || '?';
+                const displayChar = voiceUser?.name?.charAt(0).toUpperCase() || '?';
                 
                 return (
                     <div key={ index } className='channel-user group'>
