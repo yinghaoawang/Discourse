@@ -37,7 +37,8 @@ module.exports = async (io) => {
         }
 
         const getCurrentVoiceRoomId = () => {
-            return getCurrentVoiceRoom()?.id;
+            if (socket.room?.id != null) return socket.room?.id;
+            return  getCurrentVoiceRoom()?.id;
         }
 
         const onConnSignal = async ({ signal, connSocketId }) => {
@@ -62,6 +63,7 @@ module.exports = async (io) => {
             if (voiceRoom.users?.length > 1) {
                 voiceRoomEmit({ namespace, roomId, key: 'wrtcPrepare', payload: { connSocketId: socket.id }, excludeSelf: true });
             }
+            socket.room = { id: roomId };
 
             sendVoiceRoomData();
         }
@@ -70,19 +72,21 @@ module.exports = async (io) => {
             console.log('leaving vc room', roomId);
             voiceRoomEmit({ namespace, roomId, key: 'wrtcClose', payload: { connSocketId: socket.id } });
             voiceRoomEmit({ namespace, roomId, key: 'userLeftVoiceRoom' });
+            socket.room = null;
             
             leaveVoiceRoom({ roomId, socket, serverId: server.id });
             sendVoiceRoomData();
         }
 
-        const onDisconnecting = async () => {
+        const onDisconnect = async () => {
+            console.log(getCurrentVoiceRoomId());
             leaveVoiceRoomHandler({ roomId: getCurrentVoiceRoomId() });
         }
 
         socket.on('getVoiceRooms', sendVoiceRoomData);
         socket.on('joinVoiceRoom', joinVoiceRoomHandler);
         socket.on('leaveVoiceRoom', leaveVoiceRoomHandler);
-        socket.on('disconnecting', onDisconnecting);
+        socket.on('disconnect', onDisconnect);
         socket.on('wrtcSignal', onConnSignal);
         socket.on('wrtcInit', onConnInit);
     }
