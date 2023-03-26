@@ -17,13 +17,11 @@ module.exports = async (io) => {
                 return;
             }
         
-            console.log('emitting ' + key + ' to all users in ' + roomId);
             const users = voiceRoom.users;
             if (users == null) throw new Error('Voice room does not have property users in voiceRoomEmit');
         
             for (const user of users) {
                 if (excludeSelf && user.id == socket.id) continue;
-                console.log('to ' + user.id);
                 namespace.to(user.id).emit(key, payload);
             }
         }

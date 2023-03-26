@@ -3,8 +3,9 @@ const voiceRooms = [];
 const addUserToVoiceRoom = ({ voiceRoom, socket }) => {
     const user = {
         id: socket.id,
-        name: socket.user?.name
+        name: socket.user?.displayName
     }
+    console.log(socket.user);
     voiceRoom.users.push(user);
     return user;
 }

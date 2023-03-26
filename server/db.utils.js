@@ -1,7 +1,7 @@
 const { redisClient } = require('./redis.utils');
 
 const addUser = async ({ userId, userData }) => {
-    const keyName = 'users/' + userId;
+    const keyName = `users/${ userId }`;
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
         console.error('user ' + userId + ' exists in addUser, not overriding');
@@ -12,7 +12,7 @@ const addUser = async ({ userId, userData }) => {
 }
 
 const setUser = async ({ userId, userData }) => {
-    const keyName = 'users/' + userId;
+    const keyName = `users/${ userId }`;
     const cacheResults = await redisClient.get(keyName);
     if (!cacheResults) {
         console.error('user ' + userId + ' does not exist in setUser, not setting');
@@ -23,10 +23,10 @@ const setUser = async ({ userId, userData }) => {
 }
 
 const getUser = async ({ userId }) => {
-    const keyName = 'users/' + userId;
+    const keyName = `users/${ userId }`;
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
-        return JSON.parse(cacheResults);
+        return { ...JSON.parse(cacheResults), userId }; // bandaid
     } else {
         console.error('User ' + userId + ' does not exist.');
         return null;
@@ -121,19 +121,22 @@ const getPosts = async ({ serverId, channelId }) => {
     }
 }
 
-const addServerUser = async ({ serverId, serverUserData }) => {
+const addServerUser = async ({ serverId, userId }) => {
+    const user = await getUser({ userId });
+    if (user == null) throw new Error('User does not exist in addServerUser');
+    
     const keyName = `${ serverId }/users`; 
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
         const data = JSON.parse(cacheResults);
-        const matchingUser = data.find(item => serverUserData.name === item.name);
+        const matchingUser = data.find(item => userId === item.userId);
         if (matchingUser) {
             await redisClient.set(keyName, JSON.stringify([...data]))
         } else {
-            await redisClient.set(keyName, JSON.stringify([...data, serverUserData]))
+            await redisClient.set(keyName, JSON.stringify([...data, user]))
         }
     } else {
-        await redisClient.set(keyName, JSON.stringify([serverUserData]));
+        await redisClient.set(keyName, JSON.stringify([user]));
     }
 }
 

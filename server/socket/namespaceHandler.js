@@ -1,5 +1,5 @@
 const { PostTypes } = require('./socketConstants');
-const { addPost, getTextChannels, addTextChannel, getVoiceChannels, addVoiceChannel, getPosts, addServerUser, getServerUsers } = require('../db.utils');
+const { addPost, getTextChannels, addTextChannel, getVoiceChannels, addVoiceChannel, getPosts, addServerUser, getServerUsers, getUser } = require('../db.utils');
 
 module.exports = async (io) => {
     const onNamespaceConnect = async ({ socket, server }) => {
@@ -8,11 +8,11 @@ module.exports = async (io) => {
         const getUsersInNamespace = () => {
             const users = [];
             for (const [key, value] of namespace.sockets.entries()) {
-                const { user } = value;
-                if (!user) {
+                const nspSocket = value;
+                if (!nspSocket?.user) {
                     console.error('Namespace socket user does not exist')
                 } else {
-                    users.push(user);
+                    users.push(nspSocket.user);
                 }
             }
             return users;
@@ -28,7 +28,7 @@ module.exports = async (io) => {
             }
         }
         
-        const sendUsers = async () => {
+        const sendServerUsers = async () => {
             namespace.emit('serverUsers', { users: await getServerUsers({ serverId: server.id }), connectedUsers: await getUsersInNamespace({ namespace }), name: namespace.name });
         }
 
@@ -37,17 +37,21 @@ module.exports = async (io) => {
             socket.emit('posts', { posts });
         }
 
-        const updateUser = async ({ user, isOnConnect }) => {
+        const updateServerUser = async ({ userId, isOnConnect }) => {
+            const user = await getUser({ userId });
             socket.user = user;
+            socket.userId = userId;
+
             if (isOnConnect) {
                 const serverUsers = await getServerUsers({ serverId: server.id });
-                const matchingUser = serverUsers.find(item => item.name === user.name);
+                const matchingUser = serverUsers.find(item => item.userId === userId);
                 if (!matchingUser) {
                     await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN });
                 }
-                await addServerUser({ serverId: server.id, serverUserData: user });
+
+                await addServerUser({ serverId: server.id, userId });
             }
-            sendUsers();
+            sendServerUsers();
         }
 
         const sendMessage = async ({ message, roomId, type }) => {
@@ -77,7 +81,7 @@ module.exports = async (io) => {
             console.log('joining room', roomId);
             sendPosts({ roomId });
             socket.join(roomId);
-            sendUsers();
+            sendServerUsers();
         };
 
         const leaveRoom = async ({ roomId }) => {
@@ -86,7 +90,7 @@ module.exports = async (io) => {
                 return;
             }
             socket.leave(roomId);
-            sendUsers();
+            sendServerUsers();
         }
 
         const onConnect = async () => {
@@ -98,7 +102,7 @@ module.exports = async (io) => {
         }
         
         const onDisconnect = () => {
-            sendUsers();
+            sendServerUsers();
             console.log('disconnected from ', namespace.name);
         }
 
@@ -120,13 +124,13 @@ module.exports = async (io) => {
 
         socket.on('getPosts', sendPosts);
         socket.on('getChannels', sendAllChannels);
-        socket.on('getUsers', sendUsers);
+        socket.on('getServerUsers', sendServerUsers);
         socket.on('message', sendMessage);
         socket.on('disconnecting', onDisconnecting);
         socket.on('disconnect', onDisconnect);
         socket.on('joinRoom', joinRoom);
         socket.on('leaveRoom', leaveRoom);
-        socket.on('updateUser', updateUser);
+        socket.on('updateServerUser', updateServerUser);
         socket.on('addTextChannel', onAddTextChannel);
         socket.on('addVoiceChannel', onAddVoiceChannel);
 

@@ -4,15 +4,15 @@ import Moment from 'react-moment';
 
 const PostItem = ({ post }) => {
     const { message, user = { name: '?'}, dateCreated, type = PostTypes.USER_MESSAGE } = post;
-    const displayChar = user?.name?.charAt(0).toUpperCase() || '?';
+    const displayChar = user?.displayName?.charAt(0).toUpperCase() || '?';
 
     let displayMessage = message;
     switch (type) {
         case PostTypes.USER_LEAVE:
-            displayMessage = `${ user?.name } ${ message }`
+            displayMessage = `${ user?.displayName } ${ message }`
             break;
         case PostTypes.USER_JOIN:
-            displayMessage = `${ user?.name } ${ message }`
+            displayMessage = `${ user?.displayName } ${ message }`
             break;
         case PostTypes.USER_MESSAGE:
             break;
@@ -28,7 +28,7 @@ const PostItem = ({ post }) => {
             
             <div className='message-col'>
                 <div className='metadata'>
-                    <div className='username'>{ user?.name || '?' }</div>
+                    <div className='username'>{ user?.displayName || '?' }</div>
                     <div className='timestamp'><Moment format='hh:mm A' date={ dateCreated }></Moment></div>
                 </div>
                 

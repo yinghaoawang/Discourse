@@ -10,22 +10,29 @@ module.exports = async (io) => {
         }
 
         socket.on('addUser', async ({ userId, displayName }) => {
-            await addUser({ userId, userData: { displayName }});
+            await addUser({ userId, userData: { userId, displayName }});
             const user = await getUser({ userId });
+            
             socket.emit('updateCurrentUser', user);
         });
 
         socket.on('updateUser', async ({ userId, displayName }) => {
-            await setUser( { userId, userData: { displayName } });
+            await setUser( { userId, userData: { userId, displayName } });
             const user = await getUser({ userId });
+            console.log('update user', user, userId);
+
             socket.emit('updateCurrentUser', user);
         })
 
         socket.on('getUser', async ({ userId }) => {
             let user = await getUser({ userId });
             if (user == null) {
-                user = { displayName: 'Unknown' };
+                user = { userId, displayName: 'Unknown' };
             }
+
+            socket.user = user;
+            socket.userId = userId;
+
             console.log('getting user', user);
             socket.emit('updateCurrentUser', user);
         });

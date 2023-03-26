@@ -32,12 +32,11 @@ export const SocketProvider = ({ children }) => {
             if (payload == null) {
                 return;
             }
-            const { displayName } = payload;
-
+            
             const auth = getAuth();
             const userId = auth.currentUser.uid;
             const email = auth.currentUser.email;
-            setCurrentUser({ email, name: displayName, userId });
+            setCurrentUser({ email, userId, ...payload });
             getSocket().emit('getServers');
         })
     }
@@ -66,7 +65,7 @@ export const SocketProvider = ({ children }) => {
     }
 
     const sendMessage = ({ message }) => {
-        getSocket().emit('message', { message, user: currentUser, roomId: currentTextChannel.id, type: PostTypes.USER_MESSAGE });
+        getSocket().emit('message', { message, roomId: currentTextChannel.id, type: PostTypes.USER_MESSAGE });
     }
 
     const addTextChannel = ({ channelName }) => {
@@ -130,8 +129,11 @@ export const SocketProvider = ({ children }) => {
       
         newSocket.on('serverUsers', (data) => {
             const { users, connectedUsers } = data;
+            console.log('serverUsers', data);
             const categorizedUsers = users.map(user => {
-                if (connectedUsers.map(u => u.name).includes(user.name)) {
+                if (connectedUsers.map(u => u.userId).includes(user.userId)) {
+                        const connectedUser = connectedUsers.find(u => u.userId === user.userId);
+                        user = connectedUser;
                         user.category = 'Online'
                     } else {
                         user.category = 'Offline'
@@ -156,7 +158,9 @@ export const SocketProvider = ({ children }) => {
             addSocketListeners(newSocket);
             addNspListeners(newSocket);
             addWebRTCListeners(newSocket, namespace);
-            newSocket.emit('updateUser', { user: currentUser, isOnConnect: true });
+            const auth = getAuth();
+            const userId = auth.currentUser.uid;
+            newSocket.emit('updateServerUser', { userId, isOnConnect: true });
             newSocket.emit('getChannels');
             newSocket.emit('getVoiceRooms');
         });
@@ -168,11 +172,6 @@ export const SocketProvider = ({ children }) => {
         closeAllPeerConnections();
         changeSocket(io(url + namespace, options), namespace);
     }
-
-    const updateSocketUser = () => {
-        getSocket().emit('updateUser', { user: currentUser });
-    }
-
     const changeServer = (data) => {
         let server = null;
         if (data != null) server = data.server;
@@ -258,7 +257,6 @@ export const SocketProvider = ({ children }) => {
     }
 
     const value = {
-        updateSocketUser,
         connectSocket, leaveVoiceChannel,
         addServer, addTextChannel, addVoiceChannel, sendMessage,
         changeServer, changeTextChannel, changeVoiceChannel,

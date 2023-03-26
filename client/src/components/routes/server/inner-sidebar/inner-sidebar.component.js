@@ -37,7 +37,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
         leaveVoiceChannel();
     }
 
-    const displayChar = currentUser?.name?.charAt(0).toUpperCase() || '?';
+    const displayChar = currentUser?.displayName?.charAt(0).toUpperCase() || '?';
 
     return (
         <div className="inner-sidebar-container">
@@ -62,7 +62,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
                     <div className='user'>
                         <div className='icon'>{ displayChar }</div>
                         <div className='infobox'>
-                            <div className='name'>{ currentUser.name }</div>
+                            <div className='name'>{ currentUser.displayName }</div>
                             <div className='status'>{ currentUser.statusMessage || '' }</div>
                         </div>
                     </div>

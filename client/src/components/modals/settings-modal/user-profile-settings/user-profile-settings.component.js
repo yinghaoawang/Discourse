@@ -10,7 +10,7 @@ const UserProfileSettings = () => {
     const email = currentUser.email;
 
     useEffect(() => {
-        setDisplayName(currentUser.name);
+        setDisplayName(currentUser.displayName);
     }, [currentUser]);
 
     const updateUserProfileHandler = () => {
