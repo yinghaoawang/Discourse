@@ -1,5 +1,5 @@
 const { PostTypes } = require('./socketConstants');
-const { addPost, getTextChannels, addTextChannel, getVoiceChannels, addVoiceChannel, getPosts, addServerUser, getServerUsers, getUser } = require('../db.utils');
+const { addPost, getTextChannels, addTextChannel, getVoiceChannels, addVoiceChannel, getPosts, addServerUser, getServerUsers, getUser, setUser } = require('../db.utils');
 
 module.exports = async (io) => {
     const onNamespaceConnect = async ({ socket, server }) => {
@@ -37,20 +37,24 @@ module.exports = async (io) => {
             socket.emit('posts', { posts });
         }
 
-        const updateServerUser = async ({ userId, isOnConnect }) => {
+        const updateServerUser = async ({ userId, isOnConnect=false, userData=null }) => {
+
+            if (isOnConnect) {
+                const serverUsers = await getServerUsers({ serverId: server.id });
+                const matchingUser = serverUsers.find(item => item?.userId === userId);
+                if (!matchingUser) {
+                    await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN });
+                }
+            }
+
+            await addServerUser({ serverId: server.id, userId });
+            if (userData != null) {
+                setUser({ userId, userData });
+            }
             const user = await getUser({ userId });
             socket.user = user;
             socket.userId = userId;
 
-            if (isOnConnect) {
-                const serverUsers = await getServerUsers({ serverId: server.id });
-                const matchingUser = serverUsers.find(item => item.userId === userId);
-                if (!matchingUser) {
-                    await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN });
-                }
-
-                await addServerUser({ serverId: server.id, userId });
-            }
             sendServerUsers();
         }
 

@@ -16,7 +16,10 @@ const UserProfileSettings = () => {
     const updateUserProfileHandler = () => {
         const auth = getAuth();
         const userId = auth.currentUser.uid;
-        getSocket().emit('updateUser', { userId, displayName });
+        const userData = { userId, displayName };
+        getSocket().emit('updateUser', userData);
+        getSocket().emit('updateServerUser', { userId, userData });
+
     }
 
     return (
