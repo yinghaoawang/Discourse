@@ -1,4 +1,4 @@
-const { getServers, addServer, addUser, getUser } = require('../db.utils');
+const { getServers, addServer, addUser, getUser, setUser } = require('../db.utils');
 
 module.exports = async (io) => {
     const { onNamespaceConnect } = await require('./namespaceHandler')(io);
@@ -12,9 +12,14 @@ module.exports = async (io) => {
         socket.on('addUser', async ({ userId, displayName }) => {
             await addUser({ userId, userData: { displayName }});
             const user = await getUser({ userId });
-            console.log('created user, got', user);
             socket.emit('updateCurrentUser', user);
         });
+
+        socket.on('updateUser', async ({ userId, displayName }) => {
+            await setUser( { userId, userData: { displayName } });
+            const user = await getUser({ userId });
+            socket.emit('updateCurrentUser', user);
+        })
 
         socket.on('getUser', async ({ userId }) => {
             let user = await getUser({ userId });

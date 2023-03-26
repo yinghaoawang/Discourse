@@ -1,0 +1,16 @@
+.account-settings-container {
+    .danger-buttons {
+        @apply flex gap-4;
+        button {
+            @apply font-medium;
+
+            &.logout-button {
+                @apply border-[1px] border-red-600;
+            }
+
+            &.close-account-button {
+                @apply bg-red-600;
+            }
+        }
+    }
+}

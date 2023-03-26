@@ -1,6 +1,7 @@
 import { deleteUser, getAuth, signOut } from 'firebase/auth';
 import { useContext } from 'react';
 import { SocketContext } from '../../../../contexts/socket.context';
+import './account-settings.styles.scss';
 
 const AccountSettings = () => {
     const { changeServer } = useContext(SocketContext);

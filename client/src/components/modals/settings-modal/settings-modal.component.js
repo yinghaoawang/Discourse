@@ -4,6 +4,7 @@ import '../modal-layouts.scss';
 import './settings-modal.styles.scss';
 import DeviceSettings from './device-settings/device-settings.component';
 import AccountSettings from './account-settings/account-settings.component';
+import UserProfileSettings from './user-profile-settings/user-profile-settings.component';
 Modal.setAppElement('#root');
 
 const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
@@ -22,13 +23,14 @@ const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
             contentLabel="Settings"
         >
             <div className='content'>
-                <div className='header'>
+                <span className='header'>
                     <div className='title'>
                         Settings
                     </div>
                     <button className='close-button' onClick={ closeModal }><CloseIcon size={ '25px' } /></button>
-                </div>
+                </span>
                 <DeviceSettings isModalOpen={ isModalOpen } />
+                <UserProfileSettings />
                 <AccountSettings />
                 
             </div>

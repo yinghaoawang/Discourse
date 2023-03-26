@@ -4,7 +4,19 @@ const addUser = async ({ userId, userData }) => {
     const keyName = 'users/' + userId;
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
-        console.error('user ' + userId + ' exists, overriding');
+        console.error('user ' + userId + ' exists in addUser, not overriding');
+        return;
+    } else {
+        await redisClient.set(keyName, JSON.stringify(userData));
+    }
+}
+
+const setUser = async ({ userId, userData }) => {
+    const keyName = 'users/' + userId;
+    const cacheResults = await redisClient.get(keyName);
+    if (!cacheResults) {
+        console.error('user ' + userId + ' does not exist in setUser, not setting');
+        return;
     } else {
         await redisClient.set(keyName, JSON.stringify(userData));
     }
@@ -137,5 +149,5 @@ const getServerUsers = async ({ serverId }) => {
 }
 
 module.exports = {
-    addPost, getPosts, addServer, getServers, addTextChannel, getTextChannels, addVoiceChannel, getVoiceChannels, addServerUser, getServerUsers, addUser, getUser
+    addPost, getPosts, addServer, getServers, addTextChannel, getTextChannels, addVoiceChannel, getVoiceChannels, addServerUser, getServerUsers, addUser, getUser, setUser
 }

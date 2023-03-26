@@ -29,6 +29,22 @@
 .modal-layout-1 {
     @apply p-0;
 
+    button {
+        @apply px-3 py-2 rounded-md;
+    }
+
+    .submit-button {
+        @apply ml-5 bg-blue-600;
+
+        &:hover {
+            @apply bg-blue-700;
+        }
+    }
+
+    input, select {
+        @apply px-1.5 py-[1px];
+    }
+
     .heading {
         @apply flex mt-1 mb-3 text-3xl justify-between;
     }
@@ -60,13 +76,7 @@
         .action-buttons-container {
             @apply flex justify-end;
 
-            .submit-button {
-                @apply ml-5 bg-blue-600 px-3 py-2 rounded-sm;
-
-                &:hover {
-                    @apply bg-blue-700;
-                }
-            }
+            
         }
     }
 }
