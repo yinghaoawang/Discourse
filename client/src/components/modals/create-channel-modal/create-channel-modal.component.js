@@ -3,8 +3,8 @@ import { useContext, useState, useEffect } from 'react';
 import { VscChromeClose as CloseIcon } from 'react-icons/vsc'
 import { FaHashtag as HashtagIcon } from 'react-icons/fa';
 import { HiSpeakerWave as SpeakerIcon } from 'react-icons/hi2';
-import { SocketContext } from '../../../../../contexts/socket.context';
-import '../../../../shared/modal/modal-layouts.scss';
+import { SocketContext } from '../../../contexts/socket.context';
+import '../modal-layouts.scss';
 import './create-channel-modal.styles.scss';
 Modal.setAppElement('#root');
 

@@ -38,7 +38,6 @@ export const SocketProvider = ({ children }) => {
             const userId = auth.currentUser.uid;
             const email = auth.currentUser.email;
             setCurrentUser({ email, name: displayName, userId });
-            console.log({ email, displayName, userId });
             getSocket().emit('getServers');
         })
     }

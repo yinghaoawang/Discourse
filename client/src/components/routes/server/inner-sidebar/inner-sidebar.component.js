@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import TextChannelItem from './text-channel-item/text-channel-item.component';
-import CreateChannelModal from './create-channel-modal/create-channel-modal.component';
+import CreateChannelModal from '../../../modals/create-channel-modal/create-channel-modal.component';
 import VoiceChannelItem from './voice-channel-item/voice-channel-item.component';
-import SettingsModal from './settings-modal/settings-modal.component';
+import SettingsModal from '../../../modals/settings-modal/settings-modal.component';
 import { UserContext } from '../../../../contexts/user.context';
 import { IoMdMicOff as MutedMicIcon, IoMdMic as MicIcon } from 'react-icons/io';
 import { HiPhoneMissedCall as HangUpIcon } from 'react-icons/hi';

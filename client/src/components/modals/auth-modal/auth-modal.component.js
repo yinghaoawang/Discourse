@@ -1,7 +1,7 @@
 import Modal from 'react-modal';
 import { ReactComponent as GoogleLogo } from '../../../assets/google-logo.svg';
 import { useState } from 'react';
-import '../../shared/modal/modal-layouts.scss';
+import '../modal-layouts.scss';
 import './auth-modal.styles.scss';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getSocket } from '../../../util/socket.util';

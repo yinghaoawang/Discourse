@@ -1,9 +1,9 @@
 import { useContext, useEffect } from 'react';
-import { ServerContext } from '../../../../../../contexts/server.context';
-import { SettingsContext } from '../../../../../../contexts/settings.context';
-import { SocketContext } from '../../../../../../contexts/socket.context';
-import { getDevices } from '../../../../../../util/helpers.util';
-import { DeviceTypes } from '../../../../../../util/constants.util';
+import { ServerContext } from '../../../../contexts/server.context';
+import { SettingsContext } from '../../../../contexts/settings.context';
+import { SocketContext } from '../../../../contexts/socket.context';
+import { getDevices } from '../../../../util/helpers.util';
+import { DeviceTypes } from '../../../../util/constants.util';
 import './device-settings.styles.scss';
 
 const removeSelectOptions = (selectNode) => {

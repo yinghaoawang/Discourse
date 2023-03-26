@@ -9,7 +9,7 @@ import Home from './components/routes/home/home.component';
 import { UserContext } from './contexts/user.context';
 import { SettingsContext } from './contexts/settings.context';
 import { setOutputDevice } from './util/webRTC.util';
-import AuthModal from './components/routes/auth/auth-modal.component';
+import AuthModal from './components/modals/auth-modal/auth-modal.component'
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './util/firebase.util';
 import { SocketContext } from './contexts/socket.context';
