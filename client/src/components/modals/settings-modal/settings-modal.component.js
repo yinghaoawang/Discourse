@@ -5,12 +5,27 @@ import './settings-modal.styles.scss';
 import DeviceSettings from './device-settings/device-settings.component';
 import AccountSettings from './account-settings/account-settings.component';
 import UserProfileSettings from './user-profile-settings/user-profile-settings.component';
+import { useContext, useEffect } from 'react';
+import { SocketContext } from '../../../contexts/socket.context';
+import { SettingsContext } from '../../../contexts/settings.context';
+import { ServerContext } from '../../../contexts/server.context';
 Modal.setAppElement('#root');
 
 const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
     const afterOpenModalWrapper = async () => {
         if (afterOpenModal != null) afterOpenModal();
     }
+
+    const { currentVoiceChannel } = useContext(ServerContext);
+    const { changeVoiceChannel } = useContext(SocketContext);
+    const { currentInputDevice, currentOutputDevice } = useContext(SettingsContext);
+
+    useEffect(() => {
+        // rejoin current room on input/output device change
+        if (currentVoiceChannel == null) return;
+
+        changeVoiceChannel({ voiceChannel: currentVoiceChannel });
+    }, [currentInputDevice, currentOutputDevice])
 
     return (
         <Modal
@@ -29,7 +44,7 @@ const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
                     </div>
                     <button className='close-button' onClick={ closeModal }><CloseIcon size={ '25px' } /></button>
                 </span>
-                <DeviceSettings isModalOpen={ isModalOpen } />
+                <DeviceSettings />
                 <UserProfileSettings />
                 <AccountSettings />
                 

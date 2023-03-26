@@ -1,7 +1,5 @@
 import { useContext, useEffect } from 'react';
-import { ServerContext } from '../../../../contexts/server.context';
 import { SettingsContext } from '../../../../contexts/settings.context';
-import { SocketContext } from '../../../../contexts/socket.context';
 import { getDevices } from '../../../../util/helpers.util';
 import { DeviceTypes } from '../../../../util/constants.util';
 import './device-settings.styles.scss';
@@ -12,15 +10,11 @@ const removeSelectOptions = (selectNode) => {
     }
 }
 
-const DeviceSettings = ({ isModalOpen }) => {
-    const { currentVoiceChannel } = useContext(ServerContext);
-    const { changeVoiceChannel } = useContext(SocketContext);
+const DeviceSettings = () => {
     const { currentInputDevice, setCurrentInputDevice, currentOutputDevice, setCurrentOutputDevice } = useContext(SettingsContext);
 
     useEffect(() => {
         const resetDevices = async () => {
-            if (isModalOpen === false) return;
-
             const inputDeviceSelect = document.getElementById('inputDeviceSelect');
             const outputDeviceSelect = document.getElementById('outputDeviceSelect');
     
@@ -60,14 +54,9 @@ const DeviceSettings = ({ isModalOpen }) => {
         }
         resetDevices();
         
-    }, [isModalOpen]);
+    }, []);
 
-    useEffect(() => {
-        // rejoin current room on input/output device change
-        if (currentVoiceChannel == null) return;
-
-        changeVoiceChannel({ voiceChannel: currentVoiceChannel });
-    }, [currentInputDevice, currentOutputDevice])
+    
 
     const changeInputDevice = async (value, type = DeviceTypes.INPUT) => {
         switch (type) {
