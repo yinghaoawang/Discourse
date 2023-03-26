@@ -38,15 +38,6 @@ module.exports = async (io) => {
         }
 
         const updateServerUser = async ({ userId, isOnConnect=false, userData=null }) => {
-
-            if (isOnConnect) {
-                const serverUsers = await getServerUsers({ serverId: server.id });
-                const matchingUser = serverUsers.find(item => item?.userId === userId);
-                if (!matchingUser) {
-                    await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN });
-                }
-            }
-
             await addServerUser({ serverId: server.id, userId });
             if (userData != null) {
                 setUser({ userId, userData });
@@ -55,11 +46,22 @@ module.exports = async (io) => {
             socket.user = user;
             socket.userId = userId;
 
+            if (isOnConnect) {
+                const serverUsers = await getServerUsers({ serverId: server.id });
+                const matchingUser = serverUsers.find(item => item?.userId === userId);
+                if (!matchingUser) {
+                    console.log(userData);
+                    await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN, user });
+                }
+            }
+
             sendServerUsers();
         }
 
-        const sendMessage = async ({ message, roomId, type }) => {
-            const { user } = socket;
+        const sendMessage = async ({ message, roomId, type, user }) => {
+            if (user == null) {
+                user = socket.user;
+            }
             const dateCreated = new Date();
 
             // if room not specified, use first room if exists

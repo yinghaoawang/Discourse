@@ -3,7 +3,7 @@ import { PostTypes } from '../../../../util/constants.util';
 import Moment from 'react-moment';
 
 const PostItem = ({ post }) => {
-    const { message, user = { name: '?'}, dateCreated, type = PostTypes.USER_MESSAGE } = post;
+    const { message, user = { displayName: '?'}, dateCreated, type = PostTypes.USER_MESSAGE } = post;
     const displayChar = user?.displayName?.charAt(0).toUpperCase() || '?';
 
     let displayMessage = message;
