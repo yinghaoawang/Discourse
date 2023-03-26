@@ -17,7 +17,10 @@ module.exports = async (io) => {
         });
 
         socket.on('getUser', async ({ userId }) => {
-            const user = await getUser({ userId });
+            let user = await getUser({ userId });
+            if (user == null) {
+                user = { displayName: 'Unknown' };
+            }
             console.log('getting user', user);
             socket.emit('updateCurrentUser', user);
         });
