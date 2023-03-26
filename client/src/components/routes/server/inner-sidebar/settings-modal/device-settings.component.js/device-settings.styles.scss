@@ -1,0 +1,5 @@
+.device-settings-container {
+    & > .content {
+        @apply ml-2;
+    }
+}

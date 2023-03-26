@@ -1,12 +1,6 @@
 .settings-modal-content {
     @apply w-[450px] m-0;;
     & > .content {
-        .audio-settings-container {
-            & > .content {
-                @apply ml-2;
-            }
-            
-        }
         .form-item {
             @apply flex justify-between mb-2;
             select {
