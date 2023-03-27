@@ -50,7 +50,6 @@ module.exports = async (io) => {
                 const serverUsers = await getServerUsers({ serverId: server.id });
                 const matchingUser = serverUsers.find(item => item?.userId === userId);
                 if (!matchingUser) {
-                    console.log(userData);
                     await sendMessage({ message: 'has joined the server', serverId: server.id, type: PostTypes.USER_JOIN, user });
                 }
             }

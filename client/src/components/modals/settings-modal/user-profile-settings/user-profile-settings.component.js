@@ -40,7 +40,7 @@ const UserProfileSettings = () => {
                 <input value={ displayName } onChange={ e => setDisplayName(e.target.value) } />
             </div>
             <div className='form-item'>
-                <div></div>
+                <div>Status Message</div>
                 <input value={ statusMessage } onChange={ e => setStatusMessage(e.target.value) } />
             </div>
             <div className='form-item'>

@@ -16,8 +16,8 @@ module.exports = async (io) => {
             socket.emit('updateCurrentUser', user);
         });
 
-        socket.on('updateUser', async ({ userId, displayName }) => {
-            await setUser( { userId, userData: { userId, displayName } });
+        socket.on('updateUser', async ({ userId, displayName, statusMessage }) => {
+            await setUser( { userId, userData: { userId, displayName, statusMessage } });
             const user = await getUser({ userId });
             console.log('update user', user, userId);
 

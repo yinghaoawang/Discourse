@@ -129,7 +129,6 @@ export const SocketProvider = ({ children }) => {
       
         newSocket.on('serverUsers', (data) => {
             const { users, connectedUsers } = data;
-            console.log('serverUsers', data);
             const categorizedUsers = users.map(user => {
                 if (connectedUsers.map(u => u.userId).includes(user.userId)) {
                         const connectedUser = connectedUsers.find(u => u.userId === user.userId);
