@@ -121,7 +121,7 @@ const getPosts = async ({ serverId, channelId }) => {
     }
 }
 
-const addServerUser = async ({ serverId, userId }) => {
+const addServerUser = async ({ serverId, userId, update=false }) => {
     let user = await getUser({ userId });
     if (user == null) {
         console.error('DANGER: User does not exist in addServerUser, creating new user');
@@ -133,8 +133,11 @@ const addServerUser = async ({ serverId, userId }) => {
     const cacheResults = await redisClient.get(keyName);
     if (cacheResults) {
         const data = JSON.parse(cacheResults);
-        const matchingUser = data.find(item => userId === item.userId);
-        if (matchingUser) {
+        const matchingUserIndex = data.findIndex(item => userId === item.userId);
+        if (matchingUserIndex !== -1) {
+            if (update === true) {
+                data[matchingUserIndex] = user;
+            }
             await redisClient.set(keyName, JSON.stringify([...data]))
         } else {
             await redisClient.set(keyName, JSON.stringify([...data, user]))

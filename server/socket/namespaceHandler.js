@@ -38,9 +38,9 @@ module.exports = async (io) => {
         }
 
         const updateServerUser = async ({ userId, isOnConnect=false, userData=null }) => {
-            await addServerUser({ serverId: server.id, userId });
+            await addServerUser({ serverId: server.id, userId, update: true });
             if (userData != null) {
-                setUser({ userId, userData });
+                await setUser({ userId, userData });
             }
             const user = await getUser({ userId });
             socket.user = user;
