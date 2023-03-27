@@ -10,6 +10,29 @@ const addUserToVoiceRoom = ({ voiceRoom, socket }) => {
     return user;
 }
 
+const updateVoiceRoomUser = ({ roomId, serverId, socket, userData }) => {
+    let voiceRoom = voiceRooms.find(v => v.roomId === roomId && v.serverId === serverId);
+    if (voiceRoom == null) {
+        voiceRoom = { roomId, users: [], serverId: serverId };
+        voiceRooms.push(voiceRoom);
+    }
+
+    const matchingUserIndex = voiceRoom?.users?.findIndex(u => u.id === socket.id);
+    if (matchingUserIndex === -1) {
+        throw new Error('Could not find matching user in updateVoiceRoomUser');
+    }
+
+    if (userData != null) {
+        voiceRoom.users[matchingUserIndex] = { ...userData, id: socket.id };
+    } else {
+        voiceRoom.users[matchingUserIndex] = {
+            id: socket.id,
+            name: socket.user?.displayName
+        }
+    }
+    console.log('vc room users', voiceRoom.users);
+}
+
 const joinVoiceRoom = ({ roomId, socket, serverId }) => {
     let voiceRoom = voiceRooms.find(v => v.roomId === roomId && v.serverId === serverId);
     if (voiceRoom == null) {
@@ -57,5 +80,5 @@ const leaveVoiceRoom = ({ roomId, socket, serverId }) => {
 }
 
 module.exports = {
-    voiceRooms, joinVoiceRoom, leaveVoiceRoom
+    voiceRooms, joinVoiceRoom, leaveVoiceRoom, updateVoiceRoomUser
 }

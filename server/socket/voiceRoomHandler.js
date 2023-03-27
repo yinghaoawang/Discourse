@@ -1,4 +1,4 @@
-const { voiceRooms, joinVoiceRoom, leaveVoiceRoom } = require('./voiceRooms');
+const { voiceRooms, joinVoiceRoom, leaveVoiceRoom, updateVoiceRoomUser } = require('./voiceRooms');
 
 module.exports = async (io) => {
     const addVoiceRoomListeners = async ({ socket, namespace, server }) => {
@@ -66,6 +66,11 @@ module.exports = async (io) => {
             sendVoiceRoomData();
         }
 
+        const updateVoiceRoomUserHandler = async ({ roomId, serverId, userData }) => {
+            updateVoiceRoomUser({ roomId, serverId, socket, userData: { id: socket.id, name: userData?.displayName } });
+            sendVoiceRoomData();
+        }
+
         const leaveVoiceRoomHandler = async({ roomId }) => {
             console.log('leaving vc room', roomId);
             voiceRoomEmit({ namespace, roomId, key: 'wrtcClose', payload: { connSocketId: socket.id } });
@@ -84,6 +89,7 @@ module.exports = async (io) => {
         socket.on('getVoiceRooms', sendVoiceRoomData);
         socket.on('joinVoiceRoom', joinVoiceRoomHandler);
         socket.on('leaveVoiceRoom', leaveVoiceRoomHandler);
+        socket.on('updateVoiceRoomUser', updateVoiceRoomUserHandler);
         socket.on('disconnect', onDisconnect);
         socket.on('wrtcSignal', onConnSignal);
         socket.on('wrtcInit', onConnInit);
