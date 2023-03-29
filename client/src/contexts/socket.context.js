@@ -6,7 +6,7 @@ import { SettingsContext } from './settings.context';
 import { closeAllPeerConnections, resetLocalStream, addWebRTCListeners } from '../util/webRTC.util';
 import { getSocket, setSocket, url, options } from '../util/socket.util';
 import { getFirstinputDevice, getFirstOutputDevice, playSound } from '../util/helpers.util';
-import { PostTypes } from '../util/constants.util';
+import { ChannelTypes, PostTypes } from '../util/constants.util';
 import { getAuth } from 'firebase/auth';
 
 
@@ -15,7 +15,7 @@ export const SocketContext = createContext();
 export const SocketProvider = ({ children }) => {
     const { currentUser, setCurrentUser } = useContext(UserContext);
     const { voiceRooms, currentTextChannel, setCurrentTextChannel,
-        currentVoiceChannel, setCurrentVoiceChannel,
+        currentVoiceChannel, setCurrentVoiceChannel, setSelectedChannelType,
         setServers, setPosts, setVoiceChannels, setVoiceRooms,
         setTextChannels, setUsers, setCurrentServer } = useContext(ServerContext);
     const { currentInputDevice, setCurrentInputDevice, currentOutputDevice, setCurrentOutputDevice } = useContext(SettingsContext);
@@ -177,6 +177,7 @@ export const SocketProvider = ({ children }) => {
 
         leaveTextChannel();
         leaveVoiceChannel();
+        setSelectedChannelType(null);
         setPosts([]);
         setUsers([]);
         setCurrentServer(server);
@@ -242,6 +243,7 @@ export const SocketProvider = ({ children }) => {
     const changeTextChannel = ({ textChannel, currentSocket }) => {
         if (textChannel != null) {
             changeRoom({ roomId: textChannel.id, currentSocket });
+            setSelectedChannelType(ChannelTypes.TEXT);
         }
         setCurrentTextChannel(textChannel);
     }
@@ -250,6 +252,7 @@ export const SocketProvider = ({ children }) => {
         let roomId = null;
         if (voiceChannel != null) {
             roomId = voiceChannel.id;
+            setSelectedChannelType(ChannelTypes.VOICE);
         }
         await changeVoiceRoom({ roomId, currentSocket });
         setCurrentVoiceChannel(voiceChannel);

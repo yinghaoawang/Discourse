@@ -6,5 +6,10 @@ export const PostTypes = {
 
 export const DeviceTypes = {
     INPUT: 'INPUT', 
-    OUTPUT: 'OUTPUT'
+    OUTPUT: 'OUTPUT',
+}
+
+export const ChannelTypes = {
+    TEXT: 'TEXT',
+    VOICE: 'VOICE',
 }

@@ -10,6 +10,7 @@ export const ServerProvider = ({ children }) => {
     const [voiceRooms, setVoiceRooms] = useState([]);
     const [currentTextChannel, setCurrentTextChannel] = useState(null);
     const [currentVoiceChannel, setCurrentVoiceChannel] = useState(null);
+    const [selectedChannelType, setSelectedChannelType] = useState(null);
     const [posts, setPosts] = useState([]);
     const [users, setUsers] = useState([]);
     const value = {
@@ -20,6 +21,7 @@ export const ServerProvider = ({ children }) => {
         voiceChannels, setVoiceChannels,
         currentTextChannel, setCurrentTextChannel,
         currentVoiceChannel, setCurrentVoiceChannel,
+        selectedChannelType, setSelectedChannelType,
         posts, setPosts,
         users, setUsers
     };

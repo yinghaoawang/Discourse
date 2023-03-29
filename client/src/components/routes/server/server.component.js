@@ -7,11 +7,13 @@ import { ServerContext } from '../../../contexts/server.context';
 import { useNavigate, useParams } from 'react-router-dom';
 import { SocketContext } from '../../../contexts/socket.context';
 import { UserContext } from '../../../contexts/user.context';
+import { ChannelTypes } from '../../../util/constants.util';
+import VoiceChannelContent from './voice-channel-content/voice-channel-content.component';
 
 const Server = () => {
   const { id } = useParams();
   const { currentUser } = useContext(UserContext);
-  const { servers, currentTextChannel, textChannels, voiceChannels, currentServer, posts, users } = useContext(ServerContext);
+  const { servers, currentTextChannel, textChannels, voiceChannels, currentServer, posts, users, selectedChannelType } = useContext(ServerContext);
   const { changeServer } = useContext(SocketContext);
   const navigate = useNavigate();
 
@@ -40,7 +42,8 @@ const Server = () => {
       <>
         <InnerSidebar textChannels={ textChannels } voiceChannels={ voiceChannels } />
         <div className='server-content'>
-          { currentTextChannel && <TextChannelContent posts={ posts } /> }
+          { selectedChannelType === ChannelTypes.TEXT && currentTextChannel && <TextChannelContent posts={ posts } /> }
+          { selectedChannelType === ChannelTypes.VOICE && <VoiceChannelContent /> }
         </div>
         <UsersSidebar users={ users } />
       </>
