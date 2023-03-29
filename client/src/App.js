@@ -13,13 +13,17 @@ import AuthModal from './components/modals/auth-modal/auth-modal.component'
 import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './util/firebase.util';
 import { SocketContext } from './contexts/socket.context';
+import { addNoSleepOnMobile } from './util/mobile.util';
 
 const NavbarWrapper = () => {
 	const { currentUser, setCurrentUser } = useContext(UserContext);
 	const { connectSocket } = useContext(SocketContext);
 	const { currentOutputDevice } = useContext(SettingsContext);
+	useEffect(() =>{
+		addNoSleepOnMobile();
+	});
+
 	useEffect(() => {
-		
 		onAuthStateChanged(auth, (user) => {
             if (user) {
 				connectSocket({ loadServers: false, getUser: true });
