@@ -34,7 +34,7 @@ const playSound = async (filename) => {
     audioObject.autoplay = true;
     // audioObject.controls = true;
     const outputDevice = getOutputDevice();
-    if (outputDevice != null) {
+    if (outputDevice != null && audioObject?.setSinkId != null) {
         await audioObject.setSinkId(outputDevice.deviceId);
     }
     
