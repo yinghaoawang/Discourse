@@ -6,6 +6,7 @@ const Home = () => {
             <div className='inner-container'>
                 <div className='content'>
                     <h1 className='header'>What's New in Discourse</h1>
+                    <li>3/28/23 - <span>Voice chat for mobile working</span></li>
                     <li>3/26/23 - <span>Status messages added</span></li>
                     <li>3/25/23 - <span>User authentication added</span></li>
                     <li>3/24/23 - <span>Added sounds for voice channel joining/leaving and text messages</span></li>
