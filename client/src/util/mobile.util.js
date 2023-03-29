@@ -4,7 +4,6 @@ const addNoSleepOnMobile = () => {
 		video.setAttribute('loop', '');
 		// Add some styles if needed
 		video.setAttribute('style', 'position: fixed;');
-		video.controls  = true;
 
 		// A helper to add sources to video
 		function addSourceToVideo(element, type, dataURI) {
