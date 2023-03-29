@@ -43,6 +43,17 @@
         @apply w-[18px] h-[18px] accent-gray-600;
     }
 }
+
+#noSleepMobile {
+    video {
+        @apply hidden;
+        &::-webkit-media-controls-panel {
+            @apply hidden;
+            @apply opacity-100;
+        }
+    }
+}
+
 .body-container {
     @apply flex h-screen overflow-y-hidden;
 }
