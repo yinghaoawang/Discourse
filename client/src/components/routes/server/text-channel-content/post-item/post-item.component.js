@@ -1,5 +1,5 @@
 import './post-item.styles.scss';
-import { PostTypes } from '../../../../util/constants.util';
+import { PostTypes } from '../../../../../util/constants.util';
 import Moment from 'react-moment';
 
 const PostItem = ({ post }) => {

@@ -1,0 +1,7 @@
+.content-bottom-chatbar-container {
+    @apply flex flex-col w-full;
+    
+    .content-container {
+        @apply flex w-full flex-col-reverse h-full my-2 overflow-y-auto;
+    }
+}

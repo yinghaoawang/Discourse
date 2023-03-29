@@ -1,11 +1,10 @@
 import InnerSidebar from './inner-sidebar/inner-sidebar.component';
-import BottomChatbar from './bottom-chatbar/bottom-chatbar.component';
 import UsersSidebar from './users-sidebar/users-sidebar.component';
+import TextChannelContent from './text-channel-content/text-channel-content.component';
 import './server.styles.scss';
 import { useContext, useEffect } from 'react';
 import { ServerContext } from '../../../contexts/server.context';
 import { useNavigate, useParams } from 'react-router-dom';
-import PostItem from './post-item/post-item.component';
 import { SocketContext } from '../../../contexts/socket.context';
 import { UserContext } from '../../../contexts/user.context';
 
@@ -34,29 +33,19 @@ const Server = () => {
     }
   }, [currentUser]);
 
-  const reversedPosts = [...posts].reverse();
 
   return (
   <div className='server-container'>
       { currentServer ?
       <>
         <InnerSidebar textChannels={ textChannels } voiceChannels={ voiceChannels } />
-        <div className='content-bottom-chatbar-container'>
-          { currentTextChannel ? <>
-              <div className='content-container'>
-              { reversedPosts.map((post, index) => {
-                return <PostItem key={ index } post={ post } />
-              })}
-            </div>
-            <BottomChatbar />
-          </> : ''
-          }
-          
+        <div className='server-content'>
+          { currentTextChannel && <TextChannelContent posts={ posts } /> }
         </div>
         <UsersSidebar users={ users } />
       </>
       : <div className='flex justify-center items-center w-full'>Server does not exist</div>
-    }
+      }
   </div>
   );
 };

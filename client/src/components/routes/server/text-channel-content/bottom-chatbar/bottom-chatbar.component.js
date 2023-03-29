@@ -1,5 +1,5 @@
 import { useRef, useContext } from 'react';
-import { SocketContext } from '../../../../contexts/socket.context';
+import { SocketContext } from '../../../../../contexts/socket.context';
 import './bottom-chatbar.styles.scss';
 
 const BottomChatbar = () => {
