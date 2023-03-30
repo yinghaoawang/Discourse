@@ -4,7 +4,7 @@
         @apply grid w-full h-full gap-5 items-center justify-center justify-items-center overflow-auto;
 
         .board-item {
-            @apply flex flex-col aspect-video relative;
+            @apply flex flex-col aspect-video relative overflow-auto;
 
             .stream-content {
                 @apply flex bg-gray-850 min-w-[300px] items-center justify-center;
