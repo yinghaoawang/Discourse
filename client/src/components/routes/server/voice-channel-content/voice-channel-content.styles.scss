@@ -1,0 +1,29 @@
+.voice-channel-content-container {
+    @apply w-full m-5;
+    .board-container {
+        @apply grid w-full h-full gap-5 items-center justify-center justify-items-center overflow-auto;
+
+        .board-item {
+            @apply flex flex-col bg-black w-full h-full aspect-video;
+
+            .stream-content {
+                @apply flex w-full h-full bg-black items-center justify-center;
+
+                .no-stream {
+                    @apply flex w-full h-full items-center justify-center bg-gray-800;
+                    
+                    .icon {
+                        @apply flex items-center justify-center text-2xl h-[50%] aspect-square bg-green-500 rounded-full;
+                    }
+                }
+            }
+
+            .meta {
+                @apply flex justify-between items-end bg-gray-800 rounded-t-none overflow-hidden;
+                & > * {
+                    @apply mx-2 mb-1 truncate;
+                }
+            }
+        }
+    }
+}

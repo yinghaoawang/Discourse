@@ -234,10 +234,12 @@ export const SocketProvider = ({ children }) => {
 
     const leaveVoiceChannel = async () => {
         await changeVoiceChannel({ voiceChannel: null });
+        setSelectedChannelType(null);
     }
     
     const leaveTextChannel = async () => {
         await changeTextChannel({ textChannel: null });
+        setSelectedChannelType(null);
     }
     
     const changeTextChannel = ({ textChannel, currentSocket }) => {

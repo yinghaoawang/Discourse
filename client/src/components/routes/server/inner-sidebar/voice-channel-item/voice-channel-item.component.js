@@ -19,13 +19,8 @@ const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
 
     const channelClickHandler = () => {
         if (voiceChannel == null) return;
-        if (currentVoiceChannel == null) {
-            // Do nothing if clicking on current voice channel
-            // leaveVoiceChannel();
-            changeVoiceChannel({ voiceChannel });
-        } else {
-            setSelectedChannelType(ChannelTypes.VOICE);
-        }
+        changeVoiceChannel({ voiceChannel });
+        setSelectedChannelType(ChannelTypes.VOICE);
     }
 
     return (
