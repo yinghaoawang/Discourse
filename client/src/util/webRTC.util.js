@@ -9,9 +9,9 @@ const checkStream = (stream) => {
     let hasVideo = false;
     let hasAudio = false;
  
-    if (stream.getAudioTracks().length) hasAudio = true;
+    if (stream?.getAudioTracks().length) hasAudio = true;
  
-    if (stream.getVideoTracks().length) hasVideo = true;
+    if (stream?.getVideoTracks().length) hasVideo = true;
 
     return { hasVideo, hasAudio }; 
  }
@@ -24,11 +24,22 @@ const getConfig = () => {
     }
 }
 
-const resetLocalStream = async ({ inputDevice }) => {
+const stopLocalStream = () => {
+    if (localStream == null) {
+        console.error('localStream does not exist in stopLocalStream');
+        return;
+    }
+    const stream = localStream;
+    stream.getTracks().forEach(function(track) {
+        track.stop();
+    });
+}
+
+const resetLocalStream = async ({ inputDevice, isRecordVideo }) => {
     const inputDeviceId = inputDevice?.deviceId;
     const deviceId = inputDeviceId ? { exact: inputDeviceId } : null;
     const stream = await navigator.mediaDevices.getUserMedia({
-        video: { width: '640px', height: '480px' },
+        video: isRecordVideo ? { width: '640px', height: '480px' } : false,
         audio: { deviceId }
     });
 
@@ -39,6 +50,7 @@ const resetLocalStream = async ({ inputDevice }) => {
 const getLocalStream = async () => {
     if (localStream != null) return localStream;
 
+    console.error('local stream not found, creating blank one');
     return await resetLocalStream({});
 }
 
@@ -171,4 +183,6 @@ const addWebRTCListeners = (socket, namespace) => {
     });
 }
 
-export { closePeerConnection, closeAllPeerConnections, resetLocalStream, getLocalStream, getOutputDevice, setOutputDevice, prepareNewPeerConnection, addWebRTCListeners, checkStream, streams };
+export { closePeerConnection, closeAllPeerConnections, resetLocalStream, getLocalStream,
+    getOutputDevice, setOutputDevice, prepareNewPeerConnection, addWebRTCListeners,
+    checkStream, streams, stopLocalStream };

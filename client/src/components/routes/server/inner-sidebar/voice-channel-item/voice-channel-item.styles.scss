@@ -1,5 +1,13 @@
-.channel-item-container.voice-channel.selected {
-    @apply bg-gray-700;
+.channel-item-container.voice-channel {
+    @apply flex justify-between;
+
+    .left, .right {
+        @apply flex items-center;
+    }
+
+    &.selected {
+        @apply bg-gray-700;
+    }
 
     &:hover {
         @apply bg-gray-700;

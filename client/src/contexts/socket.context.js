@@ -202,7 +202,7 @@ export const SocketProvider = ({ children }) => {
 
     
 
-    const changeVoiceRoom = async ({ roomId, currentSocket }) => {
+    const changeVoiceRoom = async ({ roomId, currentSocket, isRecordVideo }) => {
         if (currentSocket == null) {
             currentSocket = getSocket();
         }
@@ -220,7 +220,7 @@ export const SocketProvider = ({ children }) => {
             const outputDevice = currentOutputDevice || await getFirstOutputDevice();
             setCurrentOutputDevice(outputDevice);
 
-            await resetLocalStream({ inputDevice });
+            await resetLocalStream({ inputDevice, isRecordVideo });
             currentSocket.emit('joinVoiceRoom', { roomId });
 
             let voiceRoom = voiceRooms.find(v => v.roomId === roomId);
@@ -250,13 +250,13 @@ export const SocketProvider = ({ children }) => {
         setCurrentTextChannel(textChannel);
     }
 
-    const changeVoiceChannel = async ({ voiceChannel, currentSocket }) => {
+    const changeVoiceChannel = async ({ voiceChannel, currentSocket, isRecordVideo }) => {
         let roomId = null;
         if (voiceChannel != null) {
             roomId = voiceChannel.id;
             setSelectedChannelType(ChannelTypes.VOICE);
         }
-        await changeVoiceRoom({ roomId, currentSocket });
+        await changeVoiceRoom({ roomId, currentSocket, isRecordVideo });
         setCurrentVoiceChannel(voiceChannel);
     }
 

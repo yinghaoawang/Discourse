@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import { HiSpeakerWave as SpeakerIcon } from 'react-icons/hi2';
 import { IoMdMicOff as MuteIcon } from 'react-icons/io';
+import { IoMdVideocam as VideoIcon } from 'react-icons/io';
 import { ServerContext } from '../../../../../contexts/server.context';
 import { SocketContext } from '../../../../../contexts/socket.context';
 import { ChannelTypes } from '../../../../../util/constants.util';
@@ -20,6 +21,7 @@ const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
     const channelClickHandler = () => {
         if (voiceChannel == null) return;
         setSelectedChannelType(ChannelTypes.VOICE);
+        if (currentVoiceChannel?.id === voiceChannel?.id) return;
         changeVoiceChannel({ voiceChannel });
     }
 
@@ -28,8 +30,12 @@ const VoiceChannelItem = ({ voiceChannel, className, children, ...props }) => {
             <div onClick={ channelClickHandler } className={ `channel-item-container voice-channel ${ className } ${ isSelected ? 'selected' : '' }` } { ...props }>
                 { children ? children :
                 <>
-                    <SpeakerIcon />
-                    <span className='text'>{ voiceChannel?.name }</span>
+                    <div className='left'>
+                        <SpeakerIcon />
+                        <span className='text'>{ voiceChannel?.name }</span>
+                    </div>
+                    <div className='right'>
+                    </div>
                 </>
                 }
             </div>

@@ -82,7 +82,6 @@ module.exports = async (io) => {
         }
 
         const onDisconnect = async () => {
-            console.log(getCurrentVoiceRoomId());
             leaveVoiceRoomHandler({ roomId: getCurrentVoiceRoomId() });
         }
 

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { ServerContext } from '../../../../contexts/server.context';
 import { getSocket } from '../../../../util/socket.util';
-import { getLocalStream, streams } from '../../../../util/webRTC.util';
+import { checkStream, getLocalStream, streams } from '../../../../util/webRTC.util';
 import './voice-channel-content.styles.scss';
 
 const VoiceChannelContent = () => {
@@ -22,20 +22,15 @@ const VoiceChannelContent = () => {
 
         const updateVoiceRoomContent = async () => {
             const currentVoiceRoomUsers = getCurrentVoiceRoom()?.users || [];
-            console.log('vc users', currentVoiceRoomUsers, getSocket().id);
             const voiceRoomUsersWithStream = await Promise.all(currentVoiceRoomUsers.map(async (user) => {
                 if (user.id === getSocket().id) {
-                    console.log('im the user');
                     user.stream = await getLocalStream();
-                    console.log(user.stream);
                     return user;
                 }
                 const stream = streams[user.id];
-                console.log('stream found', stream);
                 user.stream = stream;
                 return user;
             }));
-            console.log('users w/ stream', voiceRoomUsersWithStream);
     
             setUsers([...voiceRoomUsersWithStream]);
         }
@@ -47,7 +42,6 @@ const VoiceChannelContent = () => {
     const videoRefHandler = (ref, user) => {
         if (!ref) return;
         ref.srcObject = user?.stream;
-        // if (user.id === getSocket().id) ref.muted = true;
         ref.muted = true;
     };
     
