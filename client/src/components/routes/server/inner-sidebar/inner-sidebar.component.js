@@ -43,11 +43,10 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
         leaveVoiceChannel();
     }
 
-
-
     const videoChatClickHandler = async () => {
         const newIsVideoCalling = !isVideoCalling;
         let isRecordVideo = newIsVideoCalling;
+        stopLocalStream();
         await resetLocalStream({ inputDevice: currentInputDevice, isRecordVideo });
         await changeVoiceChannel({ voiceChannel: currentVoiceChannel, isRecordVideo });
 
