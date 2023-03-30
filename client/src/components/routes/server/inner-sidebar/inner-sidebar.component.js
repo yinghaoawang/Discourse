@@ -5,7 +5,7 @@ import VoiceChannelItem from './voice-channel-item/voice-channel-item.component'
 import SettingsModal from '../../../modals/settings-modal/settings-modal.component';
 import { UserContext } from '../../../../contexts/user.context';
 import { IoMdMicOff as MutedMicIcon, IoMdMic as MicIcon } from 'react-icons/io';
-import { IoMdVideocam as VideoIcon } from 'react-icons/io';
+import { IoVideocam as VideoIcon, IoVideocamOff as VideoOffIcon } from 'react-icons/io5';
 import { HiPhoneMissedCall as HangUpIcon } from 'react-icons/hi';
 import { IoSettingsSharp as SettingsIcon } from 'react-icons/io5';
 import { FaPlus } from 'react-icons/fa';
@@ -18,6 +18,7 @@ import { SettingsContext } from '../../../../contexts/settings.context';
 const InnerSidebar = ({ textChannels, voiceChannels }) => {
     const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] = useState(false);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+    const [isVideoCalling, setIsVideoCalling] = useState(false);
     const { currentInputDevice } = useContext(SettingsContext);
     const { currentVoiceChannel } = useContext(ServerContext);
     const { leaveVoiceChannel, changeVoiceChannel } = useContext(SocketContext);
@@ -42,9 +43,15 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
         leaveVoiceChannel();
     }
 
+
+
     const videoChatClickHandler = async () => {
-        await resetLocalStream({ inputDevice: currentInputDevice, isRecordVideo: true });
-        await changeVoiceChannel({ voiceChannel: currentVoiceChannel, isRecordVideo: true });
+        const newIsVideoCalling = !isVideoCalling;
+        let isRecordVideo = newIsVideoCalling;
+        await resetLocalStream({ inputDevice: currentInputDevice, isRecordVideo });
+        await changeVoiceChannel({ voiceChannel: currentVoiceChannel, isRecordVideo });
+
+        setIsVideoCalling(newIsVideoCalling);
     }
 
     const displayChar = currentUser?.displayName?.charAt(0).toUpperCase() || '?';
@@ -79,7 +86,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
                     <div className='buttons-container'>
                         { currentVoiceChannel != null && (
                             <>
-                                <div onClick={ videoChatClickHandler } className='button'><VideoIcon size='20px' /></div>
+                                <div onClick={ videoChatClickHandler } className='button'>{ isVideoCalling ? <VideoOffIcon size='20px' /> : <VideoIcon size='20px' /> }</div>
                                 <div onClick={ hangUpClickHandler } className='button'><HangUpIcon size='20px' /></div>
                             </>
                         )}

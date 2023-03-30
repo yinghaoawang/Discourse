@@ -67,9 +67,6 @@ const VoiceChannelContent = () => {
                                     </div>
                                 </div>
                             </div>
-
-                            
-                            
                         </div>
                     )
                 })}

@@ -25,7 +25,7 @@ const SettingsModal = ({ closeModal, afterOpenModal, isModalOpen }) => {
         if (currentVoiceChannel == null) return;
 
         changeVoiceChannel({ voiceChannel: currentVoiceChannel });
-    }, [currentInputDevice, currentOutputDevice])
+    }, [currentInputDevice, currentOutputDevice]);
 
     return (
         <Modal
