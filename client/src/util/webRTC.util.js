@@ -2,8 +2,19 @@ import Peer from 'simple-peer';
 import { getSocket } from './socket.util';
 
 let peers = {};
-let streams = [];
+let streams = {};
 let localStream = null;
+
+const checkStream = (stream) => {
+    let hasVideo = false;
+    let hasAudio = false;
+ 
+    if (stream.getAudioTracks().length) hasAudio = true;
+ 
+    if (stream.getVideoTracks().length) hasVideo = true;
+
+    return { hasVideo, hasAudio }; 
+ }
 
 const getConfig = () => {
     return {
@@ -17,7 +28,7 @@ const resetLocalStream = async ({ inputDevice }) => {
     const inputDeviceId = inputDevice?.deviceId;
     const deviceId = inputDeviceId ? { exact: inputDeviceId } : null;
     const stream = await navigator.mediaDevices.getUserMedia({
-        video: false,
+        video: { width: '640px', height: '480px' },
         audio: { deviceId }
     });
 
@@ -66,6 +77,9 @@ const prepareNewPeerConnection = async ({ connSocketId, isInitiator }) => {
     peer.on('stream', async (stream) => {
         console.log('new stream received');
 
+        const { hasVideo, hasAudio } = checkStream(stream);
+        console.log(hasVideo, hasAudio, stream, peer);
+
         const audioId = getAudioObjectIdFromSocketId(connSocketId);
 
         const existingAudioObject = document.getElementById(audioId);
@@ -88,9 +102,11 @@ const prepareNewPeerConnection = async ({ connSocketId, isInitiator }) => {
         const audioContainer = document.getElementById('audio-container');
         audioContainer.appendChild(audioObject);
 
-        streams =  [...streams, stream];
+        streams[connSocketId] = stream;
+        getSocket().emit('getVoiceRooms');
     });
     console.log('peers', peers);
+    console.log('streams', streams);
 };
 
 const closePeerConnection = ({ connSocketId }) => {
@@ -110,11 +126,18 @@ const closePeerConnection = ({ connSocketId }) => {
         console.error(error);
     }
    
+    if (streams[connSocketId != null]) {
+        streams[connSocketId].destroy();
+    }
     if (peers[connSocketId] != null) {
         peers[connSocketId].destroy();
     }
 
     delete peers[connSocketId];
+    delete streams[connSocketId];
+
+    console.log('peers', peers);
+    console.log('streams', streams);
 }
 
 const closeAllPeerConnections = () => {
@@ -148,4 +171,4 @@ const addWebRTCListeners = (socket, namespace) => {
     });
 }
 
-export { closePeerConnection, closeAllPeerConnections, resetLocalStream, getLocalStream, getOutputDevice, setOutputDevice, prepareNewPeerConnection, addWebRTCListeners };
+export { closePeerConnection, closeAllPeerConnections, resetLocalStream, getLocalStream, getOutputDevice, setOutputDevice, prepareNewPeerConnection, addWebRTCListeners, checkStream, streams };
