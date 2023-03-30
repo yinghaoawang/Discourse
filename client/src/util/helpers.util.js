@@ -48,22 +48,37 @@ const playSound = async (filename) => {
     audioContainer.appendChild(audioObject);
 }
 
-const getImagesFromText = (text) => {
-    var regex = (/(https?:\/\/[^ ]*\.(?:gif|png|jpg|jpeg))/i);
+const newLineify = (text) => {
+    return text.replace(/(\r\n|\r|\n)/g, '<br />');
+}
 
-    if (new RegExp(regex).test(text)){
-        const imgUrls = regex.exec(text);
-        return [...imgUrls]
+const escapeLtGt = text => {
+    return text.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+}
+
+const getImageUrlsFromText = (text) => {
+    const words = text.split(/(\s)/);
+    const regex = (/(https?:\/\/[^ ]*\.(?:gif|png|jpg|jpeg))/ig);
+
+    const resSet = new Set();
+    for (const word of words) {
+        const imgUrl = word.match(regex)?.[0];
+        if (imgUrl) resSet.add(imgUrl);
     }
-    return [];
+
+    if ([...resSet].length > 1) {
+        console.log([...resSet]);
+    }
+
+    return [...resSet];
 }
 
 const linkify = (text) => {
     var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     
     return text.replace(urlRegex, function(url) {
-        return '<a href="' + url + '">' + url + '</a>';
+        return '<a target="_blank" href="' + url + '">' + url + '</a>';
     });
 }
 
-export { generateRandomName, getDevices, getFirstinputDevice, getFirstOutputDevice, playSound, linkify, getImagesFromText };
+export { generateRandomName, getDevices, getFirstinputDevice, getFirstOutputDevice, playSound, linkify, getImageUrlsFromText, newLineify, escapeLtGt };

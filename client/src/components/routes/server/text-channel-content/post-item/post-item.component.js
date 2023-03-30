@@ -1,6 +1,6 @@
 import './post-item.styles.scss';
 import { PostTypes } from '../../../../../util/constants.util';
-import { linkify, getImagesFromText } from '../../../../../util/helpers.util'
+import { linkify, getImageUrlsFromText, newLineify, escapeLtGt } from '../../../../../util/helpers.util'
 import Moment from 'react-moment';
 const createDOMPurify = require('dompurify');
 const DOMPurify = createDOMPurify(window);
@@ -22,12 +22,14 @@ const PostItem = ({ post }) => {
         default:
             throw new Error('Unhandled post type ' + type);
     }
+    displayMessage = DOMPurify.sanitize(displayMessage);
+    displayMessage = newLineify(displayMessage);
+    displayMessage = escapeLtGt(displayMessage);
 
-    const imgUrls = getImagesFromText(message);
-    displayMessage = linkify(message);
+    const imgUrls = getImageUrlsFromText(displayMessage);
 
-    const sanitizedMessage = DOMPurify.sanitize(displayMessage);
-    console.log(sanitizedMessage);
+    displayMessage = linkify(displayMessage);
+
     return (
         <div className={`post-item-container ${ type !== PostTypes.USER_MESSAGE ? 'system-message' : 'user-message' }`}>
             <div className='icon'>
@@ -40,9 +42,9 @@ const PostItem = ({ post }) => {
                     <div className='timestamp'><Moment format='hh:mm A' date={ dateCreated }></Moment></div>
                 </div>
                 
-                <div className='message' dangerouslySetInnerHTML={{__html: sanitizedMessage }}></div>
-                { imgUrls?.length > 0 && imgUrls.map(imgUrl => {
-                    return <div className='message-img-container'>
+                <div className='message' dangerouslySetInnerHTML={{__html: displayMessage }}></div>
+                { imgUrls?.length > 0 && imgUrls.map((imgUrl, index) => {
+                    return <div key={ index } className='message-img-container'>
                         <img src={ imgUrl } />
                     </div>;
                 })}
