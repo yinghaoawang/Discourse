@@ -1,6 +1,9 @@
 import './post-item.styles.scss';
 import { PostTypes } from '../../../../../util/constants.util';
+import { linkify } from '../../../../../util/helpers.util'
 import Moment from 'react-moment';
+const createDOMPurify = require('dompurify');
+const DOMPurify = createDOMPurify(window);
 
 const PostItem = ({ post }) => {
     const { message, user = { displayName: '?'}, dateCreated, type = PostTypes.USER_MESSAGE } = post;
@@ -20,6 +23,10 @@ const PostItem = ({ post }) => {
             throw new Error('Unhandled post type ' + type);
     }
 
+    displayMessage = linkify(message);
+
+    const sanitizedMessage = DOMPurify.sanitize(displayMessage);
+
     return (
         <div className={`post-item-container ${ type !== PostTypes.USER_MESSAGE ? 'system-message' : 'user-message' }`}>
             <div className='icon'>
@@ -32,7 +39,7 @@ const PostItem = ({ post }) => {
                     <div className='timestamp'><Moment format='hh:mm A' date={ dateCreated }></Moment></div>
                 </div>
                 
-                <div className='message'>{ displayMessage }</div>
+                <div className='message' dangerouslySetInnerHTML={{__html: sanitizedMessage }}></div>
             </div>
         </div>
     );

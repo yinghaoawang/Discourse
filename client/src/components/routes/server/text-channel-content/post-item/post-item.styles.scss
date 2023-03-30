@@ -52,6 +52,9 @@
 
         .message {
             @apply break-words;
+            a {
+                @apply text-blue-500;
+            }
         }
     }    
 }
