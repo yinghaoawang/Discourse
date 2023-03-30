@@ -56,5 +56,13 @@
                 @apply text-blue-500;
             }
         }
+
+        .message-img-container {
+            @apply my-1.5 cursor-pointer;
+            
+            img {
+                @apply rounded-md;
+            }
+        }
     }    
 }

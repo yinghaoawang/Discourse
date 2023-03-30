@@ -48,6 +48,16 @@ const playSound = async (filename) => {
     audioContainer.appendChild(audioObject);
 }
 
+const getImagesFromText = (text) => {
+    var regex = (/(https?:\/\/[^ ]*\.(?:gif|png|jpg|jpeg))/i);
+
+    if (new RegExp(regex).test(text)){
+        const imgUrls = regex.exec(text);
+        return [...imgUrls]
+    }
+    return [];
+}
+
 const linkify = (text) => {
     var urlRegex =/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
     
@@ -56,4 +66,4 @@ const linkify = (text) => {
     });
 }
 
-export { generateRandomName, getDevices, getFirstinputDevice, getFirstOutputDevice, playSound, linkify };
+export { generateRandomName, getDevices, getFirstinputDevice, getFirstOutputDevice, playSound, linkify, getImagesFromText };

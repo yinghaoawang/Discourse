@@ -1,6 +1,6 @@
 import './post-item.styles.scss';
 import { PostTypes } from '../../../../../util/constants.util';
-import { linkify } from '../../../../../util/helpers.util'
+import { linkify, getImagesFromText } from '../../../../../util/helpers.util'
 import Moment from 'react-moment';
 const createDOMPurify = require('dompurify');
 const DOMPurify = createDOMPurify(window);
@@ -23,10 +23,11 @@ const PostItem = ({ post }) => {
             throw new Error('Unhandled post type ' + type);
     }
 
+    const imgUrls = getImagesFromText(message);
     displayMessage = linkify(message);
 
     const sanitizedMessage = DOMPurify.sanitize(displayMessage);
-
+    console.log(sanitizedMessage);
     return (
         <div className={`post-item-container ${ type !== PostTypes.USER_MESSAGE ? 'system-message' : 'user-message' }`}>
             <div className='icon'>
@@ -40,6 +41,11 @@ const PostItem = ({ post }) => {
                 </div>
                 
                 <div className='message' dangerouslySetInnerHTML={{__html: sanitizedMessage }}></div>
+                { imgUrls?.length > 0 && imgUrls.map(imgUrl => {
+                    return <div className='message-img-container'>
+                        <img src={ imgUrl } />
+                    </div>;
+                })}
             </div>
         </div>
     );
