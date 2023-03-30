@@ -85,7 +85,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
                     <div className='buttons-container'>
                         { currentVoiceChannel != null && (
                             <>
-                                <div onClick={ videoChatClickHandler } className='button'>{ isVideoCalling ? <VideoOffIcon size='20px' /> : <VideoIcon size='20px' /> }</div>
+                                <div onClick={ videoChatClickHandler } className='button'>{ isVideoCalling ? <VideoIcon size='20px' /> : <VideoOffIcon size='20px' /> }</div>
                                 <div onClick={ hangUpClickHandler } className='button'><HangUpIcon size='20px' /></div>
                             </>
                         )}
