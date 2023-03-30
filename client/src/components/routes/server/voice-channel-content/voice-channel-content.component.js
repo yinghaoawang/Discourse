@@ -42,7 +42,7 @@ const VoiceChannelContent = () => {
     const videoRefHandler = (ref, user) => {
         if (!ref) return;
         ref.srcObject = user?.stream;
-        ref.muted = true;
+        if (user.id === getSocket().id) ref.muted = true;
     };
     
 

@@ -199,10 +199,8 @@ export const SocketProvider = ({ children }) => {
         }
         currentSocket.emit('joinRoom', { roomId });
     }
-
     
-
-    const changeVoiceRoom = async ({ roomId, currentSocket, isRecordVideo }) => {
+    const changeVoiceRoom = async ({ roomId, currentSocket, isRecordVideo, isScreenSharing }) => {
         if (currentSocket == null) {
             currentSocket = getSocket();
         }
@@ -220,12 +218,11 @@ export const SocketProvider = ({ children }) => {
             const outputDevice = currentOutputDevice || await getFirstOutputDevice();
             setCurrentOutputDevice(outputDevice);
 
-            await resetLocalStream({ inputDevice, isRecordVideo });
+            await resetLocalStream({ inputDevice, isRecordVideo, isScreenSharing });
             currentSocket.emit('joinVoiceRoom', { roomId });
 
             let voiceRoom = voiceRooms.find(v => v.roomId === roomId);
             if (voiceRoom == null) {
-                console.error(voiceRooms);
                 console.error('Voice room ' + roomId + ' could not be found in voiceRooms in changeVoiceRoom');
                 voiceRoom = { users: [] };
             }
@@ -250,13 +247,13 @@ export const SocketProvider = ({ children }) => {
         setCurrentTextChannel(textChannel);
     }
 
-    const changeVoiceChannel = async ({ voiceChannel, currentSocket, isRecordVideo }) => {
+    const changeVoiceChannel = async ({ voiceChannel, currentSocket, isRecordVideo, isScreenSharing }) => {
         let roomId = null;
         if (voiceChannel != null) {
             roomId = voiceChannel.id;
             setSelectedChannelType(ChannelTypes.VOICE);
         }
-        await changeVoiceRoom({ roomId, currentSocket, isRecordVideo });
+        await changeVoiceRoom({ roomId, currentSocket, isRecordVideo, isScreenSharing });
         setCurrentVoiceChannel(voiceChannel);
     }
 

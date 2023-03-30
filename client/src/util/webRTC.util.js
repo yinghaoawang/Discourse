@@ -35,15 +35,46 @@ const stopLocalStream = () => {
     });
 }
 
-const resetLocalStream = async ({ inputDevice, isRecordVideo }) => {
+const captureScreen = async () => {
+    let mediaStream = null;
+    try {
+        mediaStream = await navigator.mediaDevices.getDisplayMedia({
+            video: {
+                cursor: 'always',
+                displaySurface: 'monitor'
+            },
+            audio: true
+        });
+    } catch (err) {
+        console.error(err);
+    }
+    console.log(mediaStream);
+    return mediaStream;
+}
+
+const resetLocalStream = async ({ inputDevice, isRecordVideo, isScreenSharing }) => {
     const inputDeviceId = inputDevice?.deviceId;
     const deviceId = inputDeviceId ? { exact: inputDeviceId } : null;
-    const stream = await navigator.mediaDevices.getUserMedia({
-        video: isRecordVideo ? { width: '640px', height: '480px' } : false,
+    let video = false;
+    if (isRecordVideo) {
+        video = { width: '640px', height: '480px' };
+    }
+    const deviceStream = await navigator.mediaDevices.getUserMedia({
+        video,
         audio: { deviceId }
     });
 
-    localStream = stream;
+
+    if (isScreenSharing) {
+        const audioTrack = deviceStream.getAudioTracks()[0];
+        const screenStream = await captureScreen();
+        if (screenStream == null) return;
+        
+        screenStream.addTrack(audioTrack);
+        localStream = screenStream;
+    } else {
+        localStream = deviceStream;
+    }
     return localStream;
 }
 
@@ -170,7 +201,6 @@ const addWebRTCListeners = (socket, namespace) => {
     });
 
     socket.on('wrtcSignal', ({ connSocketId, signal }) => {
-        // console.log('signal', connSocketId, signal);
         peers[connSocketId].signal(signal);
     });
 

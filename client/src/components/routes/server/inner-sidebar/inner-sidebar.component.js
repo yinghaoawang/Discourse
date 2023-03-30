@@ -5,6 +5,7 @@ import VoiceChannelItem from './voice-channel-item/voice-channel-item.component'
 import SettingsModal from '../../../modals/settings-modal/settings-modal.component';
 import { UserContext } from '../../../../contexts/user.context';
 import { IoMdMicOff as MutedMicIcon, IoMdMic as MicIcon } from 'react-icons/io';
+import { MdScreenShare as ScreenShareIcon, MdStopScreenShare as StopScreenShareIcon } from 'react-icons/md';
 import { IoVideocam as VideoIcon, IoVideocamOff as VideoOffIcon } from 'react-icons/io5';
 import { HiPhoneMissedCall as HangUpIcon } from 'react-icons/hi';
 import { IoSettingsSharp as SettingsIcon } from 'react-icons/io5';
@@ -19,6 +20,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
     const [isCreateChannelModalOpen, setIsCreateChannelModalOpen] = useState(false);
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const [isVideoCalling, setIsVideoCalling] = useState(false);
+    const [isScreenSharing, setIsScreenSharing] = useState(false);
     const { currentInputDevice } = useContext(SettingsContext);
     const { currentVoiceChannel } = useContext(ServerContext);
     const { leaveVoiceChannel, changeVoiceChannel } = useContext(SocketContext);
@@ -43,11 +45,19 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
         leaveVoiceChannel();
     }
 
+    const screenShareClickHandler = async () => {
+        const newIsScreenSharing = !isScreenSharing;
+        stopLocalStream();
+        console.log('change voice channel');
+        await changeVoiceChannel({ voiceChannel: currentVoiceChannel, isScreenSharing: newIsScreenSharing });
+
+        setIsScreenSharing(newIsScreenSharing);
+    }
+
     const videoChatClickHandler = async () => {
         const newIsVideoCalling = !isVideoCalling;
         let isRecordVideo = newIsVideoCalling;
         stopLocalStream();
-        await resetLocalStream({ inputDevice: currentInputDevice, isRecordVideo });
         await changeVoiceChannel({ voiceChannel: currentVoiceChannel, isRecordVideo });
 
         setIsVideoCalling(newIsVideoCalling);
@@ -85,6 +95,7 @@ const InnerSidebar = ({ textChannels, voiceChannels }) => {
                     <div className='buttons-container'>
                         { currentVoiceChannel != null && (
                             <>
+                                <div onClick={ screenShareClickHandler } className='button'>{ isScreenSharing ? <ScreenShareIcon size='20px' /> : <StopScreenShareIcon size='20px' /> }</div>
                                 <div onClick={ videoChatClickHandler } className='button'>{ isVideoCalling ? <VideoIcon size='20px' /> : <VideoOffIcon size='20px' /> }</div>
                                 <div onClick={ hangUpClickHandler } className='button'><HangUpIcon size='20px' /></div>
                             </>
